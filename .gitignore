@@ -1,0 +1,20 @@
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Mac files
+.DS_Store
+
+# Usual build folders
+target/
+build/
+dist/
+
+# IDE files
+*.ipr
+*.iml
+*.iws
+*.idea
