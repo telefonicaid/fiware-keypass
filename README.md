@@ -1,6 +1,6 @@
-# Fiware-Iot-AC
+# FIWARE-KeyPass
 
-AccessControl prototype for IoT Platform.
+AccessControl prototype.
 
 **ALPHA project**: Many features may not work as expected, the API may change
 without previous notice, the persistence is stored in memory (so all policies
@@ -15,7 +15,7 @@ $ mvn package
 # Running
 
 ```
-$ java -jar target/fiware-iot-ac-0.0.1-SNAPSHOT.jar server configs/in-memory-database.yml
+$ java -jar target/keypass-0.0.1-SNAPSHOT.jar server configs/in-memory-database.yml
 ```
 
 # Usage
