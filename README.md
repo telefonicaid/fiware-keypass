@@ -15,7 +15,7 @@ $ mvn package
 # Running
 
 ```
-$ java -jar target/keypass-0.0.1-SNAPSHOT.jar server configs/in-memory-database.yml
+$ java -jar target/keypass-0.1.0.jar server configs/in-memory-database.yml
 ```
 
 # Usage
