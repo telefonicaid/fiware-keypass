@@ -8,21 +8,21 @@ In order to setup the environment to execute the tests, follow this steps:
 
 1. Create a virtual environment for the tests.
 
-```
-virtualenv VENV
-```
+   ```
+   virtualenv VENV
+   ```
 
 2. Activate the environment.
 
-```
-source VENV/bin/activate
-```
+   ```
+   source VENV/bin/activate
+   ```
 
 3. Install the requirements using PIP.
 
-```
-pip install -r requirements.txt
-```
+   ```
+   pip install -r requirements.txt
+   ```
 
 With this steps, all the requirements will be installed in your own environment.
 
