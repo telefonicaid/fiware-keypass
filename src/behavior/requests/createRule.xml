@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy PolicyId="1234" RuleCombiningAlgId="identifier:rule-combining-algorithm:deny-overrides">
+<Target>
+  <AnyOf>
+    <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-starts-with">
+        <AttributeDesignator MustBePresent="true"
+          Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource"
+          AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+          DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"
+          >frn:contextbroker:551:</AttributeValue>
+      </Match>
+      <Match MatchId="urn:oasis:names:tc:xacml:3.0:function:string-equal">
+        <AttributeDesignator MustBePresent="true"
+          Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action"
+          AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+          DataType="http://www.w3.org/2001/XMLSchema#string"/>
+        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"
+          >read</AttributeValue>
+      </Match>
+    </AllOf>
+  </AnyOf>
+</Target>
+</Policy>
