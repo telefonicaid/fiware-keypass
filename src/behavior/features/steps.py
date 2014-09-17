@@ -9,7 +9,7 @@ def sendPolicyCreationRequest(step):
   tenant = '511'
   subject = '8194'
   url = TARGET_URL + '/pap/v1/' + tenant + '/' + subject
-  fRequest = open('./requests/createRule.xml', 'r')
+  fRequest = open('./requests/policy.xml', 'r')
   payload = fRequest.read()
   headers = {'content-type': 'application/xml'}
   r = requests.post(url, data=payload, headers=headers)
