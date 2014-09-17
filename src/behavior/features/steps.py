@@ -2,6 +2,7 @@ from lettuce import *
 import requests
 from lxml import etree
 
+#TODO: Make the test parameters configurable.
 TARGET_URL='http://localhost:8080'
 
 @step('I send a policy creation request to the Access Control')
