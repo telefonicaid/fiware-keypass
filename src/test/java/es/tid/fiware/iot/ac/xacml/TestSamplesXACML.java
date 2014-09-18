@@ -10,50 +10,66 @@ package es.tid.fiware.iot.ac.xacml;
  * All rights reserved.
  */
 
+import es.tid.fiware.iot.ac.util.Xml;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.wso2.balana.PDP;
-import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
 
 public class TestSamplesXACML {
 
     private PDPFactory pdpFactory = new PDPFactory();
+    private XPath xpath = XPathFactory.newInstance().newXPath();
 
     @DataProvider(name = "policies")
     public Object[][] createPoliciesDataset() {
         return new Object[][] {
-                { Arrays.asList("policy01.xml"),
+                { "One Policy, one Subject and Permit",
+                  Arrays.asList("policy01.xml"),
                   "policy01_request01.xml", "Permit" },
-                { Arrays.asList("policy01.xml"),
+
+                { "One Policy, one Subject and Deny",
+                  Arrays.asList("policy01.xml"),
                   "policy01_request02.xml", "Deny" },
+
+                { "Two Policy, one Subject and Permit",
+                  Arrays.asList("policy01.xml", "policy02.xml"),
+                  "policy01_request01.xml", "Permit" },
+
+                { "One Policy, two Subjects and Permit",
+                  Arrays.asList("policy01.xml"),
+                  "policy01_request03.xml", "Permit" }
+
         };
     }
 
     @Test(dataProvider = "policies")
-    public void testPolicyEval(List<String> policies, String request, String decision) {
+    public void testPolicyEval(String testName, List<String> policies,
+            String request, String decision) {
 
         PDP pdp = createPDP(policies);
-        String eval = pdp.evaluate(read(request));
 
-        assertTrue(eval.contains(decision));
+        String xacmlRes = pdp.evaluate(read(request));
+
+        assertEquals(decision, extractDecision(xacmlRes));
     }
 
     private PDP createPDP(List<String> policiesFiles) {
         List<Document> policies = new ArrayList<Document>();
         for (String policyFile : policiesFiles) {
-            policies.add(toXml(read(policyFile)));
+            policies.add(Xml.toXml(read(policyFile)));
         }
         return pdpFactory.build(policies);
     }
@@ -62,14 +78,10 @@ public class TestSamplesXACML {
         return new Scanner(TestSamplesXACML.class.getResourceAsStream(f)).useDelimiter("\\Z").next();
     }
 
-    private Document toXml(String str) {
+    private String extractDecision(String xacmlRes) {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setIgnoringComments(true);
-            factory.setNamespaceAware(true);
-            DocumentBuilder db = factory.newDocumentBuilder();
-            return db.parse(new InputSource(new StringReader(str)));
-        } catch (Exception e) {
+            return xpath.evaluate("//*[local-name()='Decision']", Xml.toXml(xacmlRes));
+        } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }
     }
