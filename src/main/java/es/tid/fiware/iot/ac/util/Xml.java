@@ -1,4 +1,5 @@
-package es.tid.fiware.iot.ac.util;/*
+package es.tid.fiware.iot.ac.util;
+/*
  * Telefónica Digital - Product Development and Innovation
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
@@ -11,10 +12,12 @@ package es.tid.fiware.iot.ac.util;/*
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.io.StringReader;
 
 public class Xml {
@@ -32,11 +35,8 @@ public class Xml {
         }
     }
 
-    public static Document toXml(String str) {
-        try {
-            return db.parse(new InputSource(new StringReader(str)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static Document toXml(String str) throws IOException, SAXException {
+        return db.parse(new InputSource(new StringReader(str)));
     }
+
 }
