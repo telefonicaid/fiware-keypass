@@ -9,7 +9,7 @@ TARGET_URL='http://localhost:8080'
 
 @step('I send a policy creation request to the Access Control for tenant "([^"]*)" and subject "([^"]*)"')
 def sendPolicyCreationRequest(step, tenant, subject):
-  url = TARGET_URL + '/pap/v1/' + tenant + '/' + subject
+  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
   fRequest = open('./requests/policy.xml', 'r')
   payload = pystache.render(fRequest.read(), {'ruleId': str(uuid4())})
   headers = {'content-type': 'application/xml'}
@@ -42,4 +42,29 @@ def accessControlDecidesAction(step, decision):
   decisionAC = requestXML.xpath('//t:Decision', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})
   assert len(decisionAC) == 1
   assert decisionAC[0].text == decision
+
+@step('I send a remove request for the last request')
+def removeLastRequest(step):
+  location = world.retrievedRequest.headers.get('Location')
+  r = requests.delete(location)
+  world.removalResult = r
+
+@step('I send a remove request for tenant "([^"]*)"')
+def removeTenant(step, tenant):
+  url = TARGET_URL + '/pap/v1/' + tenant
+  r = requests.delete(url)
+  world.removalResult = r
+
+@step('I get the list of policies for the tenant "([^"]*)" and subject "([^"]*)"')
+def getTenantPolicies(step, tenant, subject):
+  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+  r = requests.get(url)
+  world.requestList = r    
+
+@step('trying to get the policy raises a 404')
+def getLastPolicy(step):
+  location = world.retrievedRequest.headers.get('Location')
+  r = requests.get(location)
+  assert r.status_code == 404
+
 
