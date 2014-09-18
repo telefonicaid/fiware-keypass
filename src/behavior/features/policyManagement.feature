@@ -8,7 +8,7 @@ Feature: Create a new policy
     Then the Access Control returns a 201 OK and a payload with the ID
     And I can retrieve the created policy from the Access Control
 
-  Scenario Outline: Request validation accepted
+  Scenario Outline: Request validation
     Given I send a policy creation request to the Access Control for tenant "<tenant>" and subject "<subject>"
     When I send a validation request for tenant "<tenant>" with subject "<subject>", FRN "<frn>" and action "<action>"
     Then the Access Control should "<decision>" the access
