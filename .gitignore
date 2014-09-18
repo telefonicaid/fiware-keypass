@@ -18,3 +18,5 @@ dist/
 *.iml
 *.iws
 *.idea
+
+nbactions.xml
