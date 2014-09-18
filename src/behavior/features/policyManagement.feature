@@ -29,3 +29,8 @@ Feature: Create a new policy
     Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
     When I send a remove request for tenant "634"
     Then trying to get the policy raises a 404
+
+  Scenario: Remove a subject
+    Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
+    When I send a remove request for subject "467" in tenant "634"
+    Then trying to get the policy raises a 404

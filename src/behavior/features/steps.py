@@ -55,6 +55,12 @@ def removeTenant(step, tenant):
   r = requests.delete(url)
   world.removalResult = r
 
+@step('I send a remove request for subject "([^"]*)" in tenant "([^"]*)"')
+def removeSubject(step, subject, tenant):
+  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+  r = requests.delete(url)
+  world.removalResult = r
+
 @step('I get the list of policies for the tenant "([^"]*)" and subject "([^"]*)"')
 def getTenantPolicies(step, tenant, subject):
   url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
