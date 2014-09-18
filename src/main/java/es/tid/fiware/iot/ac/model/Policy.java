@@ -13,13 +13,13 @@ package es.tid.fiware.iot.ac.model;
 
 public class Policy {
 
-    private String id;
+    private final String id;
 
-    private String tenant;
+    private final String tenant;
 
-    private String subject;
+    private final String subject;
 
-    private String policy;
+    private final String policy;
 
     public Policy(String id, String tenant, String subject, String policy) {
         this.id = id;
@@ -32,31 +32,16 @@ public class Policy {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getTenant() {
         return tenant;
-    }
-
-    public void setTenant(String tenant) {
-        this.tenant = tenant;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public String getPolicy() {
         return policy;
     }
 
-    public void setPolicy(String policy) {
-        this.policy = policy;
-    }
 }

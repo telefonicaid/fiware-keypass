@@ -14,12 +14,10 @@ import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
-@Path("/pap/v1/{tenant}/{subject}")
+@Path("/pap/v1/{tenant}/subject/{subject}/policy/{policyId}")
 @Produces(MediaType.APPLICATION_XML)
 public class PoliciesEndpoint {
 
@@ -30,31 +28,13 @@ public class PoliciesEndpoint {
     }
 
     @GET
-    public Response getPolicies(@DefaultValue("20") @QueryParam("size") int size,
-            @DefaultValue("0") @QueryParam("offset") int offset,
-            @PathParam("tenant") String tenant,
-            @PathParam("subject") String subject) {
-        // TODO
-        return Response.status(501).build();
-    }
-
-    @POST
-    public Response createPolicy(@Context UriInfo info,
-             @PathParam("tenant") String tenant,
-             @PathParam("subject") String subject, String policy) {
-        Policy p = dao.create(tenant, subject, policy);
-        return Response.created(info.getAbsolutePathBuilder().path(p.getId()).build()).build();
-    }
-
-    @GET
-    @Path("{id}")
-    public Response getPolicy(@DefaultValue("20") @QueryParam("size") int size,
-            @DefaultValue("0") @QueryParam("offset") int offset,
-            @PathParam("tenant") String tenant,
+    public Response getPolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
-            @PathParam("id") String id) {
+            @PathParam("policyId") String policyId) {
 
-        Policy p = dao.get(tenant, subject, id);
+        String id = URLEncoding.decode(policyId);
+
+        Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
             return Response.ok(p.getPolicy()).build();
         } else {
@@ -62,5 +42,36 @@ public class PoliciesEndpoint {
         }
     }
 
+    @DELETE
+    public Response deletePolicy(@PathParam("tenant") String tenant,
+            @PathParam("subject") String subject,
+            @PathParam("policyId") String policyId) {
 
+        String id = URLEncoding.decode(policyId);
+
+        Policy p = dao.loadPolicy(tenant, subject, id);
+        if (p != null) {
+            dao.deletePolicy(p);
+            return Response.ok(p.getPolicy()).build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
+
+    @PUT
+    public Response updatePolicy(@PathParam("tenant") String tenant,
+            @PathParam("subject") String subject,
+            @PathParam("policyId") String policyId,
+            String policy) {
+
+        String id = URLEncoding.decode(policyId);
+
+        Policy p = dao.loadPolicy(tenant, subject, id);
+        if (p != null) {
+            Policy newP = dao.updatePolicy(new Policy(id, tenant, subject, policy));
+            return Response.ok(newP.getPolicy()).build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
 }

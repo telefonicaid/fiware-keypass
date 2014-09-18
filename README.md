@@ -24,8 +24,8 @@ $ java -jar target/keypass-0.2.0-SNAPSHOT.jar server configs/in-memory-database.
 
 ```
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
-    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01.xml \
-    http://localhost:8080/pap/v1/myOwnTenant/aRoleId
+    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy03.xml \
+    http://localhost:8080/pap/v1/myTenant/subject/role12345
 ```
 
 Response should be something like this:
@@ -33,7 +33,7 @@ Response should be something like this:
 ```
 HTTP/1.1 201 Created
 Date: Mon, 15 Sep 2014 20:02:35 GMT
-Location: http://localhost:8080/pap/v1/myOwnTenant/aRoleId/1
+Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 Content-Type: application/xml
 Content-Length: 0
 ```
@@ -41,7 +41,7 @@ Content-Length: 0
 ## Retrieve a policy
 
 ```
-curl -i http://localhost:8080/pap/v1/myOwnTenant/aRoleId/1
+curl -i http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 ```
 
 Response will be the previously uploaded policy.
@@ -55,7 +55,7 @@ Response will be the previously uploaded policy.
 ```
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
     -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01_request01.xml \
-    http://localhost:8080/pdp/v3/myOwnTenant
+    http://localhost:8080/pdp/v3/myTenant
 ```
 Response:
 

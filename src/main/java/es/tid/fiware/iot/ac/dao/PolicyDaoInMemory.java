@@ -11,68 +11,81 @@ package es.tid.fiware.iot.ac.dao;/*
 
 import es.tid.fiware.iot.ac.model.Policy;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A InMemory Impl, quick&dirty: not thread safe, no referential integrity.
+ */
 public class PolicyDaoInMemory implements PolicyDao {
 
-    private Map<String, Map<String, Policy>> db =
-            new ConcurrentHashMap<String, Map<String, Policy>>();
+    private Map<String, Map<String, Map<String, Policy>>> db =
+            new ConcurrentHashMap<String, Map<String, Map<String, Policy>>>();
 
     private AtomicInteger ids = new AtomicInteger(1);
 
-    private Map<String, Policy> getDBList(String tenant, @Nullable String subject) {
-        Map<String, Policy> l = db.get(tenant + ":" + subject);
-        if (l == null) {
-            l = new HashMap<String, Policy>();
-            db.put(tenant + ":" + subject, l);
+    private Map<String, Policy> get(String tenant, String subject) {
+        Map<String, Map<String, Policy>> tenantEntry = db.get(tenant);
+        if (tenantEntry == null) {
+            tenantEntry = new ConcurrentHashMap<String, Map<String, Policy>>();
+            db.put(tenant, tenantEntry);
         }
-        return l;
+        Map<String, Policy> subjectEntry = tenantEntry.get(subject);
+        if (subjectEntry == null) {
+            subjectEntry = new ConcurrentHashMap<String, Policy>();
+            tenantEntry.put(subject, subjectEntry);
+        }
+        return subjectEntry;
     }
 
     @Override
-    public Policy create(String tenant, @Nullable String subject, String policy) {
-        String id = "" + ids.getAndIncrement();
-        Policy p = new Policy(id, tenant, subject, policy);
-        getDBList(tenant, subject).put(id, p);
+    public Policy createPolicy(Policy p) {
+        get(p.getTenant(), p.getSubject()).put(p.getId(), p);
         return p;
     }
 
     @Override
-    public Policy get(String tenant, @Nullable String subject, String id) {
-        return getDBList(tenant, subject).get(id);
+    public Policy loadPolicy(String tenant, String subject, String id) {
+        return get(tenant, subject).get(id);
     }
 
     @Override
-    public Collection<Policy> list(String tenant, @Nullable String subject) {
-        return getDBList(tenant, subject).values();
+    public Collection<Policy> getPolicies(String tenant, String subject) {
+        return get(tenant, subject).values();
     }
 
     @Override
-    public Collection<Policy> listAll(String tenant) {
-        String tenantKey = tenant + ":";
-        Collection<Policy> policies = new ArrayList<Policy>();
-        for (String key : db.keySet()) {
-            if (key.startsWith(tenant+":")) {
-                policies.addAll(db.get(key).values());
-            }
+    public Collection<String> getSubjects(String tenant) {
+        Map<String, Map<String, Policy>> subjects = db.get(tenant);
+        if (subjects != null) {
+            return subjects.keySet();
+        } else {
+            return Collections.EMPTY_SET;
         }
-        return policies;
     }
 
     @Override
-    public Policy update(Policy policy) {
-        return getDBList(policy.getTenant(), policy.getSubject()).put(policy.getId(), policy);
+    public Policy updatePolicy(Policy policy) {
+        return createPolicy(policy);
     }
 
     @Override
-    public Policy delete(Policy policy) {
-        return getDBList(policy.getTenant(), policy.getSubject()).remove(policy.getId());
+    public Policy deletePolicy(Policy p) {
+        return get(p.getTenant(), p.getSubject()).remove(p.getId());
+    }
+
+    @Override
+    public void deleteFromTenant(String tenant) {
+        db.remove(tenant);
+    }
+
+    @Override
+    public void deleteFromSubject(String tenant, String subject) {
+        Map<String, Map<String, Policy>> subjects = db.get(tenant);
+        if (subjects != null) {
+            subjects.remove(subject);
+        }
     }
 
 }

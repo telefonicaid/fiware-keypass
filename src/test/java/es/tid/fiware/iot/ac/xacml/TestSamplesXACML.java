@@ -50,40 +50,32 @@ public class TestSamplesXACML {
 
                 { "One Policy, two Subjects and Permit",
                   Arrays.asList("policy01.xml"),
-                  "policy01_request03.xml", "Permit" }
+                  "policy01_request03.xml", "Permit" },
+
+                { "Policy with resource target",
+                  Arrays.asList("policy03.xml"),
+                  "policy01_request01.xml", "Permit" }
 
         };
     }
 
     @Test(dataProvider = "policies")
     public void testPolicyEval(String testName, List<String> policies,
-            String request, String decision) {
+            String request, String decision) throws Exception {
 
         PDP pdp = createPDP(policies);
 
-        String xacmlRes = pdp.evaluate(read(request));
+        String xacmlRes = pdp.evaluate(Util.read(request));
 
-        assertEquals(decision, extractDecision(xacmlRes));
+        assertEquals(decision, Extractors.extractDecision(xacmlRes));
     }
 
-    private PDP createPDP(List<String> policiesFiles) {
+    private PDP createPDP(List<String> policiesFiles) throws Exception {
         List<Document> policies = new ArrayList<Document>();
         for (String policyFile : policiesFiles) {
-            policies.add(Xml.toXml(read(policyFile)));
+            policies.add(Xml.toXml(Util.read(policyFile)));
         }
         return pdpFactory.build(policies);
-    }
-
-    private String read(String f) {
-        return new Scanner(TestSamplesXACML.class.getResourceAsStream(f)).useDelimiter("\\Z").next();
-    }
-
-    private String extractDecision(String xacmlRes) {
-        try {
-            return xpath.evaluate("//*[local-name()='Decision']", Xml.toXml(xacmlRes));
-        } catch (XPathExpressionException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }
