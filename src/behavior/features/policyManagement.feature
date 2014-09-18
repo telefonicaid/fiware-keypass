@@ -19,3 +19,18 @@ Feature: Create a new policy
     | 511    | 833     | frn:contextbroker:511:833:Device1 | write      | Deny          |
     | 511    | 956     | frn:contextbroker:511:833:Device1 | read       | NotApplicable |
 
+  Scenario: Remove a policy
+    Given I send a policy creation request to the Access Control for tenant "615" and subject "818"
+    When I send a remove request for the last request
+    And I get the list of policies for the tenant "615" and subject "818"
+    Then trying to get the policy raises a 404
+
+  Scenario: Remove a tenant
+    Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
+    When I send a remove request for tenant "634"
+    Then trying to get the policy raises a 404
+
+  Scenario: Remove a subject
+    Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
+    When I send a remove request for subject "467" in tenant "634"
+    Then trying to get the policy raises a 404
