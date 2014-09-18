@@ -12,7 +12,11 @@ package es.tid.fiware.iot.ac.pap;
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
+import es.tid.fiware.iot.ac.model.PolicySet;
+import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.Extractors;
+import java.io.IOException;
+import java.util.Collection;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -20,6 +24,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.xml.transform.TransformerException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * Manages Policies with a Subject.
@@ -36,14 +43,24 @@ public class SubjectEndpoint {
         this.dao = dao;
     }
 
-    /**
-     * Returns all the Subject policies (as a PolicySet).
-     */
     @GET
     public Response getPolicies(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
-        // TODO concatenate Policies in a PolicySet
-        return Response.status(501).build();
+        try {
+            Collection<Policy> policyList = dao.getPolicies(tenant, subject);
+            
+            PolicySet ps = new PolicySet(policyList);
+            Document setDocument = ps.toXml();
+            String result = Xml.toString(setDocument);
+            return Response.ok(result).build();
+        } catch (IOException ex) {
+            return Response.status(500).build();
+        } catch (SAXException ex) {
+            return Response.status(500).build();
+        } catch (TransformerException ex) {
+            return Response.status(500).build();
+        }
+        
     }
 
     /**
