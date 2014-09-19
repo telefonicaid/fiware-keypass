@@ -49,7 +49,7 @@ public class SubjectEndpoint {
         try {
             Collection<Policy> policyList = dao.getPolicies(tenant, subject);
             
-            PolicySet ps = new PolicySet(subject + ":" + tenant, policyList);
+            PolicySet ps = new PolicySet(tenant + ":" + subject, policyList);
             Document setDocument = ps.toXml();
             String result = Xml.toString(setDocument);
             return Response.ok(result).build();
