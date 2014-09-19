@@ -45,7 +45,7 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Collection<String> getSubjects(String tenant) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
