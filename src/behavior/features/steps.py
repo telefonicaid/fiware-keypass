@@ -13,9 +13,9 @@ def sendPolicyCreationRequest(step, tenant, subject):
   r = requests.post(url, data=payload, headers=headers)
   world.retrievedRequest = r
 
-@step('the Access Control returns a 201 OK and a payload with the ID')
-def checkAccessControlReturnsOkAndId(step):
-  assert world.retrievedRequest.status_code == 201
+@step('the Access Control returns a "([^"]*)" code and a payload with the ID')
+def checkAccessControlReturnsOkAndId(step, code):
+  assert world.retrievedRequest.status_code == int(code)
 
 @step('I can retrieve the created policy from the Access Control')
 def retrieveCreatedPolicy(step):
@@ -88,4 +88,20 @@ def testNumberOfPolicies(step, number):
   policies = listXML.xpath('//t:Policy', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})
   assert len(policies) == int(number)
 
+def getLastRequestId():
+  location = world.retrievedRequest.headers.get('Location')
+  r = requests.get(location)
+  policyData = etree.XML(r.text)
+  policyElement =  policyData.xpath('//t:Policy', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})[0]
+  return policyElement.get('PolicyId');
 
+@step('I modify the policy')
+def modifyPolicy(step):
+  location = world.retrievedRequest.headers.get('Location')
+  policyId = getLastRequestId()
+  fRequest = open('./requests/policyModified.xml', 'r')
+  payload = pystache.render(fRequest.read(), {'ruleId': policyId})
+  headers = {'content-type': 'application/xml'}
+  r = requests.put(location, data=payload, headers=headers)
+  world.retrievedRequest = r
+  
