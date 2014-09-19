@@ -5,7 +5,7 @@ Feature: Create a new policy
 
   Scenario: Create new policy
     When I send a policy creation request to the Access Control for tenant "511" and subject "833"
-    Then the Access Control returns a 201 OK and a payload with the ID
+    Then the Access Control returns a "201" code and a payload with the ID
     And I can retrieve the created policy from the Access Control
 
   Scenario Outline: Request validation
@@ -44,3 +44,19 @@ Feature: Create a new policy
     When I get the list of policies for the tenant "515" and subject "833"
     Then the number of policies in the list is "2"
     
+  Scenario: Policy modification
+    Given I send a policy creation request to the Access Control for tenant "511" and subject "833"
+    When I modify the policy
+    Then the Access Control returns a "200" code and a payload with the ID
+
+  Scenario: Change policy and validate request
+    Given I send a policy creation request to the Access Control for tenant "511" and subject "833"
+    When I modify the policy
+    And I send a validation request for tenant "511" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
+    Then the Access Control should "Deny" the access
+
+
+
+
+
+
