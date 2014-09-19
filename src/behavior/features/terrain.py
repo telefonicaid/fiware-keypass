@@ -1,12 +1,18 @@
 from lettuce import *
 import requests
 import json
+import os
 
 
 tenantList = [ "511", "615", "634", "515" ]
 
 def initialize():
-  with open("properties.json") as config_file:
+  if os.getenv("LETTUCE_CONFIG"):
+    filename = os.getenv("LETTUCE_CONFIG")
+  else:
+    filename = "properties.json"
+
+  with open(filename) as config_file:
     world.config = json.load(config_file)
 
 @before.each_scenario
