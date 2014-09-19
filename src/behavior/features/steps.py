@@ -4,12 +4,9 @@ import requests
 from lxml import etree
 import pystache
 
-#TODO: Make the test parameters configurable.
-TARGET_URL='http://localhost:8080'
-
 @step('I send a policy creation request to the Access Control for tenant "([^"]*)" and subject "([^"]*)"')
 def sendPolicyCreationRequest(step, tenant, subject):
-  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+  url = world.config['targetUrl'] + '/pap/v1/' + tenant + '/subject/' + subject
   fRequest = open('./requests/policy.xml', 'r')
   payload = pystache.render(fRequest.read(), {'ruleId': str(uuid4())})
   headers = {'content-type': 'application/xml'}
@@ -28,7 +25,7 @@ def retrieveCreatedPolicy(step):
   
 @step('I send a validation request for tenant "([^"]*)" with subject "([^"]*)", FRN "([^"]*)" and action "([^"]*)"')
 def sendValidationRequest(step, tenant, subject, frn, action):
-  url = TARGET_URL + '/pdp/v3/' + tenant
+  url = world.config['targetUrl'] + '/pdp/v3/' + tenant
   fRequest = open('./requests/request.xml', 'r')
   payload = pystache.render(fRequest.read(), {'subject' : subject, 'frn': frn, 'action': action}) 
   headers = {'content-type': 'application/xml'}
@@ -51,19 +48,19 @@ def removeLastRequest(step):
 
 @step('I send a remove request for tenant "([^"]*)"')
 def removeTenant(step, tenant):
-  url = TARGET_URL + '/pap/v1/' + tenant
+  url = world.config['targetUrl'] + '/pap/v1/' + tenant
   r = requests.delete(url)
   world.removalResult = r
 
 @step('I send a remove request for subject "([^"]*)" in tenant "([^"]*)"')
 def removeSubject(step, subject, tenant):
-  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+  url = world.config['targetUrl'] + '/pap/v1/' + tenant + '/subject/' + subject
   r = requests.delete(url)
   world.removalResult = r
 
 @step('I get the list of policies for the tenant "([^"]*)" and subject "([^"]*)"')
 def getTenantPolicies(step, tenant, subject):
-  url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+  url = world.config['targetUrl'] + '/pap/v1/' + tenant + '/subject/' + subject
   r = requests.get(url)
   world.requestList = r    
 
@@ -78,7 +75,7 @@ def sendPoliciesToAccessControl(step):
   for policy in step.hashes:
     tenant = policy['tenant']
     subject = policy['subject']
-    url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+    url = world.config['targetUrl'] + '/pap/v1/' + tenant + '/subject/' + subject
     fRequest = open('./requests/policy.xml', 'r')
     payload = pystache.render(fRequest.read(), {'ruleId': policy['id']})
     headers = {'content-type': 'application/xml'}
