@@ -9,7 +9,6 @@ package es.tid.fiware.iot.ac.model;
 import es.tid.fiware.iot.ac.util.Xml;
 import java.io.IOException;
 import java.util.Collection;
-import javax.ws.rs.core.Response;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
