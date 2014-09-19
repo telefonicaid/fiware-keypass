@@ -1,5 +1,10 @@
 package es.tid.fiware.iot.ac.model;
 
+import java.io.Serializable;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+
 /*
  * Telefónica Digital - Product Development and Innovation
  *
@@ -11,29 +16,62 @@ package es.tid.fiware.iot.ac.model;
  * All rights reserved.
  */
 
+@Entity
 public class Policy {
 
-    private final String id;
+    @Embeddable
+    public static class PolicyId implements Serializable {
+        private String id;
+        private String tenant;
+        
+        public PolicyId() {
+            
+        }
+        
+        public PolicyId(String tenant, String id) {
+            this.id = id;
+            this.tenant = tenant;
+        }
+        
+        public String getId() {
+            return id;
+        }
+        
+        public String getTenant() {
+            return tenant;
+        }
+    }
+    
+    @EmbeddedId
+    private PolicyId internalId;
+    private String subject;
 
-    private final String tenant;
+    private String policy;
 
-    private final String subject;
-
-    private final String policy;
+    public Policy() {
+        
+    }
 
     public Policy(String id, String tenant, String subject, String policy) {
-        this.id = id;
-        this.tenant = tenant;
+        this.internalId = new PolicyId(tenant, id);
         this.subject = subject;
         this.policy = policy;
     }
 
     public String getId() {
-        return id;
+        return internalId.getId();
     }
 
+    public PolicyId getInternalId() {
+        return internalId;
+    }
+
+    public void setInternalId(PolicyId id) {
+        internalId = id;
+    }
+    
     public String getTenant() {
-        return tenant;
+        return internalId.getTenant();
     }
 
     public String getSubject() {

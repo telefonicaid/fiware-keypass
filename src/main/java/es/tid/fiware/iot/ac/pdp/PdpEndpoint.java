@@ -15,6 +15,7 @@ import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.Extractors;
 import es.tid.fiware.iot.ac.xacml.PDPFactory;
+import io.dropwizard.hibernate.UnitOfWork;
 import org.w3c.dom.Document;
 import org.wso2.balana.PDP;
 import org.xml.sax.SAXException;
@@ -42,6 +43,7 @@ public class PdpEndpoint {
     }
 
     @POST
+    @UnitOfWork
     public Response enforce(@PathParam("tenant") String tenant,
             String xacmlRequest) {
 

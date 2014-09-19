@@ -12,6 +12,7 @@ package es.tid.fiware.iot.ac.pap;
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,6 +29,7 @@ public class PoliciesEndpoint {
     }
 
     @GET
+    @UnitOfWork
     public Response getPolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
@@ -43,6 +45,7 @@ public class PoliciesEndpoint {
     }
 
     @DELETE
+    @UnitOfWork
     public Response deletePolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
@@ -59,6 +62,7 @@ public class PoliciesEndpoint {
     }
 
     @PUT
+    @UnitOfWork
     public Response updatePolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId,

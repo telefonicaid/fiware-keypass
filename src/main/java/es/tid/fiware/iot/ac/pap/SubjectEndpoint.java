@@ -15,6 +15,7 @@ import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.model.PolicySet;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.Extractors;
+import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -44,6 +45,7 @@ public class SubjectEndpoint {
     }
 
     @GET
+    @UnitOfWork
     public Response getPolicies(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         try {
@@ -73,6 +75,7 @@ public class SubjectEndpoint {
      * @return
      */
     @POST
+    @UnitOfWork
     public Response createPolicy(@Context UriInfo info,
             @PathParam("tenant") String tenant,
             @PathParam("subject") String subject, String policy) {
@@ -93,6 +96,7 @@ public class SubjectEndpoint {
      * Delete the Subject (and all its policies).
      */
     @DELETE
+    @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         dao.deleteFromSubject(tenant, subject);

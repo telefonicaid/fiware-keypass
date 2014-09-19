@@ -11,6 +11,7 @@ package es.tid.fiware.iot.ac.pap;
  */
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -36,6 +37,7 @@ public class TenantEndpoint {
      * @return
      */
     @DELETE
+    @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant) {
         // TODO return policies from removed tenant?
         dao.deleteFromTenant(tenant);
@@ -50,6 +52,7 @@ public class TenantEndpoint {
      * @return
      */
     @GET
+    @UnitOfWork
     public Response getSubjects(@PathParam("tenant") String tenant) {
         // TODO Which format? XML? define it!
         return Response.status(501).build();
