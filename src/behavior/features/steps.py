@@ -73,4 +73,22 @@ def getLastPolicy(step):
   r = requests.get(location)
   assert r.status_code == 404
 
+@step('I send the following policies to the access control')
+def sendPoliciesToAccessControl(step):
+  for policy in step.hashes:
+    tenant = policy['tenant']
+    subject = policy['subject']
+    url = TARGET_URL + '/pap/v1/' + tenant + '/subject/' + subject
+    fRequest = open('./requests/policy.xml', 'r')
+    payload = pystache.render(fRequest.read(), {'ruleId': policy['id']})
+    headers = {'content-type': 'application/xml'}
+    r = requests.post(url, data=payload, headers=headers)
+
+@step('the number of policies in the list is "([^"]*)"')
+def testNumberOfPolicies(step, number):
+  assert world.requestList.status_code == 200
+  listXML = etree.XML(world.requestList.text)
+  policies = listXML.xpath('//t:Policy', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})
+  assert len(policies) == int(number)
+
 

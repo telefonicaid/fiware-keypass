@@ -34,3 +34,13 @@ Feature: Create a new policy
     Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
     When I send a remove request for subject "467" in tenant "634"
     Then trying to get the policy raises a 404
+
+  Scenario: List policies
+    Given I send the following policies to the access control:
+      | tenant | subject | id         |
+      | 515    | 833     | 11111111   |
+      | 515    | 967     | 22222222   |
+      | 515    | 833     | 33333333   |
+    When I get the list of policies for the tenant "515" and subject "833"
+    Then the number of policies in the list is "2"
+    
