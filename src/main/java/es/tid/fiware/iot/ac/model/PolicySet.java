@@ -20,16 +20,26 @@ import org.xml.sax.SAXException;
  */
 public class PolicySet {
     
-    private Collection<Policy> policies;
+    static private final String COMBINING_POLICY = "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides";
+    static private final String VERSION = "1.0";
+    static private final String NAMESPACE = "urn:oasis:names:tc:xacml:3.0:core:schema:wd-17";
     
-    public PolicySet(Collection<Policy> policies) {
+    private Collection<Policy> policies;
+    private String id;
+    
+    public PolicySet(String policySetId, Collection<Policy> policies) {
         this.policies = policies;
+        this.id = policySetId;
     }
     
     public Document toXml() throws IOException, SAXException {
         Document setDocument = Xml.newDocument();
-        Element rootElement = setDocument.createElementNS("urn:oasis:names:tc:xacml:3.0:core:schema:wd-17", "PolicySet");
+        Element rootElement = setDocument.createElementNS(NAMESPACE, "PolicySet");
         setDocument.appendChild(rootElement);
+        
+        rootElement.setAttributeNS(NAMESPACE, "PolicySetId", id);
+        rootElement.setAttributeNS(NAMESPACE, "Version", VERSION);
+        rootElement.setAttributeNS(NAMESPACE, "PolicySetId", COMBINING_POLICY);
         
         for (Policy p: policies) {
             Document policyDocument = Xml.toXml(p.getPolicy());
