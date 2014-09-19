@@ -1,10 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package es.tid.fiware.iot.ac.dao;
+
+/*
+ * Telefónica Digital - Product Development and Innovation
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+ * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * Copyright (c) Telefónica Investigación y Desarrollo S.A.U.
+ * All rights reserved.
+ */
 
 import es.tid.fiware.iot.ac.model.Policy;
 import io.dropwizard.hibernate.AbstractDAO;
@@ -54,8 +59,6 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
         query.setParameter("id", policy.getInternalId().getId());
         int result = query.executeUpdate();
 
-        System.out.println("The result of the update is " + result); 
-        
         return policy;
     }
 
@@ -74,8 +77,6 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
         Query query = this.currentSession().createQuery(hql);
         query.setParameter("tenant_id", tenant);
         int result = query.executeUpdate();
-        
-        System.out.println("The result of the delete tenant is " + result);
     }
 
     @Override
@@ -86,8 +87,6 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
         Query query = this.currentSession().createQuery(hql);
         query.setParameter("subject_id", subject);
         int result = query.executeUpdate();
-
-        System.out.println("The result of the delete subject is " + result);        
     }
     
 }
