@@ -20,3 +20,4 @@ dist/
 *.idea
 
 nbactions.xml
+nb-configuration.xml
