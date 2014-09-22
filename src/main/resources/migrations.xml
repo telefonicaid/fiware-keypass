@@ -6,7 +6,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="1" author="dmj">
-        <createTable tableName="policy">
+        <createTable tableName="Policy">
             <column name="id" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
@@ -18,13 +18,12 @@
             </column>
             <column name="policy" type="MEDIUMTEXT"/>
         </createTable>
-        <addPrimaryKey columnNames="tenant, id" tableName="policy"/>
+        <addPrimaryKey columnNames="tenant, id" tableName="Policy"/>
     </changeSet>
     <changeSet  id="2" author="dmj">
         <createIndex
-                indexName="idx_address"
-                schemaName="accessControl"
-                tableName="policy"
+                indexName="idx_policy_by_subject_tenant"
+                tableName="Policy"
                 unique="true">
             <column name="subject" type="varchar(255)"/>
             <column name="tenant" type="varchar(255)"/>

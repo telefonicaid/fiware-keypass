@@ -1,15 +1,18 @@
 # FIWARE-KeyPass
 
-AccessControl prototype.
-
-**ALPHA project**: Many features may not work as expected, the API may change
-without previous notice, the persistence is stored in memory (so all policies
-will be lost after server restart).
+Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
+PDP (Policy Detention Point) capabilities.
 
 # Build
 
 ```
 $ mvn package
+```
+
+Building RPM (needs native `rpmbuild` tool):
+
+```
+$ mvn -Prpm package
 ```
 
 # Running
