@@ -50,7 +50,7 @@ stop() {
     echo -n "Shutting down $pname : "
     if [ -f $pidfile ]; then
         PID=`cat $pidfile`
-        kill -9 $PID
+        kill $PID
         RETVAL=$?
         [ $RETVAL -eq 0 ] && success || failure
         rm -f $pidfile
