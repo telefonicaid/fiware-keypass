@@ -1,3 +1,13 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+      bindHost: 0.0.0.0
+  adminConnectors:
+    - type: http
+      port: 8081
+      bindHost: 127.0.0.1
+
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver
@@ -29,7 +39,9 @@ database:
   maxSize: 32
 
   # whether or not idle connections should be validated
-  checkConnectionWhileIdle: false
+  checkConnectionWhileIdle: true
+
+  checkConnectionOnBorrow: true
 
 # Logging settings.
 logging:
