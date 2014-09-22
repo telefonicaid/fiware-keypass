@@ -21,6 +21,7 @@ package es.tid.fiware.iot.ac.pdp;
  * under the License.
  */
 
+import com.codahale.metrics.annotation.Timed;
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.util.Xml;
@@ -55,6 +56,7 @@ public class PdpEndpoint {
 
     @POST
     @UnitOfWork
+    @Timed
     public Response enforce(@PathParam("tenant") String tenant,
             String xacmlRequest) {
 
