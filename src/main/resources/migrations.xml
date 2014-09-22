@@ -20,4 +20,14 @@
         </createTable>
         <addPrimaryKey columnNames="tenant, id" tableName="policy"/>
     </changeSet>
+    <changeSet  id="2" author="dmj">
+        <createIndex
+                indexName="idx_address"
+                schemaName="accessControl"
+                tableName="policy"
+                unique="true">
+            <column name="subject" type="varchar(255)"/>
+            <column name="tenant" type="varchar(255)"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
