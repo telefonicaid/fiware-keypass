@@ -1,13 +1,24 @@
 package es.tid.fiware.iot.ac.pap;
+
 /*
- * Telefónica Digital - Product Development and Innovation
+ * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
- * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
- * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
- *
- * Copyright (c) Telefónica Investigación y Desarrollo S.A.U.
- * All rights reserved.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
@@ -15,6 +26,7 @@ import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.model.PolicySet;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.Extractors;
+import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -44,6 +56,7 @@ public class SubjectEndpoint {
     }
 
     @GET
+    @UnitOfWork
     public Response getPolicies(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         try {
@@ -73,6 +86,7 @@ public class SubjectEndpoint {
      * @return
      */
     @POST
+    @UnitOfWork
     public Response createPolicy(@Context UriInfo info,
             @PathParam("tenant") String tenant,
             @PathParam("subject") String subject, String policy) {
@@ -93,6 +107,7 @@ public class SubjectEndpoint {
      * Delete the Subject (and all its policies).
      */
     @DELETE
+    @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         dao.deleteFromSubject(tenant, subject);

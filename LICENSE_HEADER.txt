@@ -1,5 +1,3 @@
-package es.tid.fiware.iot.ac.xacml;
-
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
@@ -20,13 +18,3 @@ package es.tid.fiware.iot.ac.xacml;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import java.util.Scanner;
-
-public class Util {
-
-    public static String read(String f) {
-        return new Scanner(Util.class.getResourceAsStream(f)).useDelimiter("\\Z").next();
-    }
-
-}
