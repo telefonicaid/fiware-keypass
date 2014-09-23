@@ -28,6 +28,9 @@ import es.tid.fiware.iot.ac.pap.PoliciesEndpoint;
 import es.tid.fiware.iot.ac.pap.SubjectEndpoint;
 import es.tid.fiware.iot.ac.pap.TenantEndpoint;
 import es.tid.fiware.iot.ac.pdp.PdpEndpoint;
+import es.tid.fiware.iot.ac.pdp.PdpFactory;
+import es.tid.fiware.iot.ac.pdp.PdpFactoryCached;
+import es.tid.fiware.iot.ac.util.BlockingCacheFactory;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
@@ -64,10 +67,15 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
             throws Exception {
 
         PolicyDao dao = new PolicyDAOHibernate(hibernate.getSessionFactory());
+        PdpFactory pdpFactory = new PdpFactoryCached(dao,
+                new BlockingCacheFactory(
+                        configuration.getPdpCacheConfig().getTimeToLiveSeconds(),
+                        configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()));
+
         environment.jersey().register(new TenantEndpoint(dao));
         environment.jersey().register(new SubjectEndpoint(dao));
         environment.jersey().register(new PoliciesEndpoint(dao));
-        environment.jersey().register(new PdpEndpoint(dao));
+        environment.jersey().register(new PdpEndpoint(pdpFactory));
 
     }
 }

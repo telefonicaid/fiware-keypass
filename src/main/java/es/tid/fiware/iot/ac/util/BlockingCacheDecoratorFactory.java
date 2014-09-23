@@ -1,4 +1,4 @@
-package es.tid.fiware.iot.ac;
+package es.tid.fiware.iot.ac.util;
 
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -21,30 +21,25 @@ package es.tid.fiware.iot.ac;
  * under the License.
  */
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
-import io.dropwizard.db.DataSourceFactory;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.constructs.CacheDecoratorFactory;
+import net.sf.ehcache.constructs.blocking.BlockingCache;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.util.Properties;
 
-public class AcConfig extends Configuration {
+/**
+* Creates caches with a Blocking decorator.
+*/
+public class BlockingCacheDecoratorFactory extends CacheDecoratorFactory {
 
-    @Valid
-    @NotNull
-    @JsonProperty("database")
-    private DataSourceFactory database = new DataSourceFactory();
-
-    @Valid
-    @JsonProperty("pdpCache")
-    private CacheConfig pdpCacheConfig = new CacheConfig();
-
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
+    @Override
+    public Ehcache createDecoratedEhcache(Ehcache cache, Properties properties) {
+        throw new NotImplementedException();
     }
 
-    public CacheConfig getPdpCacheConfig() {
-        return pdpCacheConfig;
+    @Override
+    public Ehcache createDefaultDecoratedEhcache(Ehcache cache, Properties properties) {
+        return new BlockingCache(cache);
     }
-
 }

@@ -43,6 +43,14 @@ database:
 
   checkConnectionOnBorrow: true
 
+# cache for PDP objects
+pdpCache:
+  # expiration time for cached objects
+  timeToLiveSeconds: 60
+
+  # max PDP objects (per tenant)
+  maxEntriesLocalHeap: 100
+
 # Logging settings.
 logging:
 
