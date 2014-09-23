@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,29 +22,34 @@ package es.tid.fiware.iot.ac;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
-import io.dropwizard.db.DataSourceFactory;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 
-public class AcConfig extends Configuration {
+public class CacheConfig {
 
-    @Valid
-    @NotNull
-    @JsonProperty("database")
-    private DataSourceFactory database = new DataSourceFactory();
+    @Min(0)
+    private int timeToLiveSeconds;
 
-    @Valid
-    @JsonProperty("pdpCache")
-    private CacheConfig pdpCacheConfig = new CacheConfig();
+    @Min(0)
+    private int maxEntriesLocalHeap;
 
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
+    @JsonProperty
+    public int getTimeToLiveSeconds() {
+        return timeToLiveSeconds;
     }
 
-    public CacheConfig getPdpCacheConfig() {
-        return pdpCacheConfig;
+    @JsonProperty
+    public void setTimeToLiveSeconds(int timeToLiveSeconds) {
+        this.timeToLiveSeconds = timeToLiveSeconds;
     }
 
+    @JsonProperty
+    public int getMaxEntriesLocalHeap() {
+        return maxEntriesLocalHeap;
+    }
+
+    @JsonProperty
+    public void setMaxEntriesLocalHeap(int maxEntriesLocalHeap) {
+        this.maxEntriesLocalHeap = maxEntriesLocalHeap;
+    }
 }

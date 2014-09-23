@@ -1,4 +1,4 @@
-package es.tid.fiware.iot.ac;
+package es.tid.fiware.iot.ac.util;
 
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,31 +20,11 @@ package es.tid.fiware.iot.ac;
  * specific language governing permissions and limitations
  * under the License.
  */
+import net.sf.ehcache.Ehcache;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
-import io.dropwizard.db.DataSourceFactory;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-public class AcConfig extends Configuration {
-
-    @Valid
-    @NotNull
-    @JsonProperty("database")
-    private DataSourceFactory database = new DataSourceFactory();
-
-    @Valid
-    @JsonProperty("pdpCache")
-    private CacheConfig pdpCacheConfig = new CacheConfig();
-
-    public DataSourceFactory getDataSourceFactory() {
-        return database;
-    }
-
-    public CacheConfig getPdpCacheConfig() {
-        return pdpCacheConfig;
-    }
-
+/**
+ * Creates caches.
+ */
+public interface CacheFactory {
+    Ehcache get(String name);
 }
