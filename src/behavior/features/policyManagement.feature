@@ -49,14 +49,12 @@ Feature: Create a new policy
     When I modify the policy
     Then the Access Control returns a "200" code and a payload with the ID
 
-  Scenario: Change policy and validate request
+  Scenario: Policies are cached, thus changing it does not take effect instantly
     Given I send a policy creation request to the Access Control for tenant "511" and subject "833"
     When I modify the policy
     And I send a validation request for tenant "511" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
-    Then the Access Control should "Deny" the access
+    Then the Access Control should "Permit" the access
 
-
-
-
-
-
+  Scenario: Invalid policies are rejected
+    Given I send a invalid policy for tenant "511" and subject "833"
+    Then the Access Control returns a "400"

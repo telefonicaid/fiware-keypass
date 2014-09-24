@@ -1,0 +1,3 @@
+<Policy PolicyId="policy04"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+</Policy>
