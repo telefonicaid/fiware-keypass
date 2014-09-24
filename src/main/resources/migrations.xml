@@ -20,13 +20,13 @@
         </createTable>
         <addPrimaryKey columnNames="tenant, id" tableName="Policy"/>
     </changeSet>
-    <changeSet  id="2" author="dmj">
+    <changeSet id="2" author="dmj">
         <createIndex
-                indexName="idx_policy_by_subject_tenant"
+                indexName="idx_policy_by_tenant_subject"
                 tableName="Policy"
-                unique="true">
-            <column name="subject" type="varchar(255)"/>
+                unique="false">
             <column name="tenant" type="varchar(255)"/>
+            <column name="subject" type="varchar(255)"/>
         </createIndex>
     </changeSet>
 </databaseChangeLog>

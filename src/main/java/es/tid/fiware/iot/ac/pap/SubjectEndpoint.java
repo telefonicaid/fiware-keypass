@@ -25,20 +25,21 @@ import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.model.PolicySet;
 import es.tid.fiware.iot.ac.util.Xml;
-import es.tid.fiware.iot.ac.xacml.Extractors;
+import es.tid.fiware.iot.ac.xacml.PDPFactory;
 import io.dropwizard.hibernate.UnitOfWork;
-import java.io.IOException;
-import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.xml.transform.TransformerException;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Manages Policies with a Subject.
@@ -49,7 +50,9 @@ public class SubjectEndpoint {
 
     private PolicyDao dao;
 
-    private AtomicInteger idx = new AtomicInteger();
+    private PDPFactory factory = new PDPFactory();
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubjectEndpoint.class);
 
     public SubjectEndpoint(PolicyDao dao) {
         this.dao = dao;
@@ -90,16 +93,14 @@ public class SubjectEndpoint {
     public Response createPolicy(@Context UriInfo info,
             @PathParam("tenant") String tenant,
             @PathParam("subject") String subject, String policy) {
-        // TODO verify policy XML format
-        // DAO will check uniqueness of policyId within tenant.
-        String policyId;
+        String id;
         try {
-            policyId = Extractors.extractPolicyId(policy);
+            id = factory.create(Xml.toXml(policy)).getId().toString();
         } catch (Exception e) {
+            LOGGER.error("Cannot parse policy: " + e.getMessage());
             return Response.status(400).build();
         }
-        dao.createPolicy(new Policy(policyId, tenant, subject, policy));
-        String id = URLEncoding.encode(policyId);
+        dao.createPolicy(new Policy(id, tenant, subject, policy));
         return Response.created(info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
     }
 

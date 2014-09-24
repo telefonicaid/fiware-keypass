@@ -3,6 +3,7 @@ from uuid import uuid4
 import requests
 from lxml import etree
 import pystache
+from nose.tools import assert_equals
 
 @step('I send a policy creation request to the Access Control for tenant "([^"]*)" and subject "([^"]*)"')
 def sendPolicyCreationRequest(step, tenant, subject):
@@ -12,6 +13,19 @@ def sendPolicyCreationRequest(step, tenant, subject):
   headers = {'content-type': 'application/xml'}
   r = requests.post(url, data=payload, headers=headers)
   world.retrievedRequest = r
+
+@step('I send a invalid policy for tenant "([^"]*)" and subject "([^"]*)"')
+def sendPolicyCreationRequest(step, tenant, subject):
+    url = world.config['targetUrl'] + '/pap/v1/' + tenant + '/subject/' + subject
+    fRequest = open('./requests/invalid-policy.xml', 'r')
+    payload = fRequest.read()
+    headers = {'content-type': 'application/xml'}
+    r = requests.post(url, data=payload, headers=headers)
+    world.retrievedRequest = r
+
+@step('the Access Control returns a "([^"]*)"')
+def checkAccessControlReturnsOkAndId(step, code):
+    assert_equals(int(code), world.retrievedRequest.status_code)
 
 @step('the Access Control returns a "([^"]*)" code and a payload with the ID')
 def checkAccessControlReturnsOkAndId(step, code):
@@ -32,13 +46,23 @@ def sendValidationRequest(step, tenant, subject, frn, action):
   r = requests.post(url, data=payload, headers=headers)
   world.retrievedRequest = r
 
+@step('I send a validation request for tenant "([^"]*)" with subjects "([^"]*)" and "([^"]*)", FRN "([^"]*)" and action "([^"]*)"')
+def sendValidationRequest(step, tenant, subject, subject2, frn, action):
+    url = world.config['targetUrl'] + '/pdp/v3/' + tenant
+    fRequest = open('./requests/request-two-subjects.xml', 'r')
+    payload = pystache.render(fRequest.read(), {'subject': subject, 'subject2': subject2, 'frn': frn, 'action': action})
+    headers = {'content-type': 'application/xml'}
+    r = requests.post(url, data=payload, headers=headers)
+    world.retrievedRequest = r
+
+
 @step('Then the Access Control should "([^"]*)" the access')
 def accessControlDecidesAction(step, decision):
   assert world.retrievedRequest.status_code == 200
   requestXML = etree.XML(world.retrievedRequest.text)
   decisionAC = requestXML.xpath('//t:Decision', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})
   assert len(decisionAC) == 1
-  assert decisionAC[0].text == decision
+  assert_equals(decision, decisionAC[0].text)
 
 @step('I send a remove request for the last request')
 def removeLastRequest(step):
@@ -86,7 +110,7 @@ def testNumberOfPolicies(step, number):
   assert world.requestList.status_code == 200
   listXML = etree.XML(world.requestList.text)
   policies = listXML.xpath('//t:Policy', namespaces={'t': 'urn:oasis:names:tc:xacml:3.0:core:schema:wd-17'})
-  assert len(policies) == int(number)
+  assert_equals(len(policies), int(number))
 
 def getLastRequestId():
   location = world.retrievedRequest.headers.get('Location')

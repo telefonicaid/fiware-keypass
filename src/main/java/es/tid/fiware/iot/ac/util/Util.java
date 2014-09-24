@@ -1,4 +1,4 @@
-package es.tid.fiware.iot.ac.xacml;
+package es.tid.fiware.iot.ac.util;
 
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
@@ -25,8 +25,8 @@ import java.util.Scanner;
 
 public class Util {
 
-    public static String read(String f) {
-        return new Scanner(Util.class.getResourceAsStream(f)).useDelimiter("\\Z").next();
+    public static String read(Class clazz, String f) {
+        return new Scanner(clazz.getResourceAsStream(f)).useDelimiter("\\Z").next();
     }
 
 }

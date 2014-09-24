@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac.xacml;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,36 +22,25 @@ package es.tid.fiware.iot.ac.xacml;
  */
 
 import es.tid.fiware.iot.ac.util.Util;
+import es.tid.fiware.iot.ac.util.Xml;
 import org.testng.annotations.Test;
-
-import java.util.Collection;
+import org.wso2.balana.ParsingException;
+import org.wso2.balana.Policy;
 
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
 
-public class TestExtractors {
-
-    @Test
-    public void testExtractSubjects() throws Exception {
-        String xacmlStr = Util.read(this.getClass(), "policy01_request03.xml");
-        Collection<String> subj = Extractors.extractSubjectIds(xacmlStr);
-        assertEquals(2, subj.size());
-        assertTrue(subj.contains("role12345"));
-        assertTrue(subj.contains("role2"));
-    }
+public class PDPFactoryTest {
 
     @Test
-    public void testExtractDecision() throws Exception {
-        String xacmlStr = Util.read(this.getClass(), "response01.xml");
-        String decision = Extractors.extractDecision(xacmlStr);
-        assertEquals("Permit", decision);
+    public void testCreateValid() throws Exception {
+        Policy p = new PDPFactory().create(Xml.toXml(
+                Util.read(this.getClass(), "policy01.xml")));
+        assertEquals("policy01", p.getId().toString());
     }
 
-    @Test
-    public void testExtractPolicyId() throws Exception {
-        String xacmlStr = Util.read(this.getClass(), "policy01.xml");
-        String policyId = Extractors.extractPolicyId(xacmlStr);
-        assertEquals("policy01", policyId);
+    @Test(expectedExceptions = ParsingException.class)
+    void testCreateInvalid() throws Exception {
+        Policy p = new PDPFactory().create(Xml.toXml(
+                Util.read(this.getClass(), "policy04.xml")));
     }
-
 }
