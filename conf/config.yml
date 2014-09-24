@@ -57,6 +57,16 @@ logging:
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
   level: INFO
 
+  # Logger-specific levels.
+  loggers:
+    "org.hibernate": ERROR
+    "io.dropwizard": ERROR
+    "org.eclipse.jetty": ERROR
+    "com.sun.jersey": ERROR
+    "io.dropwizard.jersey.DropwizardResourceConfig": INFO
+    "org.eclipse.jetty.server.ServerConnector": INFO
+    "io.dropwizard.server.ServerFactory": INFO
+
   appenders:
 
     - type: file
