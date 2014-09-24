@@ -21,6 +21,7 @@ package es.tid.fiware.iot.ac.xacml;
  * under the License.
  */
 
+import es.tid.fiware.iot.ac.util.Util;
 import es.tid.fiware.iot.ac.util.Xml;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -73,7 +74,7 @@ public class TestSamplesXACML {
 
         PDP pdp = createPDP(policies);
 
-        String xacmlRes = pdp.evaluate(Util.read(request));
+        String xacmlRes = pdp.evaluate(Util.read(this.getClass(), request));
 
         assertEquals(decision, Extractors.extractDecision(xacmlRes));
     }
@@ -81,7 +82,7 @@ public class TestSamplesXACML {
     private PDP createPDP(List<String> policiesFiles) throws Exception {
         List<Document> policies = new ArrayList<Document>();
         for (String policyFile : policiesFiles) {
-            policies.add(Xml.toXml(Util.read(policyFile)));
+            policies.add(Xml.toXml(Util.read(this.getClass(), policyFile)));
         }
         return pdpFactory.build(policies);
     }

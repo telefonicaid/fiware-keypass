@@ -21,6 +21,7 @@ package es.tid.fiware.iot.ac.xacml;
  * under the License.
  */
 
+import es.tid.fiware.iot.ac.util.Util;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public class TestExtractors {
 
     @Test
     public void testExtractSubjects() throws Exception {
-        String xacmlStr = Util.read("policy01_request03.xml");
+        String xacmlStr = Util.read(this.getClass(), "policy01_request03.xml");
         Collection<String> subj = Extractors.extractSubjectIds(xacmlStr);
         assertEquals(2, subj.size());
         assertTrue(subj.contains("role12345"));
@@ -41,14 +42,14 @@ public class TestExtractors {
 
     @Test
     public void testExtractDecision() throws Exception {
-        String xacmlStr = Util.read("response01.xml");
+        String xacmlStr = Util.read(this.getClass(), "response01.xml");
         String decision = Extractors.extractDecision(xacmlStr);
         assertEquals("Permit", decision);
     }
 
     @Test
     public void testExtractPolicyId() throws Exception {
-        String xacmlStr = Util.read("policy01.xml");
+        String xacmlStr = Util.read(this.getClass(), "policy01.xml");
         String policyId = Extractors.extractPolicyId(xacmlStr);
         assertEquals("policy01", policyId);
     }
