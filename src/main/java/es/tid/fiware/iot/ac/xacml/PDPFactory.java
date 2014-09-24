@@ -21,14 +21,14 @@ package es.tid.fiware.iot.ac.xacml;
  * under the License.
  */
 
+import es.tid.fiware.iot.ac.util.Util;
 import org.w3c.dom.Document;
-import org.wso2.balana.Balana;
-import org.wso2.balana.PDP;
-import org.wso2.balana.PDPConfig;
+import org.wso2.balana.*;
 import org.wso2.balana.finder.PolicyFinder;
 import org.wso2.balana.finder.PolicyFinderModule;
 import org.wso2.balana.finder.impl.InMemoryPolicyFinderModule;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +36,8 @@ import java.util.Set;
 public class PDPFactory {
 
     private final PDPConfig pdpConfig;
+
+    private static final String sampleRequest = Util.read(PDPFactory.class, "sample-request.xml");
 
     public PDPFactory() {
         Balana balana = Balana.getInstance();
@@ -54,4 +56,26 @@ public class PDPFactory {
                 pdpConfig.getResourceFinder(), false);
         return new PDP(newConfig);
     }
+
+    /**
+     * Builds a Balana Policy object from its XML representation.
+     *
+     * Internally it ensures that the policy is syntactically and semantically
+     * correct.
+     *
+     * @param xml
+     * @return
+     * @throws ParsingException
+     */
+    public Policy create(Document xml) throws ParsingException {
+        // the only way I've found to validate a policy if performing a XACML evaluation
+        PDP pdp = build(Arrays.asList(xml));
+        try {
+            pdp.evaluate(sampleRequest);
+        } catch (Exception e) {
+            throw new ParsingException(e);
+        }
+        return Policy.getInstance(xml.getDocumentElement());
+    }
+
 }
