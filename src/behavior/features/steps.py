@@ -46,6 +46,16 @@ def sendValidationRequest(step, tenant, subject, frn, action):
   r = requests.post(url, data=payload, headers=headers)
   world.retrievedRequest = r
 
+@step('I send a validation request for tenant "([^"]*)" with subjects "([^"]*)" and "([^"]*)", FRN "([^"]*)" and action "([^"]*)"')
+def sendValidationRequest(step, tenant, subject, subject2, frn, action):
+    url = world.config['targetUrl'] + '/pdp/v3/' + tenant
+    fRequest = open('./requests/request-two-subjects.xml', 'r')
+    payload = pystache.render(fRequest.read(), {'subject': subject, 'subject2': subject2, 'frn': frn, 'action': action})
+    headers = {'content-type': 'application/xml'}
+    r = requests.post(url, data=payload, headers=headers)
+    world.retrievedRequest = r
+
+
 @step('Then the Access Control should "([^"]*)" the access')
 def accessControlDecidesAction(step, decision):
   assert world.retrievedRequest.status_code == 200
