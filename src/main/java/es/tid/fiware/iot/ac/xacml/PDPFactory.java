@@ -27,6 +27,7 @@ import org.wso2.balana.PDP;
 import org.wso2.balana.PDPConfig;
 import org.wso2.balana.finder.PolicyFinder;
 import org.wso2.balana.finder.PolicyFinderModule;
+import org.wso2.balana.finder.impl.InMemoryPolicyFinderModule;
 
 import java.util.HashSet;
 import java.util.List;
