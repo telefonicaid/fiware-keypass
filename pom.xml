@@ -204,6 +204,20 @@
                 </mapping>
 
                 <mapping>
+                  <directory>${rpm.home}/doc</directory>
+                  <filemode>775</filemode>
+                  <documentation>true</documentation>
+                  <sources>
+                    <source>
+                      <location>${basedir}</location>
+                      <includes>
+                        <include>*.md</include>
+                      </includes>
+                    </source>
+                  </sources>
+                </mapping>
+
+                <mapping>
                   <directory>${rpm.home}/log</directory>
                   <filemode>775</filemode>
                   <username>keypass</username>
@@ -274,6 +288,40 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>zip</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.4.1</version>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>keypass-assembly</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <inherited>false</inherited>
+                <configuration>
+                  <finalName>keypass-${project.version}</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <attach>true</attach>
+                  <descriptors>
+                    <descriptor>src/assembly/assembly.xml
+                    </descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
 </project>
