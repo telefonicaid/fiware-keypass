@@ -54,11 +54,6 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
     }
 
     @Override
-    public Collection<String> getSubjects(String tenant) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public Policy updatePolicy(Policy policy) {
         String hql = "UPDATE Policy SET policy = :policy "  + 
              "WHERE tenant = :tenant and internalId.id = :id";

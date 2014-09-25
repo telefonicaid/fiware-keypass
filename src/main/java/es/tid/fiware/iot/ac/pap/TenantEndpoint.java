@@ -50,22 +50,8 @@ public class TenantEndpoint {
     @DELETE
     @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant) {
-        // TODO return policies from removed tenant?
         dao.deleteFromTenant(tenant);
         return Response.status(204).build();
     }
 
-
-    /**
-     * Returns all the Subjects.
-     *
-     * @param tenant
-     * @return
-     */
-    @GET
-    @UnitOfWork
-    public Response getSubjects(@PathParam("tenant") String tenant) {
-        // TODO Which format? XML? define it!
-        return Response.status(501).build();
-    }
 }
