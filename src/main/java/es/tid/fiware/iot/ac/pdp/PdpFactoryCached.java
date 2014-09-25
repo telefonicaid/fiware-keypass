@@ -86,7 +86,7 @@ public class PdpFactoryCached implements PdpFactory {
                 // should never happen
                 throw new RuntimeException(e);
             } catch (SAXException e) {
-                // TODO custom exception
+                // TODO custom exception?
                 throw new RuntimeException(e);
             }
         }

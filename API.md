@@ -100,10 +100,6 @@ HTTP/1.1 201 Created
 Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 ```
 
-<!--
-TODO: Add duplicate 409 examples.
- -->
-
 ### Get a policy
 
 ```
