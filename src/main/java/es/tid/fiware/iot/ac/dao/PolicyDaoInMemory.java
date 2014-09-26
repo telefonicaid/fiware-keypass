@@ -68,16 +68,6 @@ public class PolicyDaoInMemory implements PolicyDao {
     }
 
     @Override
-    public Collection<String> getSubjects(String tenant) {
-        Map<String, Map<String, Policy>> subjects = db.get(tenant);
-        if (subjects != null) {
-            return subjects.keySet();
-        } else {
-            return Collections.EMPTY_SET;
-        }
-    }
-
-    @Override
     public Policy updatePolicy(Policy policy) {
         return createPolicy(policy);
     }

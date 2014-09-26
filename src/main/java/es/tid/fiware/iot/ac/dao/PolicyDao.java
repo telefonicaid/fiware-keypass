@@ -32,12 +32,6 @@ public interface PolicyDao {
 
     Collection<Policy> getPolicies(String tenant, String subject);
 
-    /**
-     * Return all the Subjects for a given Tenant.
-     * TODO: paginate?
-     */
-    Collection<String> getSubjects(String tenant);
-
     Policy updatePolicy(Policy policy);
 
     Policy deletePolicy(Policy policy);
