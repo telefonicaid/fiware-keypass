@@ -27,6 +27,8 @@ import io.dropwizard.hibernate.UnitOfWork;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tenant Policy management.
@@ -36,6 +38,7 @@ import javax.ws.rs.core.Response;
 public class TenantEndpoint {
 
     private final PolicyDao dao;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TenantEndpoint.class);
 
     public TenantEndpoint(PolicyDao dao) {
         this.dao = dao;

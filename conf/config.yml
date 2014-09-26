@@ -13,10 +13,10 @@ database:
   driverClass: com.mysql.jdbc.Driver
 
   # the username
-  user: keypass
+  user: root
 
   # the password
-  password: keypass
+  password: temporal
 
   # the JDBC URL
   url: jdbc:mysql://localhost/keypass
@@ -55,7 +55,7 @@ pdpCache:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: DEBUG
 
   # Logger-specific levels.
   loggers:
@@ -83,6 +83,10 @@ logging:
 
       # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
       timeZone: UTC
+      
+      threshold: DEBUG
+      
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | corr=%X{client} | trans=n/a | op=%c{0} | msg=%msg\n"
 
     - type: console
       threshold: INFO

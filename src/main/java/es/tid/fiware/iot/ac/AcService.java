@@ -36,6 +36,8 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.util.EnumSet;
+import javax.servlet.DispatcherType;
 
 public class AcService extends io.dropwizard.Application<AcConfig> {
 
@@ -72,6 +74,7 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
                         configuration.getPdpCacheConfig().getTimeToLiveSeconds(),
                         configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()));
 
+        environment.servlets().addFilter("myFilter", new MDCFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");;
         environment.jersey().register(new TenantEndpoint(dao));
         environment.jersey().register(new SubjectEndpoint(dao));
         environment.jersey().register(new PoliciesEndpoint(dao));
