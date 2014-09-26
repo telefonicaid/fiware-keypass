@@ -22,14 +22,18 @@ package es.tid.fiware.iot.ac.dao;
  */
 
 import es.tid.fiware.iot.ac.model.Policy;
+import es.tid.fiware.iot.ac.pdp.PdpEndpoint;
 import io.dropwizard.hibernate.AbstractDAO;
 import java.util.Collection;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao  {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PolicyDAOHibernate.class);
 
     public PolicyDAOHibernate(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -37,11 +41,17 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy createPolicy(Policy policy) {
+        LOGGER.debug("Persisting policy [" + policy.getId() + "] for subject [" 
+                +  policy.getSubject() + "]");
+        LOGGER.trace("Policy contents:\n" + policy.getPolicy());
         return persist(policy);
     }
 
     @Override
     public Policy loadPolicy(String tenant, String subject, String id) {
+        LOGGER.debug("Getting policy for tenant [" + tenant
+            + "] for subject [" + subject
+            + "] and id [" + id + "]");
         return get(new Policy.PolicyId(tenant, id));
     }
 
@@ -55,6 +65,10 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy updatePolicy(Policy policy) {
+        LOGGER.debug("Updating policy [" + policy.getId() + "] for subject [" 
+            +  policy.getSubject() + "]");
+        LOGGER.trace("Policy contents:\n" + policy.getPolicy());
+
         String hql = "UPDATE Policy SET policy = :policy "  + 
              "WHERE tenant = :tenant and internalId.id = :id";
         
@@ -69,6 +83,10 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy deletePolicy(Policy policy) {
+        LOGGER.debug("Deleting policy [" + policy.getId() + "] for subject [" 
+            +  policy.getSubject() + "]");
+        LOGGER.trace("Policy contents:\n" + policy.getPolicy());
+        
         this.currentSession().delete(policy);
         
         return policy;
@@ -76,6 +94,7 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public void deleteFromTenant(String tenant) {
+        LOGGER.debug("Deleting all the content from tenant [" + tenant + "]");
         String hql = "DELETE FROM Policy "  + 
              "WHERE internalId.tenant = :tenant_id";
         
@@ -86,6 +105,8 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public void deleteFromSubject(String tenant, String subject) {
+        LOGGER.debug("Deleting all the content from tenant [" + tenant + "]"
+                + " and subject [" + subject + "]");
         String hql = "DELETE FROM Policy "  + 
              "WHERE subject = :subject_id";
         

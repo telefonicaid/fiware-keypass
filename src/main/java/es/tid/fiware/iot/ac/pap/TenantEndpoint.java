@@ -53,6 +53,8 @@ public class TenantEndpoint {
     @DELETE
     @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant) {
+        LOGGER.debug("Deleting all the resources for [" +  tenant + "]");
+
         dao.deleteFromTenant(tenant);
         return Response.status(204).build();
     }

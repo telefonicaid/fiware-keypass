@@ -55,7 +55,7 @@ pdpCache:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: DEBUG
+  level: TRACE
 
   # Logger-specific levels.
   loggers:
@@ -84,7 +84,7 @@ logging:
       # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
       timeZone: UTC
       
-      threshold: DEBUG
+      threshold: TRACE
       
       logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | corr=%X{client} | trans=n/a | op=%c{0} | msg=%msg\n"
 

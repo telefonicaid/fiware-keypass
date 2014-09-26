@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PdpFactoryCached implements PdpFactory {
 
@@ -46,6 +48,7 @@ public class PdpFactoryCached implements PdpFactory {
 
     private final PDPFactory pdpFactory = new PDPFactory();
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdpFactoryCached.class);
 
     public PdpFactoryCached(PolicyDao dao, CacheFactory cacheFactory) {
         this.dao = dao;
@@ -72,6 +75,8 @@ public class PdpFactoryCached implements PdpFactory {
     private Collection<Policy> toPolicy(String tenant, Set<String> subjects) {
         Collection<Policy> policies = new ArrayList<Policy>();
         for (String subject : subjects) {
+            LOGGER.debug("Getting policies for subject [" +  subject + "]");
+               
             policies.addAll(dao.getPolicies(tenant, subject));
         }
         return policies;
@@ -81,12 +86,12 @@ public class PdpFactoryCached implements PdpFactory {
         List<Document> docs = new ArrayList<Document>();
         for (Policy p : ps) {
             try {
+                LOGGER.trace("Policy [" + p.getId() + "] for subject [" 
+                        + p.getSubject() + "]:\n" + p.getPolicy());
                 docs.add(Xml.toXml(p.getPolicy()));
             } catch (IOException e) {
-                // should never happen
                 throw new RuntimeException(e);
             } catch (SAXException e) {
-                // TODO custom exception?
                 throw new RuntimeException(e);
             }
         }

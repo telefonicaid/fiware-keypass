@@ -29,15 +29,17 @@ import org.wso2.balana.PDP;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/pdp/v3/{tenant}")
 @Produces(MediaType.APPLICATION_XML)
 public class PdpEndpoint {
 
     private final PdpFactory pdpFactory;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdpEndpoint.class);
 
     public PdpEndpoint(PdpFactory pdpFactory) {
         this.pdpFactory = pdpFactory;
@@ -48,6 +50,8 @@ public class PdpEndpoint {
     @Timed
     public Response enforce(@PathParam("tenant") String tenant,
             String xacmlRequest) {
+
+        LOGGER.debug("Enforcing policies for tenant [" +  tenant + "]");
 
         PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
         return Response.ok(pdp.evaluate(xacmlRequest)).build();
