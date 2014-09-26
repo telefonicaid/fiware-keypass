@@ -3,22 +3,45 @@
 Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
 PDP (Policy Detention Point) capabilities.
 
-# Build
+KeyPass is based mainly on:
+
+* [Balana](https://github.com/wso2/commons/tree/master/balana),
+  a complete implementation of both XACML v2 and v3 specs
+* [Dropwizard](http://dropwizard.io), a framework for developing
+  high-performance, RESTful web services.
+
+In this README document you will find how to get started with the application and
+basic concepts. For a more detailed information you can read the following docs:
+
+* [API](API.md)
+* [Installation guide](INSTALL.md)
+* [Troubleshooting](TROUBLESHOOTING.md)
+
+# Building
+
+Building requires Java 6+ and Maven 3.
 
 ```
 $ mvn package
 ```
 
-Building RPM (needs native `rpmbuild` tool):
+Building RPM (needs native `rpmbuild` installed in your box, tested on MacOSX
+and Redhat Linux. May work on other platforms as well):
 
 ```
 $ mvn -Prpm package
 ```
 
+Building ZIP file
+
+```
+$ mvn -Pzip package
+```
+
 # Running
 
 ```
-$ java -jar target/keypass-0.2.0-SNAPSHOT.jar server configs/in-memory-database.yml
+$ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
 # Usage
@@ -49,10 +72,6 @@ curl -i http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 
 Response will be the previously uploaded policy.
 
-## Retrieve all the policies for a tenant / subject
-
-**Not yet implemented**
-
 ## Evaluate XACML request
 
 ```
@@ -70,10 +89,3 @@ Transfer-Encoding: chunked
 
 <Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"><Result><Decision>Permit</Decision><Status><StatusCode Value="urn:oasis:names:tc:xacml:1.0:status:ok"/></Status></Result></Response>
 ```
-
-# Future work
-
-* First code complete with all functionality implemented
-* Persistence
-* API method: policy validation
-

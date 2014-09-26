@@ -67,7 +67,7 @@ configuring it and adding the drivers.
 
 To configure, change the database driver, JDBC URL and dialect.
 
-``
+```yaml
 driverClass: com.mysql.jdbc.Driver
 
 url: jdbc:mysql://localhost/keypass
