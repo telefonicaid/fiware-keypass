@@ -101,7 +101,7 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public void deleteFromSubject(String tenant, String subject) {
-        LOGGER.debug("Deleting all the content from tenant [" + tenant + "]"
+        LOGGER.debug("Deleting all the content from tenant [{}]"
                 + " and subject [{}]", tenant, subject);
         String hql = "DELETE FROM Policy "  + 
              "WHERE subject = :subject_id";
