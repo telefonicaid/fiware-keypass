@@ -29,7 +29,7 @@ time=15:12:54.743 | lvl=INFO | corr= | trans=n/a | op=ServerFactory | msg=Starti
             __/ |
            |___/
 
- v0.2.0-SNAPSHOT
+ v0.2.0
 
 time=15:12:55.106 | lvl=INFO | corr= | trans=n/a | op=DropwizardResourceConfig | msg=The following paths were found for the configured resources:
 
