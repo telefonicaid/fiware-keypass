@@ -49,8 +49,7 @@ public class PoliciesEndpoint {
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
         
-        Object [] parameters = {policyId, tenant, subject};
-        LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", parameters);
+        LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
         
         String id = URLEncoding.decode(policyId);
 
@@ -69,8 +68,7 @@ public class PoliciesEndpoint {
             @PathParam("policyId") String policyId) {
 
         String id = URLEncoding.decode(policyId);
-        Object [] parameters = {policyId, tenant, subject};        
-        LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", parameters);
+        LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
@@ -88,8 +86,7 @@ public class PoliciesEndpoint {
             @PathParam("policyId") String policyId,
             String policy) {
         
-        Object [] parameters = {policyId, tenant, subject};
-        LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", parameters);
+        LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         String id = URLEncoding.decode(policyId);
 

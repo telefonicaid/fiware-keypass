@@ -47,8 +47,7 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy loadPolicy(String tenant, String subject, String id) {
-        Object [] parameters = {tenant, subject, id};
-        LOGGER.debug("Getting policy for tenant [{}] for subject [{}] and id [{}]", parameters);
+        LOGGER.debug("Getting policy for tenant [{}] for subject [{}] and id [{}]", tenant, subject, id);
         
         return get(new Policy.PolicyId(tenant, id));
     }

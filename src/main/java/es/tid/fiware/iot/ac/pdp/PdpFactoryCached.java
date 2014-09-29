@@ -86,8 +86,7 @@ public class PdpFactoryCached implements PdpFactory {
         List<Document> docs = new ArrayList<Document>();
         for (Policy p : ps) {
             try {
-                Object[] params = {p.getId(), p.getSubject(), p.getPolicy()};
-                LOGGER.trace("Policy [{}] for subject [{}]: {}", params);
+                LOGGER.trace("Policy [{}] for subject [{}]: {}", p.getId(), p.getSubject(), p.getPolicy());
                 docs.add(Xml.toXml(p.getPolicy()));
             } catch (IOException | SAXException e) {
                 throw new RuntimeException(e);
