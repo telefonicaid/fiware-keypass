@@ -24,6 +24,7 @@ package es.tid.fiware.iot.ac.pdp;
 import com.codahale.metrics.annotation.Timed;
 import es.tid.fiware.iot.ac.xacml.Extractors;
 import io.dropwizard.hibernate.UnitOfWork;
+import java.io.IOException;
 import org.wso2.balana.PDP;
 
 import javax.ws.rs.*;
@@ -31,8 +32,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashSet;
 import java.util.Set;
+import javax.xml.xpath.XPathExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 @Path("/pdp/v3/{tenant}")
 @Produces(MediaType.APPLICATION_XML)
@@ -51,7 +54,7 @@ public class PdpEndpoint {
     public Response enforce(@PathParam("tenant") String tenant,
             String xacmlRequest) {
 
-        LOGGER.debug("Enforcing policies for tenant [" +  tenant + "]");
+        LOGGER.debug("Enforcing policies for tenant [{}]", tenant);
 
         PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
         return Response.ok(pdp.evaluate(xacmlRequest)).build();
@@ -61,7 +64,7 @@ public class PdpEndpoint {
             throws WebApplicationException {
         try {
             return new HashSet(Extractors.extractSubjectIds(xacmlRequest));
-        } catch (Exception e) {
+        } catch (XPathExpressionException | IOException | SAXException e) {
             throw new WebApplicationException(400);
         }
     }

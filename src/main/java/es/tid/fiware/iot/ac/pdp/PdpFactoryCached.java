@@ -75,7 +75,7 @@ public class PdpFactoryCached implements PdpFactory {
     private Collection<Policy> toPolicy(String tenant, Set<String> subjects) {
         Collection<Policy> policies = new ArrayList<Policy>();
         for (String subject : subjects) {
-            LOGGER.debug("Getting policies for subject [" +  subject + "]");
+            LOGGER.debug("Getting policies for subject [{}]", subject);
                
             policies.addAll(dao.getPolicies(tenant, subject));
         }
@@ -86,12 +86,10 @@ public class PdpFactoryCached implements PdpFactory {
         List<Document> docs = new ArrayList<Document>();
         for (Policy p : ps) {
             try {
-                LOGGER.trace("Policy [" + p.getId() + "] for subject [" 
-                        + p.getSubject() + "]:\n" + p.getPolicy());
+                Object[] params = {p.getId(), p.getSubject(), p.getPolicy()};
+                LOGGER.trace("Policy [{}] for subject [{}]: {}", params);
                 docs.add(Xml.toXml(p.getPolicy()));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
+            } catch (IOException | SAXException e) {
                 throw new RuntimeException(e);
             }
         }

@@ -29,7 +29,6 @@ import es.tid.fiware.iot.ac.xacml.PDPFactory;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -64,7 +63,7 @@ public class SubjectEndpoint {
     public Response getPolicies(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         try {
-            LOGGER.debug("Getting policies for [" +  tenant + "] and subject [" + subject + "]");
+            LOGGER.debug("Getting policies for [{}] and subject [{}]", tenant, subject);
 
             Collection<Policy> policyList = dao.getPolicies(tenant, subject);
             
@@ -99,7 +98,7 @@ public class SubjectEndpoint {
         String id;
         
         try {
-            LOGGER.debug("Creating policy for tenant [" +  tenant + "] and subject [" + subject + "]");
+            LOGGER.debug("Creating policy for tenant [{}] and subject [{}]", tenant, subject);
             id = factory.create(Xml.toXml(policy)).getId().toString();
         } catch (Exception e) {
             LOGGER.error("Cannot parse policy: " + e.getMessage());
@@ -118,7 +117,7 @@ public class SubjectEndpoint {
     public Response delete(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         
-        LOGGER.debug("Removing all the policies for [" +  tenant + "] and subject[" + subject + "]");
+        LOGGER.debug("Removing all the policies for [{}] and subject[{}]", tenant, subject);
         dao.deleteFromSubject(tenant, subject);
         return Response.status(204).build();
     }
