@@ -19,7 +19,7 @@ and on what ports are listening. Just search for the keyword `AcService` on logs
 files and you will see that information:
 
 ```
-INO  [2014-09-24 16:54:15,172] io.dropwizard.server.ServerFactory: Starting AcService
+time=15:12:54.743 | lvl=INFO | corr= | trans=n/a | op=ServerFactory | msg=Starting AcService
   _  __          _____
  | |/ /         |  __ \
  | ' / ___ _   _| |__) |_ _ ___ ___
@@ -31,7 +31,7 @@ INO  [2014-09-24 16:54:15,172] io.dropwizard.server.ServerFactory: Starting AcSe
 
  v0.2.0-SNAPSHOT
 
-INFO  [2014-09-24 16:54:15,528] io.dropwizard.jersey.DropwizardResourceConfig: The following paths were found for the configured resources:
+time=15:12:55.106 | lvl=INFO | corr= | trans=n/a | op=DropwizardResourceConfig | msg=The following paths were found for the configured resources:
 
     DELETE  /pap/v1/{tenant} (es.tid.fiware.iot.ac.pap.TenantEndpoint)
     DELETE  /pap/v1/{tenant}/subject/{subject} (es.tid.fiware.iot.ac.pap.SubjectEndpoint)
@@ -42,8 +42,8 @@ INFO  [2014-09-24 16:54:15,528] io.dropwizard.jersey.DropwizardResourceConfig: T
     PUT     /pap/v1/{tenant}/subject/{subject}/policy/{policyId} (es.tid.fiware.iot.ac.pap.PoliciesEndpoint)
     POST    /pdp/v3/{tenant} (es.tid.fiware.iot.ac.pdp.PdpEndpoint)
 
-INFO  [2014-09-24 16:54:15,965] org.eclipse.jetty.server.ServerConnector: Started application@246fb611{HTTP/1.1}{0.0.0.0:8080}
-INFO  [2014-09-24 16:54:15,968] org.eclipse.jetty.server.ServerConnector: Started admin@221a28c7{HTTP/1.1}{127.0.0.1:8081}
+time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started application@7e00a490{HTTP/1.1}{0.0.0.0:8080}
+time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started admin@5c342a90{HTTP/1.1}{127.0.0.1:8081}
 ```
 
 ## Database connection errors
@@ -52,7 +52,7 @@ If the database connection is lost for whatever reason, the following error entr
 will appear in the logs.
 
 ```
-ERROR [2014-09-24 13:21:02,099] org.hibernate.engine.jdbc.spi.SqlExceptionHelpr: Communications link failure
+time=15:16:02.360 | lvl=ERROR | corr=5651d7a9-0cc8-475b-8d93-147df97ec62f | trans=n/a | op=SqlExceptionHelper | msg=Communications link failure
 ```
 
 The application tries to reconnect automatically.
@@ -66,7 +66,7 @@ But if for whatever reason you want to debug the details about this error, searc
 the logs for the following message:
 
 ```
-ERROR [2014-09-24 13:20:11,820] es.tid.fiware.iot.ac.pap.SubjectEndpoint: Cannot parse policy:
+time=15:15:02.453 | lvl=ERROR | corr=45a55bc3-3456-47ec-bf97-436f7ed0e71a | trans=n/a | op=SubjectEndpoint | msg=Cannot parse policy: java.lang.NullPointerException
 ```
 
 ## Monitoring API
