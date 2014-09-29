@@ -28,8 +28,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao  {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PolicyDAOHibernate.class);
 
     public PolicyDAOHibernate(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -37,11 +40,15 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy createPolicy(Policy policy) {
+        LOGGER.debug("Persisting policy [{}] for subject [{}]", policy.getId(), policy.getSubject());
+        LOGGER.trace("Policy contents: {}", policy.getPolicy());
         return persist(policy);
     }
 
     @Override
     public Policy loadPolicy(String tenant, String subject, String id) {
+        LOGGER.debug("Getting policy for tenant [{}] for subject [{}] and id [{}]", tenant, subject, id);
+        
         return get(new Policy.PolicyId(tenant, id));
     }
 
@@ -55,6 +62,9 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy updatePolicy(Policy policy) {
+        LOGGER.debug("Updating policy [{}] for subject [{}]", policy.getId(), policy.getSubject());
+        LOGGER.trace("Policy contents: {}", policy.getPolicy());
+
         String hql = "UPDATE Policy SET policy = :policy "  + 
              "WHERE tenant = :tenant and internalId.id = :id";
         
@@ -69,6 +79,9 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public Policy deletePolicy(Policy policy) {
+        LOGGER.debug("Deleting policy [{}] for subject [{}]", policy.getId(), policy.getSubject());
+        LOGGER.trace("Policy contents: {}", policy.getPolicy());
+        
         this.currentSession().delete(policy);
         
         return policy;
@@ -76,6 +89,7 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public void deleteFromTenant(String tenant) {
+        LOGGER.debug("Deleting all the content from tenant [{}]", tenant);
         String hql = "DELETE FROM Policy "  + 
              "WHERE internalId.tenant = :tenant_id";
         
@@ -86,6 +100,8 @@ public class PolicyDAOHibernate extends AbstractDAO<Policy> implements PolicyDao
 
     @Override
     public void deleteFromSubject(String tenant, String subject) {
+        LOGGER.debug("Deleting all the content from tenant [{}]"
+                + " and subject [{}]", tenant, subject);
         String hql = "DELETE FROM Policy "  + 
              "WHERE subject = :subject_id";
         

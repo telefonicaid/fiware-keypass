@@ -83,6 +83,10 @@ logging:
 
       # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
       timeZone: UTC
+      
+      threshold: INFO
+      
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | corr=%X{client} | trans=n/a | op=%c{0} | msg=%msg\n"
 
     - type: console
       threshold: INFO

@@ -28,10 +28,14 @@ import io.dropwizard.hibernate.UnitOfWork;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/pap/v1/{tenant}/subject/{subject}/policy/{policyId}")
 @Produces(MediaType.APPLICATION_XML)
 public class PoliciesEndpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoliciesEndpoint.class);
 
     private PolicyDao dao;
 
@@ -44,7 +48,9 @@ public class PoliciesEndpoint {
     public Response getPolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
-
+        
+        LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
+        
         String id = URLEncoding.decode(policyId);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
@@ -62,6 +68,7 @@ public class PoliciesEndpoint {
             @PathParam("policyId") String policyId) {
 
         String id = URLEncoding.decode(policyId);
+        LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
@@ -78,6 +85,8 @@ public class PoliciesEndpoint {
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId,
             String policy) {
+        
+        LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         String id = URLEncoding.decode(policyId);
 

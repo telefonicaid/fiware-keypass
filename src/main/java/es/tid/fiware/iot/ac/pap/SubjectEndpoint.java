@@ -63,6 +63,8 @@ public class SubjectEndpoint {
     public Response getPolicies(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
         try {
+            LOGGER.debug("Getting policies for [{}] and subject [{}]", tenant, subject);
+
             Collection<Policy> policyList = dao.getPolicies(tenant, subject);
             
             PolicySet ps = new PolicySet(tenant + ":" + subject, policyList);
@@ -94,12 +96,15 @@ public class SubjectEndpoint {
             @PathParam("tenant") String tenant,
             @PathParam("subject") String subject, String policy) {
         String id;
+        
         try {
+            LOGGER.debug("Creating policy for tenant [{}] and subject [{}]", tenant, subject);
             id = factory.create(Xml.toXml(policy)).getId().toString();
         } catch (Exception e) {
             LOGGER.error("Cannot parse policy: " + e.getMessage());
             return Response.status(400).build();
-        }
+        } 
+        
         dao.createPolicy(new Policy(id, tenant, subject, policy));
         return Response.created(info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
     }
@@ -111,6 +116,8 @@ public class SubjectEndpoint {
     @UnitOfWork
     public Response delete(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject) {
+        
+        LOGGER.debug("Removing all the policies for [{}] and subject[{}]", tenant, subject);
         dao.deleteFromSubject(tenant, subject);
         return Response.status(204).build();
     }
