@@ -1,27 +1,41 @@
 package es.tid.fiware.iot.ac.pap;
+
 /*
- * Telefónica Digital - Product Development and Innovation
+ * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
- * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
- * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
- *
- * Copyright (c) Telefónica Investigación y Desarrollo S.A.U.
- * All rights reserved.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
+import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Path("/pap/v1/{tenant}/{subject}")
+@Path("/pap/v1/{tenant}/subject/{subject}/policy/{policyId}")
 @Produces(MediaType.APPLICATION_XML)
 public class PoliciesEndpoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PoliciesEndpoint.class);
 
     private PolicyDao dao;
 
@@ -30,31 +44,16 @@ public class PoliciesEndpoint {
     }
 
     @GET
-    public Response getPolicies(@DefaultValue("20") @QueryParam("size") int size,
-            @DefaultValue("0") @QueryParam("offset") int offset,
-            @PathParam("tenant") String tenant,
-            @PathParam("subject") String subject) {
-        // TODO
-        return Response.status(501).build();
-    }
-
-    @POST
-    public Response createPolicy(@Context UriInfo info,
-             @PathParam("tenant") String tenant,
-             @PathParam("subject") String subject, String policy) {
-        Policy p = dao.create(tenant, subject, policy);
-        return Response.created(info.getAbsolutePathBuilder().path(p.getId()).build()).build();
-    }
-
-    @GET
-    @Path("{id}")
-    public Response getPolicy(@DefaultValue("20") @QueryParam("size") int size,
-            @DefaultValue("0") @QueryParam("offset") int offset,
-            @PathParam("tenant") String tenant,
+    @UnitOfWork
+    public Response getPolicy(@PathParam("tenant") String tenant,
             @PathParam("subject") String subject,
-            @PathParam("id") String id) {
+            @PathParam("policyId") String policyId) {
+        
+        LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
+        
+        String id = URLEncoding.decode(policyId);
 
-        Policy p = dao.get(tenant, subject, id);
+        Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
             return Response.ok(p.getPolicy()).build();
         } else {
@@ -62,5 +61,41 @@ public class PoliciesEndpoint {
         }
     }
 
+    @DELETE
+    @UnitOfWork
+    public Response deletePolicy(@PathParam("tenant") String tenant,
+            @PathParam("subject") String subject,
+            @PathParam("policyId") String policyId) {
 
+        String id = URLEncoding.decode(policyId);
+        LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
+
+        Policy p = dao.loadPolicy(tenant, subject, id);
+        if (p != null) {
+            dao.deletePolicy(p);
+            return Response.ok(p.getPolicy()).build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
+
+    @PUT
+    @UnitOfWork
+    public Response updatePolicy(@PathParam("tenant") String tenant,
+            @PathParam("subject") String subject,
+            @PathParam("policyId") String policyId,
+            String policy) {
+        
+        LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
+
+        String id = URLEncoding.decode(policyId);
+
+        Policy p = dao.loadPolicy(tenant, subject, id);
+        if (p != null) {
+            Policy newP = dao.updatePolicy(new Policy(id, tenant, subject, policy));
+            return Response.ok(newP.getPolicy()).build();
+        } else {
+            return Response.status(404).build();
+        }
+    }
 }

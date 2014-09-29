@@ -1,6 +1,6 @@
 <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
     http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
-        PolicyId="urn:oasis:names:tc:xacml:2.0:conformance-test:IIIA001:policy"
+        PolicyId="policy01"
         RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit"
         Version="1.0" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -15,14 +15,14 @@
           <AttributeDesignator
               AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
               DataType="http://www.w3.org/2001/XMLSchema#string"
-              MustBePresent="false"
+              MustBePresent="true"
               Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" />
         </Match>
       </AllOf>
     </AnyOf>
   </Target>
 
-  <Rule RuleId="urn:oasis:names:tc:xacml:2.0:conformance-test:IIIA001:rule1" Effect="Permit">
+  <Rule RuleId="policy01rule01" Effect="Permit">
 
     <Condition>
       <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">

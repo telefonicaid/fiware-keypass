@@ -1,5 +1,7 @@
 *.class
 
+log
+
 # Package Files
 *.jar
 *.war
@@ -18,3 +20,6 @@ dist/
 *.iml
 *.iws
 *.idea
+
+nbactions.xml
+nb-configuration.xml

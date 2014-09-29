@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="dmj">
+        <createTable tableName="Policy">
+            <column name="id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tenant" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject" type="varchar(255)">
+                <constraints nullable="false"/>                
+            </column>
+            <column name="policy" type="MEDIUMTEXT"/>
+        </createTable>
+        <addPrimaryKey columnNames="tenant, id" tableName="Policy"/>
+    </changeSet>
+    <changeSet id="2" author="dmj">
+        <createIndex
+                indexName="idx_policy_by_tenant_subject"
+                tableName="Policy"
+                unique="false">
+            <column name="tenant" type="varchar(255)"/>
+            <column name="subject" type="varchar(255)"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

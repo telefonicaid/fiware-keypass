@@ -1,61 +1,72 @@
 package es.tid.fiware.iot.ac.pdp;
+
 /*
- * Telefónica Digital - Product Development and Innovation
+ * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
  *
- * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
- * EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
- *
- * Copyright (c) Telefónica Investigación y Desarrollo S.A.U.
- * All rights reserved.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
-import es.tid.fiware.iot.ac.dao.PolicyDao;
-import es.tid.fiware.iot.ac.model.Policy;
-import es.tid.fiware.iot.ac.util.Xml;
-import es.tid.fiware.iot.ac.xacml.PDPFactory;
-import org.w3c.dom.Document;
+import com.codahale.metrics.annotation.Timed;
+import es.tid.fiware.iot.ac.xacml.Extractors;
+import io.dropwizard.hibernate.UnitOfWork;
+import java.io.IOException;
 import org.wso2.balana.PDP;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import javax.xml.xpath.XPathExpressionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 @Path("/pdp/v3/{tenant}")
 @Produces(MediaType.APPLICATION_XML)
 public class PdpEndpoint {
 
-    private PolicyDao dao;
-    private PDPFactory pdpFactory = new PDPFactory();
+    private final PdpFactory pdpFactory;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdpEndpoint.class);
 
-    public PdpEndpoint(PolicyDao dao) {
-        this.dao = dao;
+    public PdpEndpoint(PdpFactory pdpFactory) {
+        this.pdpFactory = pdpFactory;
     }
 
     @POST
+    @UnitOfWork
+    @Timed
     public Response enforce(@PathParam("tenant") String tenant,
-            String XacmlRequest) {
+            String xacmlRequest) {
 
-        Collection<Policy> policies = dao.listAll(tenant);
+        LOGGER.debug("Enforcing policies for tenant [{}]", tenant);
 
-        List<Document> xmlPolicies = toDocument(policies);
-
-        PDP pdp = pdpFactory.build(xmlPolicies);
-
-        return Response.ok(pdp.evaluate(XacmlRequest)).build();
+        PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
+        return Response.ok(pdp.evaluate(xacmlRequest)).build();
     }
 
-    private List<Document> toDocument(Collection<Policy> ps) {
-        List<Document> docs = new ArrayList<Document>();
-        for (Policy p : ps) {
-            docs.add(Xml.toXml(p.getPolicy()));
+    private Set<String> extractSubjectIds(String xacmlRequest)
+            throws WebApplicationException {
+        try {
+            return new HashSet(Extractors.extractSubjectIds(xacmlRequest));
+        } catch (XPathExpressionException | IOException | SAXException e) {
+            throw new WebApplicationException(400);
         }
-        return docs;
     }
+
 }

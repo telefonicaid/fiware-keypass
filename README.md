@@ -1,21 +1,47 @@
 # FIWARE-KeyPass
 
-AccessControl prototype.
+Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
+PDP (Policy Detention Point) capabilities.
 
-**ALPHA project**: Many features may not work as expected, the API may change
-without previous notice, the persistence is stored in memory (so all policies
-will be lost after server restart).
+KeyPass is based mainly on:
 
-# Build
+* [Balana](https://github.com/wso2/commons/tree/master/balana),
+  a complete implementation of both XACML v2 and v3 specs
+* [Dropwizard](http://dropwizard.io), a framework for developing
+  high-performance, RESTful web services.
+
+In this README document you will find how to get started with the application and
+basic concepts. For a more detailed information you can read the following docs:
+
+* [API](API.md)
+* [Installation guide](INSTALL.md)
+* [Troubleshooting](TROUBLESHOOTING.md)
+
+# Building
+
+Building requires Java 6+ and Maven 3.
 
 ```
 $ mvn package
 ```
 
+Building RPM (needs native `rpmbuild` installed in your box, tested on MacOSX
+and Redhat Linux. May work on other platforms as well):
+
+```
+$ mvn -Prpm package
+```
+
+Building ZIP file
+
+```
+$ mvn -Pzip package
+```
+
 # Running
 
 ```
-$ java -jar target/keypass-0.1.0.jar server configs/in-memory-database.yml
+$ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
 # Usage
@@ -24,8 +50,8 @@ $ java -jar target/keypass-0.1.0.jar server configs/in-memory-database.yml
 
 ```
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
-    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01.xml \
-    http://localhost:8080/pap/v1/myOwnTenant/aRoleId
+    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy03.xml \
+    http://localhost:8080/pap/v1/myTenant/subject/role12345
 ```
 
 Response should be something like this:
@@ -33,7 +59,7 @@ Response should be something like this:
 ```
 HTTP/1.1 201 Created
 Date: Mon, 15 Sep 2014 20:02:35 GMT
-Location: http://localhost:8080/pap/v1/myOwnTenant/aRoleId/1
+Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 Content-Type: application/xml
 Content-Length: 0
 ```
@@ -41,21 +67,17 @@ Content-Length: 0
 ## Retrieve a policy
 
 ```
-curl -i http://localhost:8080/pap/v1/myOwnTenant/aRoleId/1
+curl -i http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
 ```
 
 Response will be the previously uploaded policy.
-
-## Retrieve all the policies for a tenant / subject
-
-**Not yet implemented**
 
 ## Evaluate XACML request
 
 ```
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
     -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01_request01.xml \
-    http://localhost:8080/pdp/v3/myOwnTenant
+    http://localhost:8080/pdp/v3/myTenant
 ```
 Response:
 
@@ -67,10 +89,3 @@ Transfer-Encoding: chunked
 
 <Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"><Result><Decision>Permit</Decision><Status><StatusCode Value="urn:oasis:names:tc:xacml:1.0:status:ok"/></Status></Result></Response>
 ```
-
-# Future work
-
-* First code complete with all functionality implemented
-* Persistence
-* API method: policy validation
-
