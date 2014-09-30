@@ -22,6 +22,7 @@ package es.tid.fiware.iot.ac.pdp;
  */
 
 import com.codahale.metrics.annotation.Timed;
+import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.xacml.Extractors;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
@@ -37,7 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
-@Path("/pdp/v3/{tenant}")
+@Path("/pdp/v3")
 @Produces(MediaType.APPLICATION_XML)
 public class PdpEndpoint {
 
@@ -51,10 +52,11 @@ public class PdpEndpoint {
     @POST
     @UnitOfWork
     @Timed
-    public Response enforce(@PathParam("tenant") String tenant,
+    public Response enforce(@Tenant String tenant,
             String xacmlRequest) {
 
         LOGGER.debug("Enforcing policies for tenant [{}]", tenant);
+        LOGGER.trace("XACML Request: {}", xacmlRequest);
 
         PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
         return Response.ok(pdp.evaluate(xacmlRequest)).build();
