@@ -37,7 +37,7 @@
         <include>*.jar</include>
       </includes>
       <excludes>
-        <exclude>original*</exclude>
+        <exclude>**/original-*</exclude>
       </excludes>
     </fileSet>
 
@@ -62,6 +62,7 @@
       <outputDirectory>/behavior</outputDirectory>
       <excludes>
         <exclude>VENV/**</exclude>
+        <exclude>**/*.pyc</exclude>
       </excludes>
     </fileSet>
 
