@@ -24,11 +24,16 @@ package es.tid.fiware.iot.ac;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class AcConfig extends Configuration {
+
+    @NotEmpty
+    @JsonProperty("tenantHeader")
+    private String tenantHeader;
 
     @Valid
     @NotNull
@@ -39,6 +44,10 @@ public class AcConfig extends Configuration {
     @JsonProperty("pdpCache")
     private CacheConfig pdpCacheConfig = new CacheConfig();
 
+    public String getTenantHeader() {
+        return tenantHeader;
+    }
+
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
@@ -47,4 +56,15 @@ public class AcConfig extends Configuration {
         return pdpCacheConfig;
     }
 
+    public void setTenantHeader(String tenantHeader) {
+        this.tenantHeader = tenantHeader;
+    }
+
+    public void setDatabase(DataSourceFactory database) {
+        this.database = database;
+    }
+
+    public void setPdpCacheConfig(CacheConfig pdpCacheConfig) {
+        this.pdpCacheConfig = pdpCacheConfig;
+    }
 }

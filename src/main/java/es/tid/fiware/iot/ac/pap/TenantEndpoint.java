@@ -22,6 +22,7 @@ package es.tid.fiware.iot.ac.pap;
  */
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
+import es.tid.fiware.iot.ac.rs.Tenant;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -33,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Tenant Policy management.
  */
-@Path("/pap/v1/{tenant}")
+@Path("/pap/v1")
 @Produces(MediaType.APPLICATION_XML)
 public class TenantEndpoint {
 
@@ -52,7 +53,7 @@ public class TenantEndpoint {
      */
     @DELETE
     @UnitOfWork
-    public Response delete(@PathParam("tenant") String tenant) {
+    public Response delete(@Tenant String tenant) {
         LOGGER.debug("Deleting all the resources for [{}]", tenant);
 
         dao.deleteFromTenant(tenant);
