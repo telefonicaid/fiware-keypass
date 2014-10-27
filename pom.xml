@@ -278,7 +278,7 @@
                 </script>
               </preremoveScriptlet>
               <requires>
-                <require>java &gt; 1.6</require>
+                <require>java &gt; 1.7</require>
               </requires>
             </configuration>
             <executions>
