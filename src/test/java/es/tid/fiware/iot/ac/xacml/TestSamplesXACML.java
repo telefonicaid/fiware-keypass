@@ -63,6 +63,14 @@ public class TestSamplesXACML {
 
                 { "Policy with resource target",
                   Arrays.asList("policy03.xml"),
+                  "policy01_request01.xml", "Permit" },
+
+                { "Policy with several actions permitted",
+                  Arrays.asList("policy05.xml"),
+                  "policy01_request01.xml", "Permit" },
+
+                { "Policy with any action permitted",
+                  Arrays.asList("policy06.xml"),
                   "policy01_request01.xml", "Permit" }
 
         };
