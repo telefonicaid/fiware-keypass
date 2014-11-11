@@ -26,6 +26,9 @@ import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.xacml.Extractors;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
+
+import org.hibernate.CacheMode;
+import org.hibernate.FlushMode;
 import org.wso2.balana.PDP;
 
 import javax.ws.rs.*;
@@ -50,7 +53,8 @@ public class PdpEndpoint {
     }
 
     @POST
-    @UnitOfWork
+    @UnitOfWork(readOnly = true, transactional = false,
+            cacheMode = CacheMode.GET, flushMode = FlushMode.MANUAL)
     @Timed
     public Response enforce(@Tenant String tenant,
             String xacmlRequest) {

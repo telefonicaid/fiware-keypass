@@ -37,23 +37,26 @@ import java.util.List;
  */
 public class Extractors {
 
-    private static XPath xpath = XPathFactory.newInstance().newXPath();
+    // XPath is not thread safe: <http://stackoverflow.com/a/3442674/1035380>
 
-    private static XPathExpression sujectIdsExp =
-            buildExp("//*[@AttributeId='urn:oasis:names:tc:xacml:1.0:subject:subject-id']/*[local-name()='AttributeValue']");
+    private static XPathExpression decisionExp() {
+        return buildExp("//*[local-name()='Decision']/text()");
+    }
 
-    private static XPathExpression decisionExp =
-            buildExp("//*[local-name()='Decision']/text()");
+    private static XPathExpression sujectIdsExp() {
+        return buildExp("//*[@AttributeId='urn:oasis:names:tc:xacml:1.0:subject:subject-id']/*[local-name()='AttributeValue']");
+    }
 
-    private static XPathExpression policyIdExp =
-            buildExp("//*[local-name()='Policy']/@PolicyId");
+    private static XPathExpression policyIdExp() {
+        return buildExp("//*[local-name()='Policy']/@PolicyId");
+    }
 
     public static Collection<String> extractSubjectIds(String xacmlRequest)
             throws XPathExpressionException, IOException, SAXException {
 
         Document xacml = Xml.toXml(xacmlRequest);
 
-        NodeList nodes = (NodeList) sujectIdsExp.evaluate(xacml,
+        NodeList nodes = (NodeList) sujectIdsExp().evaluate(xacml,
                 XPathConstants.NODESET);
 
         List<String> subjects = new ArrayList<String>();
@@ -66,17 +69,17 @@ public class Extractors {
 
     public static String extractDecision(String xacmlRes)
             throws XPathExpressionException, IOException, SAXException {
-        return decisionExp.evaluate(Xml.toXml(xacmlRes));
+        return decisionExp().evaluate(Xml.toXml(xacmlRes));
     }
 
     public static String extractPolicyId(String xacmlPolicy)
             throws XPathExpressionException, IOException, SAXException {
-        return policyIdExp.evaluate(Xml.toXml(xacmlPolicy));
+        return policyIdExp().evaluate(Xml.toXml(xacmlPolicy));
     }
 
     private static XPathExpression buildExp(String exp) {
         try {
-            return xpath.compile(exp);
+            return XPathFactory.newInstance().newXPath().compile(exp);
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }
