@@ -41,9 +41,9 @@ import javax.xml.transform.stream.StreamResult;
 
 public class Xml {
 
-    private static DocumentBuilder db = createDocumentBuilder();
+    // DocumentBuilder is not thread safe: <http://stackoverflow.com/a/3442674/1035380>
 
-    private static DocumentBuilder createDocumentBuilder() {
+    private static DocumentBuilder db() {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setIgnoringComments(true);
         factory.setNamespaceAware(true);
@@ -64,10 +64,10 @@ public class Xml {
     }
     
     public static Document toXml(String str) throws IOException, SAXException {
-        return db.parse(new InputSource(new StringReader(str)));
+        return db().parse(new InputSource(new StringReader(str)));
     }
 
     public static Document newDocument() {
-        return db.newDocument();
+        return db().newDocument();
     }
 }

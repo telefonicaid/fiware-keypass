@@ -24,19 +24,18 @@ package es.tid.fiware.iot.ac.pap;
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.model.PolicySet;
+import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.PDPFactory;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.wso2.balana.ParsingException;
 import org.xml.sax.SAXException;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Collection;
@@ -44,7 +43,7 @@ import java.util.Collection;
 /**
  * Manages Policies with a Subject.
  */
-@Path("/pap/v1/{tenant}/subject/{subject}")
+@Path("/pap/v1/subject/{subject}")
 @Produces(MediaType.APPLICATION_XML)
 public class SubjectEndpoint {
 
@@ -60,7 +59,7 @@ public class SubjectEndpoint {
 
     @GET
     @UnitOfWork
-    public Response getPolicies(@PathParam("tenant") String tenant,
+    public Response getPolicies(@Tenant String tenant,
             @PathParam("subject") String subject) {
         try {
             LOGGER.debug("Getting policies for [{}] and subject [{}]", tenant, subject);
@@ -71,14 +70,9 @@ public class SubjectEndpoint {
             Document setDocument = ps.toXml();
             String result = Xml.toString(setDocument);
             return Response.ok(result).build();
-        } catch (IOException ex) {
-            return Response.status(500).build();
-        } catch (SAXException ex) {
-            return Response.status(500).build();
-        } catch (TransformerException ex) {
+        } catch (IOException | SAXException | TransformerException ex) {
             return Response.status(500).build();
         }
-        
     }
 
     /**
@@ -93,20 +87,22 @@ public class SubjectEndpoint {
     @POST
     @UnitOfWork
     public Response createPolicy(@Context UriInfo info,
-            @PathParam("tenant") String tenant,
+            @Tenant String tenant,
             @PathParam("subject") String subject, String policy) {
         String id;
         
         try {
             LOGGER.debug("Creating policy for tenant [{}] and subject [{}]", tenant, subject);
-            id = factory.create(Xml.toXml(policy)).getId().toString();
-        } catch (Exception e) {
+            id = URLEncoding.encode(
+                    factory.create(Xml.toXml(policy)).getId().toString());
+        } catch (SAXException | IOException | ParsingException e) {
             LOGGER.error("Cannot parse policy: " + e.getMessage());
             return Response.status(400).build();
-        } 
-        
+        }
+
         dao.createPolicy(new Policy(id, tenant, subject, policy));
-        return Response.created(info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
+        return Response.created(
+                info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
     }
 
     /**
@@ -114,10 +110,11 @@ public class SubjectEndpoint {
      */
     @DELETE
     @UnitOfWork
-    public Response delete(@PathParam("tenant") String tenant,
+    public Response delete(@Tenant String tenant,
             @PathParam("subject") String subject) {
         
-        LOGGER.debug("Removing all the policies for [{}] and subject[{}]", tenant, subject);
+        LOGGER.debug("Removing all the policies for tenant [{}] and subject [{}]", 
+                tenant, subject);
         dao.deleteFromSubject(tenant, subject);
         return Response.status(204).build();
     }

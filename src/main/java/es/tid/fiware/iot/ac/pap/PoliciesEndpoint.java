@@ -23,6 +23,7 @@ package es.tid.fiware.iot.ac.pap;
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
+import es.tid.fiware.iot.ac.rs.Tenant;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/pap/v1/{tenant}/subject/{subject}/policy/{policyId}")
+@Path("/pap/v1/subject/{subject}/policy/{policyId}")
 @Produces(MediaType.APPLICATION_XML)
 public class PoliciesEndpoint {
 
@@ -45,7 +46,7 @@ public class PoliciesEndpoint {
 
     @GET
     @UnitOfWork
-    public Response getPolicy(@PathParam("tenant") String tenant,
+    public Response getPolicy(@Tenant String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
         
@@ -63,7 +64,7 @@ public class PoliciesEndpoint {
 
     @DELETE
     @UnitOfWork
-    public Response deletePolicy(@PathParam("tenant") String tenant,
+    public Response deletePolicy(@Tenant String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId) {
 
@@ -81,7 +82,7 @@ public class PoliciesEndpoint {
 
     @PUT
     @UnitOfWork
-    public Response updatePolicy(@PathParam("tenant") String tenant,
+    public Response updatePolicy(@Tenant String tenant,
             @PathParam("subject") String subject,
             @PathParam("policyId") String policyId,
             String policy) {

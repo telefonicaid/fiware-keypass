@@ -5,6 +5,10 @@
 Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
 PDP (Policy Detention Point) capabilities.
 
+Tenancy is defined by means of an HTTP header. Default configuration uses
+`Fiware-Service` as the tenant header name, but it can be easily changed
+modifying it in the config file.
+
 The PDP endpoint will evaluate the Policies for the subjects contained in a
 XACML request. This is a design decision took by Keypass in order to simplify
 how the application is used.
@@ -30,7 +34,8 @@ they are not resources _per se_.
 ### Create or update a policy
 
 ```
-POST /pap/v1/:tenant/subject/:subjectId
+POST /pap/v1/subject/:subjectId
+<TENANT-HEADER>:<tenant>
 
 <Policy/>
 ```
@@ -44,9 +49,10 @@ replaced (updated) with the new policy.
 Examples:
 
 ```HTTP
-POST /pap/v1/myTenant/subject/role12345 HTTP/1.1
+POST /pap/v1/subject/role12345 HTTP/1.1
 Content-type: application/xml
 Accept: application/xml
+Fiware-Service: myTenant
 
 <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
     http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
@@ -97,13 +103,14 @@ Response
 
 ```HTTP
 HTTP/1.1 201 Created
-Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
+Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy03
 ```
 
 ### Get a policy
 
 ```
-GET /pap/v1/:tenant/subject/:subjectId/policy/:policyId
+GET /pap/v1/subject/:subjectId/policy/:policyId
+<TENANT-HEADER>:<tenant>
 ```
 
 Retrieves an existing policy. Returns `404` if the policy does not exist. Please
@@ -112,7 +119,8 @@ note that `404` is returned also if the Tenant or Subject does not exists.
 Example:
 
 ```
-GET http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
+GET http://localhost:8080/pap/v1/subject/role12345/policy/policy03
+Fiware-Service: myTenant
 ```
 
 Response
@@ -169,7 +177,8 @@ Content-Type: application/xml
 ### Delete a policy
 
 ```
-DELETE /pap/v1/:tenant/subject/:subjectId/policy/:policyId
+DELETE /pap/v1/subject/:subjectId/policy/:policyId
+<TENANT-HEADER>:<tenant>
 ```
 
 Removes a policy. If removed successfully, returns the removed policy. In case
@@ -179,7 +188,8 @@ the policy does not exists, returns `404`.
 Example:
 
 ```
-DELETE http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
+DELETE http://localhost:8080/pap/v1/subject/role12345/policy/policy03
+Fiware-Service: myTenant
 ```
 
 Response
@@ -236,7 +246,8 @@ Content-Type: application/xml
 ### Get subject policies
 
 ```
-GET /pap/v1/:tenant/subject/:subjectId
+GET /pap/v1/subject/:subjectId
+<TENANT-HEADER>:<tenant>
 ```
 
 Retrieves all the policies of a given subject as PolicySet element. If there
@@ -248,7 +259,8 @@ policies.
 Exmple:
 
 ```
-GET http://localhost:8080/pap/v1/myTenant/subject/role12345
+GET http://localhost:8080/pap/v1/subject/role12345
+Fiware-Service: myTenant
 ```
 
 Response
@@ -263,7 +275,8 @@ Content-Type: application/xml
 ### Delete subject policies
 
 ```
-DELETE /pap/v1/:tenant/subject/:subjectId
+DELETE /pap/v1/subject/:subjectId
+<TENANT-HEADER>:<tenant>
 ```
 
 Convenience method to remove all the policies of the subject. Will return `204`
@@ -273,7 +286,8 @@ a subject is not a resource from the Keypass point of view).
 Example:
 
 ```
-DELETE http://localhost:8080/pap/v1/myTenant/subject/role12345
+DELETE http://localhost:8080/pap/v1/subject/role12345
+Fiware-Service: myTenant
 ```
 
 Response
@@ -285,7 +299,8 @@ HTTP/1.1 204 No Content
 ### Delete tenant policies
 
 ```
-DELETE /pap/v1/:tenant
+DELETE /pap/v1
+<TENANT-HEADER>:<tenant>
 ```
 
 Convenience method to remove all the policies of the given tenant. As previous
@@ -294,7 +309,8 @@ method, returns `204` always.
 Example:
 
 ```
-DELETE http://localhost:8080/pap/v1/myTenant
+DELETE http://localhost:8080/pap/v1
+Fiware-Service: myTenant
 ```
 
 Response
@@ -307,7 +323,8 @@ HTTP/1.1 204 No Content
 ## PDP API
 
 ```
-POST /pdp/v3/:tenant
+POST /pdp/v3
+<TENANT-HEADER>:<tenant>
 
 <xacmlRequest/>
 ```
@@ -319,7 +336,8 @@ with Decision `NotApplicable`.
 Example:
 
 ```HTTP
-POST /pdp/v3/myTenant
+POST /pdp/v3
+Fiware-Service: myTenant
 Content-type: application/xml
 Accept: application/xml
 
