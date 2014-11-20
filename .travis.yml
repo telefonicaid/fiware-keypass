@@ -1,0 +1,9 @@
+language: java
+install:
+  - sudo apt-get update
+  - DEBIAN_FRONTEND=noninteractive sudo apt-get install -y rpm
+script:
+  - mvn -Pzip,rpm package
+jdk:
+  - oraclejdk7
+
