@@ -60,7 +60,7 @@ Response should be something like this:
 ```
 HTTP/1.1 201 Created
 Date: Mon, 15 Sep 2014 20:02:35 GMT
-Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
+Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy03
 Content-Type: application/xml
 Content-Length: 0
 ```
