@@ -115,8 +115,13 @@ public class SubjectEndpoint {
         
         LOGGER.debug("Removing all the policies for tenant [{}] and subject [{}]", 
                 tenant, subject);
-        dao.deleteFromSubject(tenant, subject);
-        return Response.status(204).build();
+        Collection<Policy> policyList = dao.getPolicies(tenant, subject);
+        if (policyList.size() > 0) {
+            dao.deleteFromSubject(tenant, subject);
+            return Response.status(204).build();
+        } else {
+            return Response.status(404).build();
+        }
     }
 
 }
