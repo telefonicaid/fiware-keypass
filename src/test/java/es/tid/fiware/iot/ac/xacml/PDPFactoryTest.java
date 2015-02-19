@@ -39,9 +39,19 @@ public class PDPFactoryTest {
         assertEquals("policy01", p.getId().toString());
     }
 
+    @Test
+    public void testCreateValid2() throws Exception {
+    AbstractPolicy p = new PDPFactory().create(Xml.toXml(
+                Util.read(this.getClass(), "policyset01.xml")));
+        assertEquals("policyset01", p.getId().toString());
+    }
+
     @Test(expectedExceptions = ParsingException.class)
     void testCreateInvalid() throws Exception {
         AbstractPolicy p = new PDPFactory().create(Xml.toXml(
                 Util.read(this.getClass(), "policy04.xml")));
     }
+
+
+
 }
