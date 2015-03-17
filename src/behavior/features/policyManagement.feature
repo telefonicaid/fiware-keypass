@@ -9,7 +9,8 @@ Feature: Create a new policy
     And I can retrieve the created policy for tenant "511" from the Access Control
 
   Scenario Outline: Request validation
-    Given I send a policy creation request to the Access Control for tenant "<tenant>" and subject "<subject>"
+    Given I send a remove request for tenant "511"
+    And I send a policy creation request to the Access Control for tenant "<tenant>" and subject "<subject>"
     When I send a validation request for tenant "<tenant>" with subject "<subject>", FRN "<frn>" and action "<action>"
     Then the Access Control should "<decision>" the access
 
@@ -34,7 +35,6 @@ Feature: Create a new policy
     Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
     When I send a remove request for subject "467" in tenant "634"
     Then the Access Control returns a "204"
-    And trying to get the policy for tenant "634" raises a 404
 
   Scenario: Remove an unexistent subject
     Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
@@ -56,13 +56,19 @@ Feature: Create a new policy
     Then the Access Control returns a "200" code and a payload with the ID
 
   Scenario: Two subjects in request
-    Given I send a policy creation request to the Access Control for tenant "599" and subject "833"
-    And I send a validation request for tenant "599" with subjects "833" and "433", FRN "frn:contextbroker:511:833:Device1" and action "read"
+    Given I send a remove request for tenant "511"
+    And I send a remove request for tenant "599"
+    And I send a policy creation request to the Access Control for tenant "599" and subject "833"
+    And I send a validation request for tenant "599" with subjects "833" and "433", FRN "frn:contextbroker:599:833:Device1" and action "read"
     Then the Access Control should "Permit" the access
 
   Scenario: Policies are cached, thus changing it does not take effect instantly
-    Given I send a policy creation request to the Access Control for tenant "588" and subject "833"
-    And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
+    Given I send a remove request for tenant "511"
+    And I send a remove request for tenant "599"
+    And I send a remove request for tenant "588"
+    And I send a policy creation request to the Access Control for tenant "588" and subject "833"
+    And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "write"
+    Then the Access Control should "Deny" the access
     When I modify the policy for tenant "588"
     And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
     Then the Access Control should "Permit" the access
