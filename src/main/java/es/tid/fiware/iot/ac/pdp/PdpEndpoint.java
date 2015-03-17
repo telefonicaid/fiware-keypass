@@ -63,7 +63,9 @@ public class PdpEndpoint {
         LOGGER.trace("XACML Request: {}", xacmlRequest);
 
         PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
-        return Response.ok(pdp.evaluate(xacmlRequest)).build();
+        String evaluation = pdp.evaluate(xacmlRequest);
+        LOGGER.trace("XACML evaluation: {}", evaluation);
+        return Response.ok(evaluation).build();
     }
 
     private Set<String> extractSubjectIds(String xacmlRequest)
