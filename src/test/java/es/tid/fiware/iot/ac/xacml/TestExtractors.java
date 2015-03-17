@@ -54,4 +54,11 @@ public class TestExtractors {
         assertEquals("policy01", policyId);
     }
 
+    @Test
+    public void testExtractPolicySetId() throws Exception {
+        String xacmlStr = Util.read(this.getClass(), "policyset01.xml");
+        String policySetId = Extractors.extractPolicySetId(xacmlStr);
+        assertEquals("policyset01", policySetId);
+    }
+
 }
