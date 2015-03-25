@@ -18,7 +18,9 @@ def initialize():
 @before.each_scenario
 def cleanContext(feature):
   for tenant in tenantList:
-    url = world.config['targetUrl'] + '/pap/v1/' + tenant
-    r = requests.delete(url)
+    url = world.config['targetUrl'] + '/pap/v1/'
+    headers = {'content-type': 'application/xml', world.config['tenantHeader']: tenant}
+    r = requests.delete(url, headers=headers)
+    assert r.status_code == 204
 
 initialize()      
