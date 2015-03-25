@@ -33,7 +33,12 @@ Feature: Create a new policy
   Scenario: Remove a subject
     Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
     When I send a remove request for subject "467" in tenant "634"
-    Then trying to get the policy for tenant "634" raises a 404
+    Then the Access Control returns a "204"
+
+  Scenario: Remove an unexistent subject
+    Given I send a policy creation request to the Access Control for tenant "634" and subject "467"
+    When I send a remove request for subject "468b" in tenant "634"
+    Then the Access Control returns a "404"
 
   Scenario: List policies
     Given I send the following policies to the access control:
@@ -50,13 +55,15 @@ Feature: Create a new policy
     Then the Access Control returns a "200" code and a payload with the ID
 
   Scenario: Two subjects in request
-    Given I send a policy creation request to the Access Control for tenant "599" and subject "833"
-    And I send a validation request for tenant "599" with subjects "833" and "433", FRN "frn:contextbroker:511:833:Device1" and action "read"
+    Given I send a remove request for tenant "599"
+    And I send a policy creation request to the Access Control for tenant "599" and subject "833"
+    And I send a validation request for tenant "599" with subjects "833" and "433", FRN "frn:contextbroker:599:833:Device1" and action "read"
     Then the Access Control should "Permit" the access
 
   Scenario: Policies are cached, thus changing it does not take effect instantly
     Given I send a policy creation request to the Access Control for tenant "588" and subject "833"
-    And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
+    And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "write"
+    Then the Access Control should "Deny" the access
     When I modify the policy for tenant "588"
     And I send a validation request for tenant "588" with subject "833", FRN "frn:contextbroker:511:833:Device1" and action "read"
     Then the Access Control should "Permit" the access
