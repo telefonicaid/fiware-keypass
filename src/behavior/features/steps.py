@@ -81,8 +81,8 @@ def removeTenant(step, tenant):
 def removeSubject(step, subject, tenant):
   url = world.config['targetUrl'] + '/pap/v1/subject/' + subject
   r = requests.delete(url, headers={world.config['tenantHeader']: tenant})
-  world.removalResult = r
-
+  world.retrievedRequest = r
+  
 @step('I get the list of policies for the tenant "([^"]*)" and subject "([^"]*)"')
 def getTenantPolicies(step, tenant, subject):
   url = world.config['targetUrl'] + '/pap/v1/subject/' + subject

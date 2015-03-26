@@ -45,7 +45,7 @@ public class TestSamplesXACML {
     @DataProvider(name = "policies")
     public Object[][] createPoliciesDataset() {
         return new Object[][] {
-                { "One Policy, one Subject and Permit",
+                 { "One Policy, one Subject and Permit",
                   Arrays.asList("policy01.xml"),
                   "policy01_request01.xml", "Permit" },
 
@@ -71,8 +71,11 @@ public class TestSamplesXACML {
 
                 { "Policy with any action permitted",
                   Arrays.asList("policy06.xml"),
-                  "policy01_request01.xml", "Permit" }
+                  "policy01_request01.xml", "Permit" },
 
+                 { "One PolicySet, one Subject and Permit",
+                  Arrays.asList("policyset01.xml"),
+                  "policyset01_request01.xml", "Permit" },
         };
     }
 

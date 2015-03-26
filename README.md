@@ -1,7 +1,7 @@
 # FIWARE-KeyPass
 
 Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
-PDP (Policy Detention Point) capabilities.
+PDP (Policy Decision Point) capabilities.
 
 KeyPass is based mainly on:
 
@@ -16,6 +16,8 @@ basic concepts. For a more detailed information you can read the following docs:
 * [API](API.md)
 * [Installation guide](INSTALL.md)
 * [Troubleshooting](TROUBLESHOOTING.md)
+* [Behaviour Tests](https://github.com/telefonicaid/fiware-keypass/tree/develop/src/behavior/README.md)
+
 
 # Building
 
@@ -51,7 +53,7 @@ $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
     -H "Fiware-Service: myTenant" \
-    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy03.xml \
+    -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01.xml \
     http://localhost:8080/pap/v1/subject/role12345
 ```
 
@@ -60,7 +62,7 @@ Response should be something like this:
 ```
 HTTP/1.1 201 Created
 Date: Mon, 15 Sep 2014 20:02:35 GMT
-Location: http://localhost:8080/pap/v1/myTenant/subject/role12345/policy/policy03
+Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy01
 Content-Type: application/xml
 Content-Length: 0
 ```
@@ -69,7 +71,7 @@ Content-Length: 0
 
 ```
 curl -i -H "Fiware-Service: myTenant" \
-    http://localhost:8080/pap/v1/subject/role12345/policy/policy03
+    http://localhost:8080/pap/v1/subject/role12345/policy/policy01
 ```
 
 Response will be the previously uploaded policy.

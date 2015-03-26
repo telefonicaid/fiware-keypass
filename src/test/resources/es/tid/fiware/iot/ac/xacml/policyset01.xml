@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PolicySet xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" 
+    PolicySetId="policyset01"
+    Version="1.0" 
+    PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:permit-overrides">
+    <Description>
+         Sample PolicySet
+    </Description>
+    <Target />
+    <Policy PolicyId="MissionManagementApp" Version="1.0"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:permit-overrides">
+        <Description>
+         Policy for MissionManagementApp
+       </Description>
+        <Target>
+            <Resources>
+                <Resource>
+                    <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">MissionManagementApp</AttributeValue>
+                        <ResourceAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                            DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true" />
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+        <Rule RuleId="MissionManager_role_can_manage_team" Effect="Permit">
+            <Description>Only MissionManager role authorized to manage the mission team</Description>
+            <Target>
+                <Resources>
+                    <Resource>
+                        <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Team</AttributeValue>
+                            <ResourceAttributeDesignator AttributeId="urn:thales:xacml:2.0:resource:sub-resource-id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true" />
+                        </ResourceMatch>
+                    </Resource>
+                </Resources>
+                <Actions>
+                    <Action>
+                        <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">manage</AttributeValue>
+                            <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true" />
+                        </ActionMatch>
+                    </Action>
+                </Actions>
+            </Target>
+            <Condition>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of">
+                    <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal" />
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">MissionManager</AttributeValue>
+                    <SubjectAttributeDesignator 
+                        AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id"
+                        DataType="http://www.w3.org/2001/XMLSchema#string" 
+                        MustBePresent="false"
+                        SubjectCategory="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" />
+                </Apply>
+            </Condition>
+        </Rule>
+    </Policy>
+</PolicySet>
