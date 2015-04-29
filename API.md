@@ -3,7 +3,7 @@
 ## Introduction
 
 Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
-PDP (Policy Detention Point) capabilities.
+PDP (Policy Decision Point) capabilities.
 
 Tenancy is defined by means of an HTTP header. Default configuration uses
 `Fiware-Service` as the tenant header name, but it can be easily changed
