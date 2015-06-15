@@ -29,4 +29,6 @@ public interface PdpFactory {
 
     PDP get(String tenant, Set<String> subjects);
 
+    boolean getSteelSkinPepMode();
+
 }
