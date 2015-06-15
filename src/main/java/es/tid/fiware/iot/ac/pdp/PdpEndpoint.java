@@ -68,7 +68,7 @@ public class PdpEndpoint {
         String evaluation = null;
         // Check if work in Pep-steelskin mode or not
         if (pdpFactory.getSteelSkinPepMode()) {
-            // Iterate by all SubjectIs to check by each subjectId
+            // Iterate by all SubjectIs to evaluate by each subjectId
             for (String subjectId : subjectIds) {
                 List<String> set_subjectId = new ArrayList<String>();
                 set_subjectId.add(subjectId);
