@@ -74,7 +74,8 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         PdpFactory pdpFactory = new PdpFactoryCached(dao,
                 new BlockingCacheFactory(
                         configuration.getPdpCacheConfig().getTimeToLiveSeconds(),
-                        configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()));
+                        configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()),
+                                                     configuration.getSteelSkinPepMode());
 
         environment.servlets().addFilter("myFilter", new MDCFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
