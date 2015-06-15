@@ -46,19 +46,23 @@ public class PdpFactoryCached implements PdpFactory {
 
     private final CacheFactory cacheFactory;
 
+    private final boolean steelSkinPepMode;
+
     private final PDPFactory pdpFactory = new PDPFactory();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PdpFactoryCached.class);
 
-    public PdpFactoryCached(PolicyDao dao, CacheFactory cacheFactory) {
+    public PdpFactoryCached(PolicyDao dao, CacheFactory cacheFactory,
+                            boolean steelSkinPepMode) {
         this.dao = dao;
         this.cacheFactory = cacheFactory;
+        this.steelSkinPepMode = steelSkinPepMode;
     }
 
     @Override
     public PDP get(String tenant, Set<String> subjects) {
         Ehcache cache = cacheFactory.get(tenant);
-
+        LOGGER.trace("recovering by XACML subject Ids: {}", subjects);
         Element el = cache.get(subjects);
 
         if (el != null) {
@@ -66,6 +70,7 @@ public class PdpFactoryCached implements PdpFactory {
         } else {
             Collection<Policy> policies = toPolicy(tenant, subjects);
             List<Document> xmlPolicies = toDocument(policies);
+            LOGGER.debug("xmlPolicies are {}", xmlPolicies);
             PDP pdp = pdpFactory.build(xmlPolicies);
             cache.put(new Element(subjects, pdp));
             return pdp;
@@ -94,4 +99,10 @@ public class PdpFactoryCached implements PdpFactory {
         }
         return docs;
     }
+
+    @Override
+    public boolean getSteelSkinPepMode() {
+        return steelSkinPepMode;
+    }
+
 }
