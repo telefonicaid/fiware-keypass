@@ -77,8 +77,9 @@ public class PdpEndpoint {
                 String response = extractDecision(evaluation);
                 LOGGER.debug("XACML partial evaluation for Role {} is {}",
                              subjectId, response);
-                if (response == "Permit"){
-                    LOGGER.debug("XACML partial evaluation skiping");
+                if (response.equals("Permit")){
+                    LOGGER.debug("XACML partial evaluation match for {}", subjectId);
+                    LOGGER.debug("Skipping other subjects");
                     break;
                 }
             }
