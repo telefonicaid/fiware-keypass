@@ -4,7 +4,7 @@
 
     <groupId>es.tid.fiware</groupId>
     <artifactId>keypass</artifactId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <description>
       Keypass is multi-tenant XACML server with PAP (Policy Administration
       Point) andPDP (Policy Detention Point) capabilities.
