@@ -1,0 +1,23 @@
+0.4.2
+
+ADD steelskin_pep_mode
+
+0.4.1
+
+REMOVE SNAPSHOT from package name
+
+0.4.0
+
+ADD policyset_pap_api_creation
+FIX log_format_for_alarms
+
+FIX delete_subject_always_return_204
+FIX MissedPolicyCombiningAlgId
+
+0.3.0
+
+ADD tenant support path to HTTP header
+
+0.2.0
+
+0.1.0
