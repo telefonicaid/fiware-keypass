@@ -1,10 +1,10 @@
 0.4.3
 
-FIX BUG in steelskin_pep_mode
+FIX BUG in steelskin_pep_mode about string comparation
 
 0.4.2
 
-ADD steelskin_pep_mode
+ADD steelskin_pep_mode: by default evaluates each subject-id of a request separately
 
 0.4.1
 
@@ -12,11 +12,11 @@ REMOVE SNAPSHOT from package name
 
 0.4.0
 
-ADD policyset_pap_api_creation
-FIX log_format_for_alarms
+ADD support policyset format at API creation PAP
+FIX log format for alarms
 
-FIX delete_subject_always_return_204
-FIX MissedPolicyCombiningAlgId
+FIX delete subject always return 204 even if not exists, now return 404
+FIX Missed PolicyCombiningAlgId in XACML policy response instead of PolicySetId
 
 0.3.0
 
