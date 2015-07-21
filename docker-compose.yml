@@ -1,0 +1,26 @@
+db:
+  image: mysql
+  expose:
+    - "3306"
+  ports:
+    - "3307:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: keypass
+    MYSQL_DATABASE: keypass
+    MYSQL_USER: keypass
+    MYSQL_PASSWORD: keypass
+
+keypass:
+  build: .
+  links:
+    - db
+  expose:
+    - "7070"
+    - "7071"
+  ports:
+    - "7170:7070"
+    - "7171:7071"
+  command: java -jar /data/keypass.jar db migrate /data/config.yml && java -jar /data/keypass.jar server /data/config.yml
+
+
+
