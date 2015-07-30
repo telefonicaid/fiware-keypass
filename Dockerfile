@@ -17,13 +17,10 @@ RUN ln -fs /opt/maven/bin/mvn /usr/bin/mvn
 ## Install MySQL (client at least?)
 RUN yum -y install mysql
 
-RUN mkdir /github && mkdir /github/telefonicaid
-
-WORKDIR /github/telefonicaid
-RUN git clone https://github.com/telefonicaid/fiware-keypass 
-
-WORKDIR /github/telefonicaid/fiware-keypass
-RUN git fetch && git checkout develop && mvn package
+RUN mkdir -p /opt/keypass
+COPY . /opt/keypass
+WORKDIR /opt/keypass
+RUN mvn package
 
 RUN sed -i "s/port: 8080/port: 7070/g" conf/config.yml
 RUN sed -i "s/port: 8081/port: 7071/g" conf/config.yml
