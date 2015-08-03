@@ -20,7 +20,4 @@ keypass:
   ports:
     - "7170:7070"
     - "7171:7071"
-  command: java -jar /data/keypass.jar db migrate /data/config.yml && java -jar /data/keypass.jar server /data/config.yml
-
-
 
