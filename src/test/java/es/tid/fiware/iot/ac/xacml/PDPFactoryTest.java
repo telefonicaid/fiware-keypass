@@ -26,6 +26,7 @@ import es.tid.fiware.iot.ac.util.Xml;
 import org.testng.annotations.Test;
 import org.wso2.balana.ParsingException;
 import org.wso2.balana.Policy;
+import org.wso2.balana.AbstractPolicy;
 
 import static org.testng.AssertJUnit.assertEquals;
 
@@ -33,14 +34,24 @@ public class PDPFactoryTest {
 
     @Test
     public void testCreateValid() throws Exception {
-        Policy p = new PDPFactory().create(Xml.toXml(
+        AbstractPolicy p = new PDPFactory().create(Xml.toXml(
                 Util.read(this.getClass(), "policy01.xml")));
         assertEquals("policy01", p.getId().toString());
     }
 
+    @Test
+    public void testCreateValid2() throws Exception {
+    AbstractPolicy p = new PDPFactory().create(Xml.toXml(
+                Util.read(this.getClass(), "policyset01.xml")));
+        assertEquals("policyset01", p.getId().toString());
+    }
+
     @Test(expectedExceptions = ParsingException.class)
     void testCreateInvalid() throws Exception {
-        Policy p = new PDPFactory().create(Xml.toXml(
+        AbstractPolicy p = new PDPFactory().create(Xml.toXml(
                 Util.read(this.getClass(), "policy04.xml")));
     }
+
+
+
 }

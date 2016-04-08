@@ -51,6 +51,10 @@ public class Extractors {
         return buildExp("//*[local-name()='Policy']/@PolicyId");
     }
 
+    private static XPathExpression policysetIdExp() {
+        return buildExp("//*[local-name()='PolicySet']/@PolicySetId");
+    }
+
     public static Collection<String> extractSubjectIds(String xacmlRequest)
             throws XPathExpressionException, IOException, SAXException {
 
@@ -75,6 +79,11 @@ public class Extractors {
     public static String extractPolicyId(String xacmlPolicy)
             throws XPathExpressionException, IOException, SAXException {
         return policyIdExp().evaluate(Xml.toXml(xacmlPolicy));
+    }
+
+    public static String extractPolicySetId(String xacmlPolicySet)
+            throws XPathExpressionException, IOException, SAXException {
+        return policysetIdExp().evaluate(Xml.toXml(xacmlPolicySet));
     }
 
     private static XPathExpression buildExp(String exp) {

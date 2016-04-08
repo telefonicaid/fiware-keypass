@@ -35,6 +35,9 @@ public class AcConfig extends Configuration {
     @JsonProperty("tenantHeader")
     private String tenantHeader;
 
+    @JsonProperty("steelSkinPepMode")
+    private boolean steelSkinPepMode;
+
     @Valid
     @NotNull
     @JsonProperty("database")
@@ -48,6 +51,10 @@ public class AcConfig extends Configuration {
         return tenantHeader;
     }
 
+    public boolean getSteelSkinPepMode() {
+        return steelSkinPepMode;
+    }
+
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
@@ -58,6 +65,10 @@ public class AcConfig extends Configuration {
 
     public void setTenantHeader(String tenantHeader) {
         this.tenantHeader = tenantHeader;
+    }
+
+    public void setSteelSkinPepMode(boolean steelSkinPepMode) {
+        this.steelSkinPepMode = steelSkinPepMode;
     }
 
     public void setDatabase(DataSourceFactory database) {

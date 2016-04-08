@@ -1,0 +1,309 @@
+FORMAT: 1A
+
+# Keypass
+
+Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
+PDP (Policy Detention Point) capabilities.
+
+Tenancy is defined by means of an HTTP header. Default configuration uses
+`Fiware-Service` as the tenant header name, but it can be easily changed
+modifying it in the config file.
+
+The PDP endpoint will evaluate the Policies for the subjects contained in a
+XACML request. This is a design decision took by Keypass in order to simplify
+how the application is used.
+
+You, as a developer, may wonder what a subject is, and why policies are grouped
+around them. To simplify, a subject is the same you put in a `subject-id` in
+an XACML request. You can then structure your user, groups and roles as usual
+in your preferred Identity Management system, just taking into account that
+those `ids` (subject, roles, groups) shall be used in your PEP when building
+the XACML request.
+
+Applying the policies per subject means that policies must be managed grouping
+them by subject. Keypass PAP API is designed to accomplish this.
+
+As XACML is an XML specification, Keypass API offers an XML Restful API.
+
+From the PAP REST point of view, the only resource is the Policy, with resides
+in a Subject of a Tenant. Both Tenant and Subject may be seen as namespaces, as
+they are not resources _per se_ .
+
+# Group PAP
+
+Policy Administration Point
+
+## Policies [/pap/v1/subject/:id]
+
++ Model (application/xml)
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
+    + Body
+
+        ```xml
+        <PolicySet xmlns:ns0="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  
+                xmlns:ns1="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+                xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+                ns0:PolicySetId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides"
+                ns1:Version="1.0">
+            <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
+                http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
+                PolicyId="policy03"
+                RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit"
+                Version="1.0" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+                <Target>
+                    <AnyOf>
+                        <AllOf>
+                            <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                                <AttributeValue
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                >fiware:orion:.*</AttributeValue>
+                                <AttributeDesignator
+                                    AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" />
+                            </Match>
+                        </AllOf>
+                    </AnyOf>
+                </Target>
+
+                <Rule RuleId="policy03rule01" Effect="Permit">
+
+                    <Condition>
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <AttributeDesignator
+                                    AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                                    DataType="http://www.w3.org/2001/XMLSchema#string"
+                                    MustBePresent="true"
+                                    Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" />
+                            </Apply>
+                            <AttributeValue
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                >read</AttributeValue>
+                        </Apply>
+                    </Condition>
+                </Rule>
+
+            </Policy>
+        </PolicySet>
+        ```
+
++ Parameters
+
+    + id (string) ... Subject identifier, used to group policies
+  
+### Create a Policy [POST]
+
++ Request
+
+    [Policy][]
+
++ Response 201
+
+    + Headers
+    
+            Location: http://KEYPASS_HOST/pap/v1/subject/:id/policy/:policyId
+
+### Get Subject Policies [GET]
+
++ Request
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
++ Response 200
+
+    [Policies][]
+
+### Delete all Subject Policies [DELETE]
+
++ Request
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
++ Response 204
+
+## Tenant [/pap/v1]
+
+### Delete all Tenant Policies [DELETE]
+
++ Request
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
++ Response 204
+
+## Policy [/pap/v1/subject/:id/policy/:policyId]
+
++ Parameters
+
+    + id (string) ... Subject identifier, used to group policies
+    + policyId (string) ... Policy Identifier
+
++ Model (application/xml)
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
+    + Body
+
+        ```xml
+
+        <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
+            http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
+            PolicyId="policy03"
+            RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit"
+            Version="1.0" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+            <Target>
+                <AnyOf>
+                    <AllOf>
+                        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                            <AttributeValue
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                            >fiware:orion:.*</AttributeValue>
+                            <AttributeDesignator
+                                AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                MustBePresent="true"
+                                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" />
+                        </Match>
+                    </AllOf>
+                </AnyOf>
+            </Target>
+
+            <Rule RuleId="policy03rule01" Effect="Permit">
+
+                <Condition>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <AttributeDesignator
+                                AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                MustBePresent="true"
+                                Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" />
+                        </Apply>
+                        <AttributeValue
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            >read</AttributeValue>
+                    </Apply>
+                </Condition>
+            </Rule>
+
+        </Policy>
+        ```
+        
+### Get a Policy [GET]
+
++ Request
+
+    [Policy][]
+
++ Response 200
+
+    [Policy][]
+
++ Response 404
+
+### Update a Policy [PUT]
+
++ Request
+
+    [Policy][]
+
++ Response 200
+
+    [Policy][]
+
++ Response 404
+
+### Delete a Policy [DELETE]
+
++ Request
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
++ Response 200
+
+    [Policy][]
+
++ Response 404
+
+# Group PDP
+
+Policy Decision Point
+
+## Validation [/pdp/v3]
+
+### Validate requests [POST]
+
++ Request
+
+    + Headers
+
+        ```
+        Fiware-Service: myTenant
+        ```
+
+    + Body
+
+        ```xml
+        <Request xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17 http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd" ReturnPolicyIdList="false" CombinedDecision="false" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
+            <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id">
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">role12345</AttributeValue>
+            </Attribute>
+          </Attributes>
+          <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource">
+            <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id">
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">fiware:orion:tenant1234:us-west-1:res9876</AttributeValue>
+            </Attribute>
+          </Attributes>
+          <Attributes Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action">
+            <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id">
+              <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">read</AttributeValue>
+            </Attribute>
+          </Attributes>
+        </Request>
+        ```
+
++ Response 200
+
+    ```xml
+    <Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
+      <Result>
+        <Decision>NotApplicable</Decision>
+        <Status>
+          <StatusCode Value="urn:oasis:names:tc:xacml:1.0:status:ok"/>
+        </Status>
+      </Result>
+    </Response>
+    ```

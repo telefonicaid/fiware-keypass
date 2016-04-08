@@ -36,6 +36,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,15 +63,49 @@ public class PdpEndpoint {
 
         LOGGER.debug("Enforcing policies for tenant [{}]", tenant);
         LOGGER.trace("XACML Request: {}", xacmlRequest);
-
-        PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
-        return Response.ok(pdp.evaluate(xacmlRequest)).build();
+        Set<String> subjectIds = extractSubjectIds(xacmlRequest);
+        LOGGER.debug("XACML Request subjectIds: {}", subjectIds);
+        String evaluation = null;
+        // Check if work in Pep-steelskin mode or not
+        if (pdpFactory.getSteelSkinPepMode()) {
+            // Iterate by all SubjectIs to evaluate by each subjectId
+            for (String subjectId : subjectIds) {
+                List<String> set_subjectId = new ArrayList<String>();
+                set_subjectId.add(subjectId);
+                PDP pdp = pdpFactory.get(tenant, new HashSet(set_subjectId));
+                evaluation = pdp.evaluate(xacmlRequest);
+                String response = extractDecision(evaluation);
+                LOGGER.debug("XACML partial evaluation for Role {} is {}",
+                             subjectId, response);
+                if (response.equals("Permit")){
+                    LOGGER.debug("XACML partial evaluation match for {}", subjectId);
+                    LOGGER.debug("Skipping other subjects");
+                    break;
+                }
+            }
+        } else {
+            PDP pdp = pdpFactory.get(tenant, extractSubjectIds(xacmlRequest));
+            evaluation = pdp.evaluate(xacmlRequest);
+            LOGGER.trace("XACML evaluation: {}", evaluation);
+        }
+        return Response.ok(evaluation).build();
     }
 
     private Set<String> extractSubjectIds(String xacmlRequest)
             throws WebApplicationException {
         try {
             return new HashSet(Extractors.extractSubjectIds(xacmlRequest));
+        } catch (XPathExpressionException | IOException | SAXException e) {
+            throw new WebApplicationException(400);
+        }
+    }
+
+    private String extractDecision(String evaluation)
+        throws WebApplicationException {
+        try {
+            String response = Extractors.extractDecision(evaluation);
+            LOGGER.trace("response: {}", response);
+            return response;
         } catch (XPathExpressionException | IOException | SAXException e) {
             throw new WebApplicationException(400);
         }
