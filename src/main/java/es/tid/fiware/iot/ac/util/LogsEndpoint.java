@@ -22,7 +22,6 @@ package es.tid.fiware.iot.ac.util;
  */
 
 import es.tid.fiware.iot.ac.rs.Tenant;
-import es.tid.fiware.iot.ac.xacml.Extractors;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
 
@@ -42,7 +41,9 @@ public class LogsEndpoint {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(LogsEndpoint.class);
 
-    private static String[] ValidLogLevels = {"ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"};
+    private static String[] ValidLogLevels = {
+        "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"
+    };
 
     public LogsEndpoint() {
 
@@ -63,7 +64,8 @@ public class LogsEndpoint {
                                    ) {
 
         // Check logLevel proposed
-        if ( (logLevel != null) && (Arrays.asList(ValidLogLevels).contains(logLevel))) {
+        if ( (logLevel != null) &&
+             (Arrays.asList(ValidLogLevels).contains(logLevel))) {
             LOGGER.debug("trying to change log level changed to " + logLevel);
             LOGGER.setLevel(Level.toLevel(logLevel));
             LOGGER.info("Keypass log level changed to " + logLevel);
