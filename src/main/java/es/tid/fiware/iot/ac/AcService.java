@@ -33,6 +33,7 @@ import es.tid.fiware.iot.ac.pdp.PdpFactoryCached;
 import es.tid.fiware.iot.ac.rs.TenantHeaderFilter;
 import es.tid.fiware.iot.ac.rs.TenantProvider;
 import es.tid.fiware.iot.ac.util.BlockingCacheFactory;
+import es.tid.fiware.iot.ac.util.LogsEndpoint;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
@@ -87,6 +88,7 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().register(new SubjectEndpoint(dao));
         environment.jersey().register(new PoliciesEndpoint(dao));
         environment.jersey().register(new PdpEndpoint(pdpFactory));
+        environment.jersey().register(new LogsEndpoint());
 
     }
 }

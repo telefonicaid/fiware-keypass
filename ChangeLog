@@ -1,3 +1,9 @@
+0.4.4
+
+Add API to change Keypass logLevel
+Fix docker support: start daemon
+
+
 0.4.3
 
 FIX BUG in steelskin_pep_mode about string comparation
