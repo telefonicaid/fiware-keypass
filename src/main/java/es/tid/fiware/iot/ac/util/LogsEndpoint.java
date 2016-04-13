@@ -59,7 +59,6 @@ public class LogsEndpoint {
 
     @PUT
     @UnitOfWork
-<<<<<<< HEAD
     public Response updateLogLevel(@Tenant String tenant,
                                    @Correlator String correlator,
                                    @QueryParam("logLevel") String logLevel
