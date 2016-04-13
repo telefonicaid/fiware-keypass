@@ -65,10 +65,11 @@ public class LogsEndpoint {
 
         // Check logLevel proposed
         if (logLevel != null) {
-            if (Arrays.asList(ValidLogLevels).contains(logLevel)) {
-                LOGGER.debug("trying to change log level changed to " + logLevel);
-                LOGGER.setLevel(Level.toLevel(logLevel));
-                LOGGER.info("Keypass log level changed to " + logLevel);
+            if (Arrays.asList(ValidLogLevels).contains(logLevel.toUpperCase())) {
+                String newLogLevel = logLevel.toUpperCase();
+                LOGGER.debug("trying to change log level changed to " + newLogLevel);
+                LOGGER.setLevel(Level.toLevel(newLogLevel));
+                LOGGER.info("Keypass log level changed to " + newLogLevel);
                 return Response.status(200).build();
             } else {
                 LOGGER.info("invalid log level " + logLevel);
