@@ -14,18 +14,23 @@ RUN unzip -oq apache-maven-3.2.5-bin.zip
 RUN cp -rf apache-maven-3.2.5 /opt/maven
 RUN ln -fs /opt/maven/bin/mvn /usr/bin/mvn
 
+## Install MySQL (client at least?)
+RUN yum -y install mysql
 
-RUN mkdir /github && mkdir /github/telefonicaid
+RUN mkdir -p /opt/keypass
+COPY . /opt/keypass
+WORKDIR /opt/keypass
+RUN mvn package
 
-WORKDIR /github/telefonicaid
-RUN git clone https://github.com/telefonicaid/fiware-keypass 
+ADD target/keypass-0.4.3.jar /data/keypass.jar
+ADD conf/config.yml /data/config.yml
 
-WORKDIR /github/telefonicaid/fiware-keypass
-RUN git fetch && git checkout develop && mvn package
+RUN sed -i -e "s/port: 8080/port: 7070/g" /data/config.yml
+RUN sed -i -e "s/port: 8081/port: 7071/g" /data/config.yml
+RUN sed -i -e "s/localhost/db/g" /data/config.yml
+RUN cat /data/config.yml
 
-#java -jar target/keypass-<VERSION>.jar server conf/config.yml
+CMD java -jar /data/keypass.jar db migrate /data/config.yml && java -jar /data/keypass.jar server /data/config.yml
 
-RUN sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml
-RUN sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml
 EXPOSE 7070
 EXPOSE 7071
