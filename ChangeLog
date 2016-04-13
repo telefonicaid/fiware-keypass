@@ -1,5 +1,6 @@
 0.4.4
 
+Add Fiware-Correlator header
 Add API to change Keypass logLevel
 Fix docker support: start daemon
 
