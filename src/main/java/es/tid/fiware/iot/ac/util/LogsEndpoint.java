@@ -60,7 +60,7 @@ public class LogsEndpoint {
     @UnitOfWork
     public Response updateLogLevel(
                                    @Tenant String tenant,
-                                   @QueryParam("logLevel") String logLevel
+                                   @QueryParam("level") String logLevel
                                    ) {
 
         // Check logLevel proposed
