@@ -64,15 +64,19 @@ public class LogsEndpoint {
                                    ) {
 
         // Check logLevel proposed
-        if ( (logLevel != null) &&
-             (Arrays.asList(ValidLogLevels).contains(logLevel))) {
-            LOGGER.debug("trying to change log level changed to " + logLevel);
-            LOGGER.setLevel(Level.toLevel(logLevel));
-            LOGGER.info("Keypass log level changed to " + logLevel);
-            return Response.status(200).build();
+        if (logLevel != null) {
+            if (Arrays.asList(ValidLogLevels).contains(logLevel)) {
+                LOGGER.debug("trying to change log level changed to " + logLevel);
+                LOGGER.setLevel(Level.toLevel(logLevel));
+                LOGGER.info("Keypass log level changed to " + logLevel);
+                return Response.status(200).build();
+            } else {
+                LOGGER.info("invalid log level " + logLevel);
+                return Response.status(400).entity("invalid log level").build();
+            }
         } else {
-            LOGGER.info("bad logLevel provided " + logLevel);
-            return Response.status(400).build();
+            LOGGER.info("log level missing " + logLevel);
+            return Response.status(400).entity("log level missing").build();
         }
 
     }
