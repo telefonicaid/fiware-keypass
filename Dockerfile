@@ -34,9 +34,9 @@ RUN sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml
 
 WORKDIR /opt/keypass
 
-#RUN java -jar keypass-0.4.3.jar db migrate config.yml
+RUN java -jar keypass-0.4.4.jar db migrate config.yml
 
-CMD ["java -jar keypass-0.4.3.jar server config.yml"]
+CMD ["java -jar keypass-0.4.4.jar server config.yml"]
 
 EXPOSE 7070
 EXPOSE 7071
