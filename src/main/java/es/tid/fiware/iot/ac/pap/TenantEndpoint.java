@@ -23,6 +23,7 @@ package es.tid.fiware.iot.ac.pap;
 
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.rs.Tenant;
+import es.tid.fiware.iot.ac.rs.Correlator;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -53,7 +54,8 @@ public class TenantEndpoint {
      */
     @DELETE
     @UnitOfWork
-    public Response delete(@Tenant String tenant) {
+    public Response delete(@Tenant String tenant,
+                           @Correlator String correlator) {
         LOGGER.debug("Deleting all the resources for [{}]", tenant);
 
         dao.deleteFromTenant(tenant);
