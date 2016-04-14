@@ -29,6 +29,7 @@ import com.sun.jersey.spi.inject.Injectable;
 import com.sun.jersey.spi.inject.InjectableProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -60,6 +61,7 @@ public class TenantProvider
             LOGGER.error("Too many Tenant Headers {}:", tenantHeader, headers);
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         } else {
+            MDC.put("service", headers.get(0));
             return headers.get(0);
         }
     }
