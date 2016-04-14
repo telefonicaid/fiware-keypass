@@ -95,8 +95,10 @@ logging:
       
       threshold: INFO
       
-      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | op=%c{0} | msg=%msg\n"
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"
 
     - type: console
       threshold: INFO
       target: stdout
+      timeZone: UTC
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"
