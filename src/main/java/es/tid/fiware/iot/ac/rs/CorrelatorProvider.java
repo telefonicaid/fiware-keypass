@@ -54,18 +54,21 @@ public class CorrelatorProvider
     @Override
     public String getValue(HttpContext httpContext) {
         List<String> headers = httpContext.getRequest().getRequestHeader(correlatorHeader);
-        if (headers == null || headers.size() == 0) {
-            LOGGER.error("Correlator Header {} not present", correlatorHeader);
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        } else if (headers.size() > 1) {
-            LOGGER.error("Too many Correlator Headers {}:", correlatorHeader, headers);
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        if ( (headers != null) && (headers.size() > 0) ) {
+            if (headers.size() == 1) {
+                LOGGER.debug("correlator found {}:", headers.get(0));
+                MDC.put("client", headers.get(0));
+                return headers.get(0);
+            } else {
+                LOGGER.error("Too many Correlator Headers {}:", correlatorHeader, headers);
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
         } else {
-            LOGGER.debug("correlator found {}:", headers.get(0));
-            MDC.put("client", headers.get(0));
-            return headers.get(0);
+            LOGGER.debug("correlator not found");
+            return null;
         }
     }
+
 
     @Override
     public ComponentScope getScope() {
