@@ -23,6 +23,7 @@ package es.tid.fiware.iot.ac.pdp;
 
 import com.codahale.metrics.annotation.Timed;
 import es.tid.fiware.iot.ac.rs.Tenant;
+import es.tid.fiware.iot.ac.rs.Correlator;
 import es.tid.fiware.iot.ac.xacml.Extractors;
 import io.dropwizard.hibernate.UnitOfWork;
 import java.io.IOException;
@@ -59,7 +60,8 @@ public class PdpEndpoint {
             cacheMode = CacheMode.GET, flushMode = FlushMode.MANUAL)
     @Timed
     public Response enforce(@Tenant String tenant,
-            String xacmlRequest) {
+                            @Correlator String correlator,
+                            String xacmlRequest) {
 
         LOGGER.debug("Enforcing policies for tenant [{}]", tenant);
         LOGGER.trace("XACML Request: {}", xacmlRequest);

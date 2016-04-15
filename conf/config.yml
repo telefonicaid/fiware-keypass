@@ -10,6 +10,8 @@ server:
 
 tenantHeader: Fiware-Service
 
+correlatorHeader: Fiware-Correlator
+
 # SteelSkinPep can perform a XACML request using several subject-id in the
 # accesss-subject field
 # If Policies were not prepared to match with everal subject-ids (by using

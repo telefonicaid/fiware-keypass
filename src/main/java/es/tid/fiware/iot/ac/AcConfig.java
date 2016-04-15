@@ -35,6 +35,10 @@ public class AcConfig extends Configuration {
     @JsonProperty("tenantHeader")
     private String tenantHeader;
 
+    @NotEmpty
+    @JsonProperty("correlatorHeader")
+    private String correlatorHeader;
+
     @JsonProperty("steelSkinPepMode")
     private boolean steelSkinPepMode;
 
@@ -51,6 +55,10 @@ public class AcConfig extends Configuration {
         return tenantHeader;
     }
 
+    public String getCorrelatorHeader() {
+        return correlatorHeader;
+    }
+
     public boolean getSteelSkinPepMode() {
         return steelSkinPepMode;
     }
@@ -65,6 +73,10 @@ public class AcConfig extends Configuration {
 
     public void setTenantHeader(String tenantHeader) {
         this.tenantHeader = tenantHeader;
+    }
+
+    public void setCorrelatorHeader(String correlatorHeader) {
+        this.correlatorHeader = correlatorHeader;
     }
 
     public void setSteelSkinPepMode(boolean steelSkinPepMode) {

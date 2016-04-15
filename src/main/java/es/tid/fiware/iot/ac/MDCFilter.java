@@ -30,8 +30,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import org.slf4j.MDC;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MDCFilter implements Filter {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MDCFilter.class);
+
     @Override
     public void init(FilterConfig fc) throws ServletException {
 
