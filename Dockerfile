@@ -22,15 +22,21 @@ COPY . /opt/keypass
 WORKDIR /opt/keypass
 RUN mvn package
 
-ADD target/keypass-0.4.3.jar /data/keypass.jar
-ADD conf/config.yml /data/config.yml
+RUN mkdir -p /opt/keypass
+RUN mkdir -p /opt/keypass/log
+COPY ./target/keypass-*.jar /opt/keypass/
+COPY ./conf/config.yml /opt/keypass/
+COPY ./bin/keypass-daemon.sh /opt/keypass/
 
-RUN sed -i -e "s/port: 8080/port: 7070/g" /data/config.yml
-RUN sed -i -e "s/port: 8081/port: 7071/g" /data/config.yml
-RUN sed -i -e "s/localhost/db/g" /data/config.yml
-RUN cat /data/config.yml
 
-CMD java -jar /data/keypass.jar db migrate /data/config.yml && java -jar /data/keypass.jar server /data/config.yml
+RUN sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml
+RUN sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml
+
+WORKDIR /opt/keypass
+
+RUN java -jar keypass-0.4.4.jar db migrate config.yml
+
+CMD ["java -jar keypass-0.4.4.jar server config.yml"]
 
 EXPOSE 7070
 EXPOSE 7071
