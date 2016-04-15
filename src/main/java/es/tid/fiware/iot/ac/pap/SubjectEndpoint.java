@@ -25,6 +25,7 @@ import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.model.PolicySet;
 import es.tid.fiware.iot.ac.rs.Tenant;
+import es.tid.fiware.iot.ac.rs.Correlator;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.PDPFactory;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -60,7 +61,8 @@ public class SubjectEndpoint {
     @GET
     @UnitOfWork
     public Response getPolicies(@Tenant String tenant,
-            @PathParam("subject") String subject) {
+                                @Correlator String correlator,
+                                @PathParam("subject") String subject) {
         try {
             LOGGER.debug("Getting policies for [{}] and subject [{}]", tenant, subject);
 
@@ -87,8 +89,9 @@ public class SubjectEndpoint {
     @POST
     @UnitOfWork
     public Response createPolicy(@Context UriInfo info,
-            @Tenant String tenant,
-            @PathParam("subject") String subject, String policy) {
+                                 @Tenant String tenant,
+                                 @Correlator String correlator,
+                                 @PathParam("subject") String subject, String policy) {
         String id;
         
         try {
@@ -111,7 +114,8 @@ public class SubjectEndpoint {
     @DELETE
     @UnitOfWork
     public Response delete(@Tenant String tenant,
-            @PathParam("subject") String subject) {
+                           @Correlator String correlator,
+                           @PathParam("subject") String subject) {
         
         LOGGER.debug("Removing all the policies for tenant [{}] and subject [{}]", 
                 tenant, subject);
