@@ -58,7 +58,7 @@ public class PoliciesEndpoint {
 
         Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
-            return Response.ok(p.getPolicy()).build();
+            return Response.status(204).entity(p.getPolicy()).build();
         } else {
             return Response.status(404).build();
         }
