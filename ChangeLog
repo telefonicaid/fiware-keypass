@@ -1,3 +1,7 @@
+1.0.0
+
+return 204 at delete policy from role
+
 0.5.0
 
 Update CI script
