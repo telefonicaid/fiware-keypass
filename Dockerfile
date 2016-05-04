@@ -3,6 +3,8 @@ FROM centos:6
 MAINTAINER IoT team
 
 ENV DB_HOST localhost
+ENV KEYPASS_VERSION 1.0.0
+
 
 RUN \
     # Install dependencies
@@ -30,7 +32,7 @@ RUN mvn package
 
 RUN mkdir -p /opt/keypass
 RUN mkdir -p /opt/keypass/log
-COPY ./target/keypass-*.jar /opt/keypass/keypass.jar
+COPY ./target/keypass-$KEYPASS_VERSION.jar /opt/keypass/keypass.jar
 COPY ./conf/config.yml /opt/keypass/
 COPY ./bin/keypass-daemon.sh /opt/keypass/
 
