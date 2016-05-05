@@ -39,13 +39,12 @@ COPY ./bin/keypass-daemon.sh /opt/keypass/
 
 RUN sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml
 RUN sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml
-RUN sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml
+#RUN sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml
 
 WORKDIR /opt/keypass
 
-RUN java -jar keypass.jar db migrate config.yml
-
-CMD ["java -jar keypass.jar server config.yml"]
+# Define the entry point
+ENTRYPOINT ["/opb/keypass//cygnus-entrypoint.sh"]
 
 EXPOSE 7070
 EXPOSE 7071
