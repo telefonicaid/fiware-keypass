@@ -35,7 +35,7 @@ RUN mkdir -p /opt/keypass/log
 COPY ./target/keypass-$KEYPASS_VERSION.jar /opt/keypass/keypass.jar
 COPY ./conf/config.yml /opt/keypass/
 COPY ./bin/keypass-daemon.sh /opt/keypass/
-COPY ./bin/cygnus-entrypoint.sh /opt/keypass/
+COPY ./bin/keypass-entrypoint.sh /opt/keypass/
 
 
 RUN sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml
@@ -45,7 +45,7 @@ RUN sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.ym
 WORKDIR /opt/keypass
 
 # Define the entry point
-ENTRYPOINT ["/opt/keypass/cygnus-entrypoint.sh"]
+ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
 
 EXPOSE 7070
 EXPOSE 7071
