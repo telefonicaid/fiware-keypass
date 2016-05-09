@@ -28,19 +28,22 @@ RUN \
 RUN mkdir -p /opt/keypass
 COPY . /opt/keypass
 WORKDIR /opt/keypass
-RUN mvn package
 
-RUN mkdir -p /opt/keypass
-RUN mkdir -p /opt/keypass/log
+RUN \
+    mvn package && \
+    mkdir -p /opt/keypass && \
+    mkdir -p /opt/keypass/log
+
 COPY ./target/keypass-$KEYPASS_VERSION.jar /opt/keypass/keypass.jar
 COPY ./conf/config.yml /opt/keypass/
 COPY ./bin/keypass-daemon.sh /opt/keypass/
 COPY ./bin/keypass-entrypoint.sh /opt/keypass/
 
 
-RUN sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml
-RUN sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml
-RUN sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml
+RUN \
+    sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml && \
+    sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml && \
+    sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml
 
 WORKDIR /opt/keypass
 
