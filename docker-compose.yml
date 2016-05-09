@@ -20,5 +20,5 @@ keypass:
   ports:
     - "7170:7070"
     - "7171:7071"
-  command: -dbhost db    
+  command: -dbhost db
 
