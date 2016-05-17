@@ -8,7 +8,7 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk.x86_64
 
 RUN \
     # Install dependencies
-    yum update -y && yum install -y wget  && \
+    yum update -y && yum install -y wget nc && \
     wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm && \
     yum localinstall -y --nogpgcheck epel-release-6-8.noarch.rpm  && \
     yum install -y rpm-build git java-1.7.0-openjdk java-1.7.0-openjdk-devel && \
