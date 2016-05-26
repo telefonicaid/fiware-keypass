@@ -34,6 +34,7 @@ RUN \
     cp ./bin/keypass-entrypoint.sh /opt/keypass/ && \
     sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml && \
     sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml && \
+    sed -i "s/bindHost: 127.0.0.1/bindHost: 0.0.0.0/g" /opt/keypass/config.yml && \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml
 
 # Define the entry point
