@@ -53,7 +53,7 @@ public class PolicySet {
         
         rootElement.setAttributeNS(NAMESPACE, "PolicySetId", id);
         rootElement.setAttributeNS(NAMESPACE, "Version", VERSION);
-        rootElement.setAttributeNS(NAMESPACE, "PolicySetId", COMBINING_POLICY);
+        rootElement.setAttributeNS(NAMESPACE, "PolicyCombiningAlgId", COMBINING_POLICY);
         
         for (Policy p: policies) {
             Document policyDocument = Xml.toXml(p.getPolicy());

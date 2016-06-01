@@ -67,7 +67,7 @@ public class PDPFactory {
      * @return
      * @throws ParsingException
      */
-    public Policy create(Document xml) throws ParsingException {
+    public AbstractPolicy create(Document xml) throws ParsingException {
         // the only way I've found to validate a policy if performing a XACML evaluation
         PDP pdp = build(Arrays.asList(xml));
         try {
@@ -75,7 +75,13 @@ public class PDPFactory {
         } catch (Exception e) {
             throw new ParsingException(e);
         }
-        return Policy.getInstance(xml.getDocumentElement());
+        // xml document could be a Policy or a PolicySet
+        try {
+            return Policy.getInstance(xml.getDocumentElement());
+        } catch (org.wso2.balana.ParsingException e){
+            // e.printStackTrace(); Cannot create Policy from root of type PolicySet
+            return PolicySet.getInstance(xml.getDocumentElement());
+        }
     }
 
 }
