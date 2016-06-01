@@ -1,0 +1,42 @@
+1.0.0
+
+return 204 at delete policy from role
+
+0.5.0
+
+Update CI script
+
+0.4.4
+
+Add Fiware-Correlator header
+Add API to change Keypass logLevel
+Fix docker support: start daemon
+
+
+0.4.3
+
+FIX BUG in steelskin_pep_mode about string comparation
+
+0.4.2
+
+ADD steelskin_pep_mode: by default evaluates each subject-id of a request separately
+
+0.4.1
+
+REMOVE SNAPSHOT from package name
+
+0.4.0
+
+ADD support policyset format at API creation PAP
+FIX log format for alarms
+
+FIX delete subject always return 204 even if not exists, now return 404
+FIX Missed PolicyCombiningAlgId in XACML policy response instead of PolicySetId
+
+0.3.0
+
+ADD tenant support path to HTTP header
+
+0.2.0
+
+0.1.0

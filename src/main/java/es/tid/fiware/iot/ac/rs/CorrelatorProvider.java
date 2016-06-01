@@ -37,34 +37,38 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * Jersey Provider implementation for {@link Tenant} annotation.
+ * Jersey Provider implementation for {@link Correlator} annotation.
  */
-public class TenantProvider
+public class CorrelatorProvider
         extends AbstractHttpContextInjectable<String>
-        implements InjectableProvider<Tenant, Type> {
+        implements InjectableProvider<Correlator, Type> {
 
-    private final String tenantHeader;
+    private final String correlatorHeader;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TenantProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CorrelatorProvider.class);
 
-    public TenantProvider(String tenantHeader) {
-        this.tenantHeader = tenantHeader;
+    public CorrelatorProvider(String correlatorHeader) {
+        this.correlatorHeader = correlatorHeader;
     }
 
     @Override
     public String getValue(HttpContext httpContext) {
-        List<String> headers = httpContext.getRequest().getRequestHeader(tenantHeader);
-        if (headers == null || headers.size() == 0) {
-            LOGGER.error("Tenant Header {} not present", tenantHeader);
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        } else if (headers.size() > 1) {
-            LOGGER.error("Too many Tenant Headers {}:", tenantHeader, headers);
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        List<String> headers = httpContext.getRequest().getRequestHeader(correlatorHeader);
+        if ( (headers != null) && (headers.size() > 0) ) {
+            if (headers.size() == 1) {
+                LOGGER.debug("correlator found {}:", headers.get(0));
+                MDC.put("client", headers.get(0));
+                return headers.get(0);
+            } else {
+                LOGGER.error("Too many Correlator Headers {}:", correlatorHeader, headers);
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+            }
         } else {
-            MDC.put("service", headers.get(0));
-            return headers.get(0);
+            LOGGER.debug("correlator not found");
+            return null;
         }
     }
+
 
     @Override
     public ComponentScope getScope() {
@@ -72,7 +76,7 @@ public class TenantProvider
     }
 
     @Override
-    public Injectable getInjectable(ComponentContext componentContext, Tenant tenant, Type type) {
+    public Injectable getInjectable(ComponentContext componentContext, Correlator correlator, Type type) {
         if (type.equals(String.class)) {
             return this;
         }

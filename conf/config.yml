@@ -10,6 +10,15 @@ server:
 
 tenantHeader: Fiware-Service
 
+correlatorHeader: Fiware-Correlator
+
+# SteelSkinPep can perform a XACML request using several subject-id in the
+# accesss-subject field
+# If Policies were not prepared to match with everal subject-ids (by using
+# subject-id in AttributeDesignator of Match) this mode enables to match each
+# subject-id of XACML request, checking one by one
+steelSkinPepMode: True
+
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver
@@ -88,8 +97,10 @@ logging:
       
       threshold: INFO
       
-      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | corr=%X{client} | trans=n/a | op=%c{0} | msg=%msg\n"
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"
 
     - type: console
       threshold: INFO
       target: stdout
+      timeZone: UTC
+      logFormat: "time=%d{HH:mm:ss.SSS} | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"

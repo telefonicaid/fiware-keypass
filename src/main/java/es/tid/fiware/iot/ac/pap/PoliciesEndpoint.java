@@ -24,6 +24,7 @@ package es.tid.fiware.iot.ac.pap;
 import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.rs.Tenant;
+import es.tid.fiware.iot.ac.rs.Correlator;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -47,8 +48,9 @@ public class PoliciesEndpoint {
     @GET
     @UnitOfWork
     public Response getPolicy(@Tenant String tenant,
-            @PathParam("subject") String subject,
-            @PathParam("policyId") String policyId) {
+                              @Correlator String correlator,
+                              @PathParam("subject") String subject,
+                              @PathParam("policyId") String policyId) {
         
         LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
         
@@ -64,9 +66,11 @@ public class PoliciesEndpoint {
 
     @DELETE
     @UnitOfWork
+    @Correlator
     public Response deletePolicy(@Tenant String tenant,
-            @PathParam("subject") String subject,
-            @PathParam("policyId") String policyId) {
+                                 @Correlator String correlator,
+                                 @PathParam("subject") String subject,
+                                 @PathParam("policyId") String policyId) {
 
         String id = URLEncoding.decode(policyId);
         LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
@@ -74,7 +78,7 @@ public class PoliciesEndpoint {
         Policy p = dao.loadPolicy(tenant, subject, id);
         if (p != null) {
             dao.deletePolicy(p);
-            return Response.ok(p.getPolicy()).build();
+            return Response.status(204).build();
         } else {
             return Response.status(404).build();
         }
@@ -82,10 +86,12 @@ public class PoliciesEndpoint {
 
     @PUT
     @UnitOfWork
+    @Correlator
     public Response updatePolicy(@Tenant String tenant,
-            @PathParam("subject") String subject,
-            @PathParam("policyId") String policyId,
-            String policy) {
+                                 @Correlator String correlator,
+                                 @PathParam("subject") String subject,
+                                 @PathParam("policyId") String policyId,
+                                 String policy) {
         
         LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 

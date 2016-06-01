@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -32,7 +32,10 @@ import es.tid.fiware.iot.ac.pdp.PdpFactory;
 import es.tid.fiware.iot.ac.pdp.PdpFactoryCached;
 import es.tid.fiware.iot.ac.rs.TenantHeaderFilter;
 import es.tid.fiware.iot.ac.rs.TenantProvider;
+import es.tid.fiware.iot.ac.rs.CorrelatorHeaderFilter;
+import es.tid.fiware.iot.ac.rs.CorrelatorProvider;
 import es.tid.fiware.iot.ac.util.BlockingCacheFactory;
+import es.tid.fiware.iot.ac.util.LogsEndpoint;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
@@ -49,14 +52,14 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
             return configuration.getDataSourceFactory();
         }
     };
-    
+
     public static void main(String[] args) throws Exception {
         new AcService().run(args);
     }
 
     @Override
     public void initialize(Bootstrap<AcConfig> bootstrap) {
-        bootstrap.addBundle(hibernate);     
+        bootstrap.addBundle(hibernate);
         bootstrap.addBundle(new MigrationsBundle<AcConfig>() {
             @Override
             public DataSourceFactory getDataSourceFactory(AcConfig configuration) {
@@ -74,18 +77,23 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         PdpFactory pdpFactory = new PdpFactoryCached(dao,
                 new BlockingCacheFactory(
                         configuration.getPdpCacheConfig().getTimeToLiveSeconds(),
-                        configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()));
+                        configuration.getPdpCacheConfig().getMaxEntriesLocalHeap()),
+                                                     configuration.getSteelSkinPepMode());
 
         environment.servlets().addFilter("myFilter", new MDCFilter()).addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
         environment.jersey().register(new TenantProvider(configuration.getTenantHeader()));
+        environment.jersey().register(new CorrelatorProvider(configuration.getCorrelatorHeader()));
         environment.jersey().getResourceConfig().getContainerResponseFilters().add(
                 new TenantHeaderFilter(configuration.getTenantHeader()));
+        environment.jersey().getResourceConfig().getContainerResponseFilters().add(
+                new CorrelatorHeaderFilter(configuration.getCorrelatorHeader()));
 
         environment.jersey().register(new TenantEndpoint(dao));
         environment.jersey().register(new SubjectEndpoint(dao));
         environment.jersey().register(new PoliciesEndpoint(dao));
         environment.jersey().register(new PdpEndpoint(pdpFactory));
+        environment.jersey().register(new LogsEndpoint());
 
     }
 }

@@ -1,4 +1,4 @@
-package es.tid.fiware.iot.ac.pdp;
+package es.tid.fiware.iot.ac.rs;
 
 /*
  * Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
@@ -21,14 +21,11 @@ package es.tid.fiware.iot.ac.pdp;
  * under the License.
  */
 
-import org.wso2.balana.PDP;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Set;
-
-public interface PdpFactory {
-
-    PDP get(String tenant, Set<String> subjects);
-
-    boolean getSteelSkinPepMode();
-
-}
+@Target({ ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Correlator {}
