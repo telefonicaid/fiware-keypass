@@ -32,7 +32,8 @@ RUN \
     sed -i "s/bindHost: 127.0.0.1/bindHost: 0.0.0.0/g" /opt/keypass/config.yml && \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
-    mvn clean && rm -rf /opt/maven && rm -rf ~/.m2/repository && \
+    mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
+    yum erase -y java-1.7.0-openjdk-devel && unset JAVA_HOME && \
     rpm -qa redhat-logos gtk2 pulseaudio-libs libvorbis jpackage-utils groff alsa-lib atk cairo libX* | xargs -r rpm -e --nodeps && yum -y erase libss && yum clean all && rpm -vv --rebuilddb && \
     rm -rf /var/lib/yum/yumdb && \
     rm -rf /var/lib/yum/history && find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' ! -name 'es' ! -name 'es_ES' | xargs rm -r && \
