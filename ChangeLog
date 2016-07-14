@@ -1,6 +1,7 @@
 1.2.0
 
 Add API to get Keypass logLevel
+Fix log format according with IOTPv4
 
 1.1.0
 
