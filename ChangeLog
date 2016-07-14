@@ -2,6 +2,7 @@
 
 Add API to get Keypass logLevel
 Fix log format according with IOTPv4
+Add allow to use level as logLevel to change log level
 
 1.1.0
 

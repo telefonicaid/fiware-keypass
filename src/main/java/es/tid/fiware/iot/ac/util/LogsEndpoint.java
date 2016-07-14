@@ -80,8 +80,13 @@ public class LogsEndpoint {
     @UnitOfWork
     public Response updateLogLevel(@Tenant String tenant,
                                    @Correlator String correlator,
-                                   @QueryParam("logLevel") String logLevel
+                                   @QueryParam("logLevel") String logLevel,
+                                   @QueryParam("level") String level
                                    ) {
+        // Allow level as well as logLevel
+        if (level != null) {
+            logLevel = level;
+        }
 
         // Check logLevel proposed
         if (logLevel != null) {
@@ -103,5 +108,6 @@ public class LogsEndpoint {
         }
 
     }
+
 
 }
