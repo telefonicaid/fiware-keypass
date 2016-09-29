@@ -94,13 +94,11 @@ logging:
 
       # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
       timeZone: UTC
-      
-      threshold: INFO
-      
-      logFormat: "time=%d | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"
+      threshold: DEBUG
+      logFormat: "time=%d{yyyy-MM-dd,UTC}T%d{HH:mm:ss.SSS,UTC}Z | lvl=%level | corr=%X{client} | trans=n/a | srv=%X{service} | subsrv=n/a | comp=KEYPASS | op=%c{0} | msg=%msg\n"
 
     - type: console
-      threshold: INFO
+      threshold: DEBUG
       target: stdout
       timeZone: UTC
-      logFormat: "time=%d | lvl=%level | Component=KEYPASS | corr=%X{client} | trans=n/a | srv=%X{service} | op=%c{0} | msg=%msg\n"
+      logFormat: "time=%d{yyyy-MM-dd,UTC}T%d{HH:mm:ss.SSS,UTC}Z | lvl=%level | corr=%X{client} | trans=n/a | srv=%X{service} | subsrv=n/a | comp=KEYPASS | op=%c{0} | msg=%msg\n"
