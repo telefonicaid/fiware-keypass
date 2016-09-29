@@ -3,7 +3,7 @@ FROM centos:6
 MAINTAINER IoT team
 
 ENV DB_HOST localhost
-ENV KEYPASS_VERSION 1.2.0
+ENV KEYPASS_VERSION 1.2.1
 ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk.x86_64
 
 COPY . /opt/keypass/
