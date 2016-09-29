@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.Level;
 
-
 @Path("/admin/log")
 @Produces(MediaType.APPLICATION_XML)
 public class LogsEndpoint {
@@ -50,6 +49,26 @@ public class LogsEndpoint {
 
     }
 
+
+    /**
+     * Get LogLevel
+     *
+     * @return logLevel
+     */
+
+    @GET
+    @UnitOfWork
+    public Response getLogLevel(@Tenant String tenant,
+                                @Correlator String correlator
+                                ) {
+        // Get current logLevel
+        Logger root_LOGGER = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        Level level = root_LOGGER.getLevel();
+        LOGGER.debug("get current log level: " + level.toString());
+        return Response.status(200).entity(level.toString()).build();
+    }
+
+
     /**
      * Change LogLevel
      *
@@ -61,15 +80,22 @@ public class LogsEndpoint {
     @UnitOfWork
     public Response updateLogLevel(@Tenant String tenant,
                                    @Correlator String correlator,
-                                   @QueryParam("logLevel") String logLevel
+                                   @QueryParam("logLevel") String logLevel,
+                                   @QueryParam("level") String level
                                    ) {
+        // Allow level as well as logLevel
+        if (level != null) {
+            logLevel = level;
+        }
 
         // Check logLevel proposed
         if (logLevel != null) {
             if (Arrays.asList(ValidLogLevels).contains(logLevel.toUpperCase())) {
                 String newLogLevel = logLevel.toUpperCase();
                 LOGGER.debug("trying to change log level changed to " + newLogLevel);
-                LOGGER.setLevel(Level.toLevel(newLogLevel));
+
+                Logger root_LOGGER = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+                root_LOGGER.setLevel(Level.toLevel(newLogLevel));
                 LOGGER.info("Keypass log level changed to " + newLogLevel);
                 return Response.status(200).build();
             } else {
@@ -82,5 +108,6 @@ public class LogsEndpoint {
         }
 
     }
+
 
 }
