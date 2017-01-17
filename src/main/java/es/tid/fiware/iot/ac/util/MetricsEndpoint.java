@@ -100,16 +100,22 @@ public class MetricsEndpoint {
         }
 
         JSONObject timers = (JSONObject) jettyMetricsjson.get("timers");
+        JSONObject meters = (JSONObject) jettyMetricsjson.get("meters");
         JSONObject requests = (JSONObject) timers.get("io.dropwizard.jetty.MutableServletContextHandler.requests");
+        JSONObject requests200 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.2xx-responses");
+        JSONObject requests400 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.4xx-responses");
+        JSONObject requests500 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.5xx-responses");
+
+        long errors = (long)requests400.get("count") + (long)requests500.get("count");
 
         // Matching jetty metrics with IoTPlatform metrics
         JSONObject outputjson = new JSONObject();
         outputjson.put("service", "TBD");
         JSONObject sumlist = new JSONObject();
-        sumlist.put("incomingTransactions", requests.get("count"));
+        sumlist.put("incomingTransactions", (long)requests.get("count") - errors);
         sumlist.put("incomingTransactionRequestSize", new Integer(0));
         sumlist.put("incomingTransactionResponseSize", new Integer(0));
-        sumlist.put("incomingTransactionErrors", new Integer(0));
+        sumlist.put("incomingTransactionErrors", errors);
         sumlist.put("serviceTime", requests.get("mean"));
         outputjson.put("sum", sumlist);
 
