@@ -37,13 +37,19 @@ import es.tid.fiware.iot.ac.rs.CorrelatorProvider;
 import es.tid.fiware.iot.ac.util.BlockingCacheFactory;
 import es.tid.fiware.iot.ac.util.LogsEndpoint;
 import es.tid.fiware.iot.ac.util.VersionEndpoint;
+import es.tid.fiware.iot.ac.util.MetricsEndpoint;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.client.JerseyClientBuilder;
+import io.dropwizard.jetty.HttpConnectorFactory;
+import io.dropwizard.server.DefaultServerFactory;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
+import com.sun.jersey.api.client.Client;
+
 
 public class AcService extends io.dropwizard.Application<AcConfig> {
 
@@ -74,6 +80,9 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
             Environment environment)
             throws Exception {
 
+        final Client jerseyClient = new JerseyClientBuilder(environment).using(configuration.getJerseyClientConfiguration())
+            .build(getName());
+
         PolicyDao dao = new PolicyDAOHibernate(hibernate.getSessionFactory());
         PdpFactory pdpFactory = new PdpFactoryCached(dao,
                 new BlockingCacheFactory(
@@ -96,6 +105,8 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().register(new PdpEndpoint(pdpFactory));
         environment.jersey().register(new LogsEndpoint());
         environment.jersey().register(new VersionEndpoint());
+        environment.jersey().register(new MetricsEndpoint(jerseyClient,
+                                                          ((HttpConnectorFactory) ((DefaultServerFactory) configuration.getServerFactory()).getAdminConnectors().get(0)).getPort()));
 
     }
 }
