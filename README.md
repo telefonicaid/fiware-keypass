@@ -54,7 +54,7 @@ $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
     -H "Fiware-Service: myTenant" \
     -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01.xml \
-    http://localhost:8080/pap/v1/subject/role12345
+    http://localhost:7070/pap/v1/subject/role12345
 ```
 
 Response should be something like this:
@@ -62,7 +62,7 @@ Response should be something like this:
 ```
 HTTP/1.1 201 Created
 Date: Mon, 15 Sep 2014 20:02:35 GMT
-Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy01
+Location: http://localhost:7070/pap/v1/subject/role12345/policy/policy01
 Content-Type: application/xml
 Content-Length: 0
 ```
@@ -71,7 +71,7 @@ Content-Length: 0
 
 ```
 curl -i -H "Fiware-Service: myTenant" \
-    http://localhost:8080/pap/v1/subject/role12345/policy/policy01
+    http://localhost:7070/pap/v1/subject/role12345/policy/policy01
 ```
 
 Response will be the previously uploaded policy.
@@ -82,7 +82,7 @@ Response will be the previously uploaded policy.
 curl -i -H "Accept: application/xml" -H "Content-type: application/xml" \
     -H "Fiware-Service: myTenant" \
     -X POST -d @src/test/resources/es/tid/fiware/iot/ac/xacml/policy01_request01.xml \
-    http://localhost:8080/pdp/v3
+    http://localhost:7070/pdp/v3
 ```
 Response:
 

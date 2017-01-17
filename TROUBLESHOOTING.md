@@ -42,7 +42,7 @@ time=15:12:55.106 | lvl=INFO | corr= | trans=n/a | op=DropwizardResourceConfig |
     PUT     /pap/v1/{tenant}/subject/{subject}/policy/{policyId} (es.tid.fiware.iot.ac.pap.PoliciesEndpoint)
     POST    /pdp/v3/{tenant} (es.tid.fiware.iot.ac.pdp.PdpEndpoint)
 
-time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started application@7e00a490{HTTP/1.1}{0.0.0.0:8080}
+time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started application@7e00a490{HTTP/1.1}{0.0.0.0:7070}
 time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started admin@5c342a90{HTTP/1.1}{127.0.0.1:8081}
 ```
 
