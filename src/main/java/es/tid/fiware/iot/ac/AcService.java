@@ -46,6 +46,7 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.jetty.HttpConnectorFactory;
 import io.dropwizard.server.DefaultServerFactory;
+import com.codahale.metrics.MetricRegistry;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 import com.sun.jersey.api.client.Client;
@@ -83,6 +84,9 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         final Client jerseyClient = new JerseyClientBuilder(environment).using(configuration.getJerseyClientConfiguration())
             .build(getName());
 
+
+        MetricRegistry metrics = environment.metrics();
+
         PolicyDao dao = new PolicyDAOHibernate(hibernate.getSessionFactory());
         PdpFactory pdpFactory = new PdpFactoryCached(dao,
                 new BlockingCacheFactory(
@@ -106,7 +110,7 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().register(new LogsEndpoint());
         environment.jersey().register(new VersionEndpoint());
         environment.jersey().register(new MetricsEndpoint(jerseyClient,
-                                                          ((HttpConnectorFactory) ((DefaultServerFactory) configuration.getServerFactory()).getAdminConnectors().get(0)).getPort()));
+                                                          ((HttpConnectorFactory) ((DefaultServerFactory) configuration.getServerFactory()).getAdminConnectors().get(0)).getPort(), metrics));
 
     }
 }
