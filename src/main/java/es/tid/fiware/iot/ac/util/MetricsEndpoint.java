@@ -24,6 +24,9 @@ package es.tid.fiware.iot.ac.util;
 import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.rs.Correlator;
 import io.dropwizard.hibernate.UnitOfWork;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.Timer;
+import com.codahale.metrics.Counter;
 
 import java.io.IOException;
 
@@ -52,11 +55,13 @@ public class MetricsEndpoint {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(LogsEndpoint.class);
 
+    private MetricRegistry metrics;
     private Client jerseyClient;
     private Integer adminPort;
     private String metricsAdminPath;
 
-    public MetricsEndpoint(Client jerseyClient, Integer adminPort) {
+    public MetricsEndpoint(Client jerseyClient, Integer adminPort, MetricRegistry metrics){
+        this.metrics = metrics;
         this.jerseyClient = jerseyClient;
         this.adminPort = adminPort;
         this.metricsAdminPath = new String("http://127.0.0.1:" + this.adminPort + "/metrics");
@@ -71,9 +76,48 @@ public class MetricsEndpoint {
 
     @GET
     @UnitOfWork
+    @Correlator
     public Response getMetrics(@Correlator String correlator,
-                               @QueryParam("reset") String level
+                               @QueryParam("reset") String reset
                                ) {
+
+        JSONObject outputjson = _getMetrics();
+
+        LOGGER.debug("Get metrics ");
+
+        if (reset != null) {
+            if (reset.toUpperCase().equals("TRUE")) {
+                _resetMetrics();
+            }
+        }
+        return Response.status(200).entity(outputjson.toString()).build();
+    }
+
+
+    /**
+     * Reset Metrics
+     *
+     * @return
+     */
+
+    @DELETE
+    @UnitOfWork
+    @Correlator
+    public Response resetMetrics(@Correlator String correlator
+                                 ) {
+
+        LOGGER.debug("Reset metrics ");
+
+        JSONObject outputjson = _getMetrics();
+        _resetMetrics();
+
+        return Response.status(204).entity(outputjson.toString()).build();
+    }
+
+
+
+    private JSONObject _getMetrics() {
+
         // Metrics: no outgoing no subservice
         // incomingTransactions: number of requests consumed by the component.
         // incomingTransactionRequestSize: total size (bytes) in requests associated to incoming transactions
@@ -85,7 +129,7 @@ public class MetricsEndpoint {
         ClientResponse response =  webResource.accept("application/json").type("application/json").get(ClientResponse.class);
         int status = response.getStatus();
         if (response.getStatus() != 200) {
-            LOGGER.error("trying to change log level changed to: " + response.getStatus());
+            LOGGER.error("trying to get jetty metrics: " + response.getStatus());
             throw new RuntimeException("Failed : HTTP error code : "
                     + response.getStatus());
         }
@@ -99,6 +143,7 @@ public class MetricsEndpoint {
             e.printStackTrace();
         }
 
+        // Get number of requests
         JSONObject timers = (JSONObject) jettyMetricsjson.get("timers");
         JSONObject meters = (JSONObject) jettyMetricsjson.get("meters");
         JSONObject requests = (JSONObject) timers.get("io.dropwizard.jetty.MutableServletContextHandler.requests");
@@ -108,35 +153,42 @@ public class MetricsEndpoint {
 
         long errors = (long)requests400.get("count") + (long)requests500.get("count");
 
+
+        // Get size of request and responses
+        Counter incomingTransactionRequestSizeCounter = metrics.counter("incomingTransactionRequestSize");
+        Counter incomingTransactionResponseSizeCounter = metrics.counter("incomingTransactionResponseSize");
+
+
         // Matching jetty metrics with IoTPlatform metrics
         JSONObject outputjson = new JSONObject();
-        outputjson.put("service", "TBD");
+        outputjson.put("service", new JSONObject());
         JSONObject sumlist = new JSONObject();
         sumlist.put("incomingTransactions", (long)requests.get("count") - errors);
-        sumlist.put("incomingTransactionRequestSize", new Integer(0));
-        sumlist.put("incomingTransactionResponseSize", new Integer(0));
+        sumlist.put("incomingTransactionRequestSize", incomingTransactionRequestSizeCounter.getCount());
+        sumlist.put("incomingTransactionResponseSize", incomingTransactionResponseSizeCounter.getCount());
         sumlist.put("incomingTransactionErrors", errors);
         sumlist.put("serviceTime", requests.get("mean"));
         outputjson.put("sum", sumlist);
 
-        return Response.status(200).entity(outputjson.toString()).build();
+        return outputjson;
     }
 
 
-    // /**
-    //  * Reset Metrics
-    //  *
-    //  * @return
-    //  */
+    private void _resetMetrics() {
+        // Reset custom counters
+        Counter incomingTransactionRequestSizeCounter = metrics.counter("incomingTransactionRequestSize");
+        long incomingTransactionRequestSizeCount = incomingTransactionRequestSizeCounter.getCount();
+        incomingTransactionRequestSizeCounter.dec(incomingTransactionRequestSizeCount);
 
-    // @DELETE
-    // @UnitOfWork
-    // public Response resetMetrics(@Correlator String correlator,
-    //                              ) {
-
+        Counter incomingTransactionResponseSizeCounter = metrics.counter("incomingTransactionResponseSize");
+        long incomingTransactionResponseSizeCount = incomingTransactionResponseSizeCounter.getCount();
+        incomingTransactionResponseSizeCounter.dec(incomingTransactionResponseSizeCount);
 
 
-    // }
+        // TODO: reset timers
+        // Timer timer = metrics.timer("io.dropwizard.jetty.MutableServletContextHandler.requests");
 
+
+    }
 
 }
