@@ -307,3 +307,50 @@ Policy Decision Point
       </Result>
     </Response>
     ```
+
+
+
+
+## Metrics [/v1.0/admin/metrics]
+
+The following metrics are collected by the component:
+
+- incomingTransactions: number of requests consumed by the component.
+- incomingTransactionRequestSize: total size (bytes) in requests associated to incoming transactions
+- incomingTransactionResponseSize: total size (bytes) in responses associated to incoming transactions
+- incomingTransacionError: number of incoming transactions resulting in error.
+- serviceTime: average time to serve a transaction.
+
+### Get current metrics [GET]
++ Parameters
+  + reset (optional, `string`) ... ["true", "false"]
++ Response 200 (application/json)
+    + Body
+       {
+          "service": {
+          },
+          "sum": {
+            "incomingTransactions": 25
+            "incomingTransactionRequestSize": 3456
+            "incomingTransactionResponseSize": 435
+            "incomingTransacionError": 2
+            "serviceTime": 0.48
+          }
+       }
+
+
+### Reset current metrics [DELETE]
++ Parameters
++ Response 204 (application/json)
+    + Body
+       {
+          "service": {
+          },
+          "sum": {
+            "incomingTransactions": 25
+            "incomingTransactionRequestSize": 3456
+            "incomingTransactionResponseSize": 435
+            "incomingTransacionError": 2
+            "serviceTime": 0.48
+          }
+       }
