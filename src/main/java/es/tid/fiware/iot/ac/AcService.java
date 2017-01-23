@@ -43,9 +43,6 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.dropwizard.client.JerseyClientBuilder;
-import io.dropwizard.jetty.HttpConnectorFactory;
-import io.dropwizard.server.DefaultServerFactory;
 import com.codahale.metrics.MetricRegistry;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
@@ -81,10 +78,6 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
             Environment environment)
             throws Exception {
 
-        final Client jerseyClient = new JerseyClientBuilder(environment).using(configuration.getJerseyClientConfiguration())
-            .build(getName());
-
-
         MetricRegistry metrics = environment.metrics();
 
         PolicyDao dao = new PolicyDAOHibernate(hibernate.getSessionFactory());
@@ -109,8 +102,7 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().register(new PdpEndpoint(pdpFactory, metrics));
         environment.jersey().register(new LogsEndpoint());
         environment.jersey().register(new VersionEndpoint());
-        environment.jersey().register(new MetricsEndpoint(jerseyClient,
-                                                          ((HttpConnectorFactory) ((DefaultServerFactory) configuration.getServerFactory()).getAdminConnectors().get(0)).getPort(), metrics));
+        environment.jersey().register(new MetricsEndpoint(metrics));
 
     }
 }

@@ -27,6 +27,7 @@ import io.dropwizard.hibernate.UnitOfWork;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
 
 import java.io.IOException;
 
@@ -56,15 +57,9 @@ public class MetricsEndpoint {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(LogsEndpoint.class);
 
     private MetricRegistry metrics;
-    private Client jerseyClient;
-    private Integer adminPort;
-    private String metricsAdminPath;
 
-    public MetricsEndpoint(Client jerseyClient, Integer adminPort, MetricRegistry metrics){
+    public MetricsEndpoint(MetricRegistry metrics){
         this.metrics = metrics;
-        this.jerseyClient = jerseyClient;
-        this.adminPort = adminPort;
-        this.metricsAdminPath = new String("http://127.0.0.1:" + this.adminPort + "/metrics");
     }
 
     /**
@@ -82,9 +77,7 @@ public class MetricsEndpoint {
                                ) {
 
         JSONObject outputjson = _getMetrics();
-
         LOGGER.debug("Get metrics ");
-
         if (reset != null) {
             if (reset.toUpperCase().equals("TRUE")) {
                 _resetMetrics();
@@ -105,12 +98,9 @@ public class MetricsEndpoint {
     @Correlator
     public Response resetMetrics(@Correlator String correlator
                                  ) {
-
         LOGGER.debug("Reset metrics ");
-
         JSONObject outputjson = _getMetrics();
         _resetMetrics();
-
         return Response.status(204).entity(outputjson.toString()).build();
     }
 
@@ -125,49 +115,45 @@ public class MetricsEndpoint {
         // incomingTransacionError: number of incoming transactions resulting in error.
         // serviceTime: average time to serve a transaction.
 
-        WebResource webResource = jerseyClient.resource(this.metricsAdminPath);
-        ClientResponse response =  webResource.accept("application/json").type("application/json").get(ClientResponse.class);
-        int status = response.getStatus();
-        if (response.getStatus() != 200) {
-            LOGGER.error("trying to get jetty metrics: " + response.getStatus());
-            throw new RuntimeException("Failed : HTTP error code : "
-                    + response.getStatus());
-        }
 
-        String jettyMetrics = response.getEntity(String.class);
-        JSONObject jettyMetricsjson = null;
-        try {
-            JSONParser parser = new JSONParser();
-            jettyMetricsjson = (JSONObject) parser.parse(jettyMetrics);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        // Get number of requests
-        JSONObject timers = (JSONObject) jettyMetricsjson.get("timers");
-        JSONObject meters = (JSONObject) jettyMetricsjson.get("meters");
-        JSONObject requests = (JSONObject) timers.get("io.dropwizard.jetty.MutableServletContextHandler.requests");
-        JSONObject requests200 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.2xx-responses");
-        JSONObject requests400 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.4xx-responses");
-        JSONObject requests500 = (JSONObject) meters.get("io.dropwizard.jetty.MutableServletContextHandler.5xx-responses");
-
-        long errors = (long)requests400.get("count") + (long)requests500.get("count");
+        Timer requests_All =
+            metrics.timer("io.dropwizard.jetty.MutableServletContextHandler.requests");
+        Meter responses_400 =
+            metrics.meter("io.dropwizard.jetty.MutableServletContextHandler.4xx-responses");
+        Meter responses_500 =
+            metrics.meter("io.dropwizard.jetty.MutableServletContextHandler.5xx-responses");
 
 
         // Get size of request and responses
-        Counter incomingTransactionRequestSizeCounter = metrics.counter("incomingTransactionRequestSize");
-        Counter incomingTransactionResponseSizeCounter = metrics.counter("incomingTransactionResponseSize");
+        Counter incomingTransactionRequestSizeCounter =
+            metrics.counter("incomingTransactionRequestSize");
+        Counter incomingTransactionResponseSizeCounter =
+            metrics.counter("incomingTransactionResponseSize");
+
+        Counter requests_before_reset =
+            metrics.counter("requests_before_reset");
+        Counter responses_error_before_reset =
+            metrics.counter("responses_error__before_reset");
 
 
-        // Matching jetty metrics with IoTPlatform metrics
+        long errors = (long)responses_400.getCount() +
+            (long)responses_500.getCount() -
+            responses_error_before_reset.getCount();
+        long requests = (long)requests_All.getCount() -
+            (long)requests_before_reset.getCount() -
+            errors;
+
+
         JSONObject outputjson = new JSONObject();
         outputjson.put("service", new JSONObject());
         JSONObject sumlist = new JSONObject();
-        sumlist.put("incomingTransactions", (long)requests.get("count") - errors);
-        sumlist.put("incomingTransactionRequestSize", incomingTransactionRequestSizeCounter.getCount());
-        sumlist.put("incomingTransactionResponseSize", incomingTransactionResponseSizeCounter.getCount());
+        sumlist.put("incomingTransactions", requests);
+        sumlist.put("incomingTransactionRequestSize",
+                    incomingTransactionRequestSizeCounter.getCount());
+        sumlist.put("incomingTransactionResponseSize",
+                    incomingTransactionResponseSizeCounter.getCount());
         sumlist.put("incomingTransactionErrors", errors);
-        sumlist.put("serviceTime", requests.get("mean"));
+        sumlist.put("serviceTime", requests_All.getMeanRate());
         outputjson.put("sum", sumlist);
 
         return outputjson;
@@ -176,17 +162,29 @@ public class MetricsEndpoint {
 
     private void _resetMetrics() {
         // Reset custom counters
-        Counter incomingTransactionRequestSizeCounter = metrics.counter("incomingTransactionRequestSize");
-        long incomingTransactionRequestSizeCount = incomingTransactionRequestSizeCounter.getCount();
+        Counter incomingTransactionRequestSizeCounter =
+            metrics.counter("incomingTransactionRequestSize");
+        long incomingTransactionRequestSizeCount =
+            incomingTransactionRequestSizeCounter.getCount();
         incomingTransactionRequestSizeCounter.dec(incomingTransactionRequestSizeCount);
 
-        Counter incomingTransactionResponseSizeCounter = metrics.counter("incomingTransactionResponseSize");
-        long incomingTransactionResponseSizeCount = incomingTransactionResponseSizeCounter.getCount();
+        Counter incomingTransactionResponseSizeCounter =
+            metrics.counter("incomingTransactionResponseSize");
+        long incomingTransactionResponseSizeCount =
+            incomingTransactionResponseSizeCounter.getCount();
         incomingTransactionResponseSizeCounter.dec(incomingTransactionResponseSizeCount);
 
 
-        // TODO: reset timers
-        // Timer timer = metrics.timer("io.dropwizard.jetty.MutableServletContextHandler.requests");
+        metrics.remove("requests_before_reset");
+        metrics.counter("requests_before_reset").inc(
+            metrics.timer("io.dropwizard.jetty.MutableServletContextHandler.requests").getCount());
+
+        metrics.remove("responses_error_befor_reset");
+        metrics.counter("responses_error_befor_reset").inc(
+            metrics.meter("io.dropwizard.jetty.MutableServletContextHandler.4xx-responses").getCount() +
+            metrics.meter("io.dropwizard.jetty.MutableServletContextHandler.5xx-responses").getCount()
+        );
+
 
 
     }
