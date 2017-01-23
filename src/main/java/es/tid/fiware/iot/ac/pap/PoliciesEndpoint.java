@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac.pap;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -26,12 +26,15 @@ import es.tid.fiware.iot.ac.model.Policy;
 import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.rs.Correlator;
 import io.dropwizard.hibernate.UnitOfWork;
+import com.codahale.metrics.annotation.Timed;
+import com.codahale.metrics.MetricRegistry;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 @Path("/pap/v1/subject/{subject}/policy/{policyId}")
 @Produces(MediaType.APPLICATION_XML)
@@ -41,23 +44,33 @@ public class PoliciesEndpoint {
 
     private PolicyDao dao;
 
-    public PoliciesEndpoint(PolicyDao dao) {
+    private MetricRegistry metrics;
+
+    public PoliciesEndpoint(PolicyDao dao, MetricRegistry metrics) {
         this.dao = dao;
+        this.metrics = metrics;
     }
 
     @GET
     @UnitOfWork
+    @Correlator
+    @Timed
     public Response getPolicy(@Tenant String tenant,
                               @Correlator String correlator,
                               @PathParam("subject") String subject,
                               @PathParam("policyId") String policyId) {
-        
+
         LOGGER.debug("Getting policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
-        
+
         String id = URLEncoding.decode(policyId);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length() +
+                                                              subject.length() +
+                                                              policyId.length());
         if (p != null) {
+            metrics.counter("incomingTransactionResponseSize").inc(p.getPolicy().length());
             return Response.ok(p.getPolicy()).build();
         } else {
             return Response.status(404).build();
@@ -67,6 +80,7 @@ public class PoliciesEndpoint {
     @DELETE
     @UnitOfWork
     @Correlator
+    @Timed
     public Response deletePolicy(@Tenant String tenant,
                                  @Correlator String correlator,
                                  @PathParam("subject") String subject,
@@ -76,6 +90,10 @@ public class PoliciesEndpoint {
         LOGGER.debug("Removing policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length() +
+                                                              subject.length() +
+                                                              policyId.length());
         if (p != null) {
             dao.deletePolicy(p);
             return Response.status(204).build();
@@ -87,19 +105,26 @@ public class PoliciesEndpoint {
     @PUT
     @UnitOfWork
     @Correlator
+    @Timed
     public Response updatePolicy(@Tenant String tenant,
                                  @Correlator String correlator,
                                  @PathParam("subject") String subject,
                                  @PathParam("policyId") String policyId,
                                  String policy) {
-        
+
         LOGGER.debug("Updating policy with id [{}] for [{}] and subject [{}]", policyId, tenant, subject);
 
         String id = URLEncoding.decode(policyId);
 
         Policy p = dao.loadPolicy(tenant, subject, id);
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length() +
+                                                              subject.length() +
+                                                              policyId.length() +
+                                                              policy.length());
         if (p != null) {
             Policy newP = dao.updatePolicy(new Policy(id, tenant, subject, policy));
+            metrics.counter("incomingTransactionResponseSize").inc(newP.getPolicy().length());
             return Response.ok(newP.getPolicy()).build();
         } else {
             return Response.status(404).build();

@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac.pap;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,6 +29,7 @@ import es.tid.fiware.iot.ac.rs.Correlator;
 import es.tid.fiware.iot.ac.util.Xml;
 import es.tid.fiware.iot.ac.xacml.PDPFactory;
 import io.dropwizard.hibernate.UnitOfWork;
+import com.codahale.metrics.MetricRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -52,10 +53,13 @@ public class SubjectEndpoint {
 
     private PDPFactory factory = new PDPFactory();
 
+    private MetricRegistry metrics;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SubjectEndpoint.class);
 
-    public SubjectEndpoint(PolicyDao dao) {
+    public SubjectEndpoint(PolicyDao dao, MetricRegistry metrics) {
         this.dao = dao;
+        this.metrics = metrics;
     }
 
     @GET
@@ -67,10 +71,13 @@ public class SubjectEndpoint {
             LOGGER.debug("Getting policies for [{}] and subject [{}]", tenant, subject);
 
             Collection<Policy> policyList = dao.getPolicies(tenant, subject);
-            
+
             PolicySet ps = new PolicySet(tenant + ":" + subject, policyList);
             Document setDocument = ps.toXml();
             String result = Xml.toString(setDocument);
+            metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                                  correlator.length());
+            metrics.counter("incomingTransactionResponseSize").inc(result.length());
             return Response.ok(result).build();
         } catch (IOException | SAXException | TransformerException ex) {
             return Response.status(500).build();
@@ -88,12 +95,13 @@ public class SubjectEndpoint {
      */
     @POST
     @UnitOfWork
+    @Correlator
     public Response createPolicy(@Context UriInfo info,
                                  @Tenant String tenant,
                                  @Correlator String correlator,
                                  @PathParam("subject") String subject, String policy) {
         String id;
-        
+
         try {
             LOGGER.debug("Creating policy for tenant [{}] and subject [{}]", tenant, subject);
             id = URLEncoding.encode(
@@ -104,8 +112,12 @@ public class SubjectEndpoint {
         }
 
         dao.createPolicy(new Policy(id, tenant, subject, policy));
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length() +
+                                                              subject.length() +
+                                                              policy.length());
         return Response.created(
-                info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
+                  info.getAbsolutePathBuilder().path("/policy/" + id).build()).build();
     }
 
     /**
@@ -116,10 +128,13 @@ public class SubjectEndpoint {
     public Response delete(@Tenant String tenant,
                            @Correlator String correlator,
                            @PathParam("subject") String subject) {
-        
-        LOGGER.debug("Removing all the policies for tenant [{}] and subject [{}]", 
+
+        LOGGER.debug("Removing all the policies for tenant [{}] and subject [{}]",
                 tenant, subject);
         Collection<Policy> policyList = dao.getPolicies(tenant, subject);
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length() +
+                                                              subject.length());
         if (policyList.size() > 0) {
             dao.deleteFromSubject(tenant, subject);
             return Response.status(204).build();

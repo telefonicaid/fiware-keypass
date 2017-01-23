@@ -103,10 +103,10 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().getResourceConfig().getContainerResponseFilters().add(
                 new CorrelatorHeaderFilter(configuration.getCorrelatorHeader()));
 
-        environment.jersey().register(new TenantEndpoint(dao));
-        environment.jersey().register(new SubjectEndpoint(dao));
-        environment.jersey().register(new PoliciesEndpoint(dao));
-        environment.jersey().register(new PdpEndpoint(pdpFactory));
+        environment.jersey().register(new TenantEndpoint(dao, metrics));
+        environment.jersey().register(new SubjectEndpoint(dao, metrics));
+        environment.jersey().register(new PoliciesEndpoint(dao, metrics));
+        environment.jersey().register(new PdpEndpoint(pdpFactory, metrics));
         environment.jersey().register(new LogsEndpoint());
         environment.jersey().register(new VersionEndpoint());
         environment.jersey().register(new MetricsEndpoint(jerseyClient,
