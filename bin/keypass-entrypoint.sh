@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo INFO: keypass entrypoint start"
+echo "INFO: keypass entrypoint start"
 
 # Check argument DB_HOST
 DB_HOST_ARG=${1}
@@ -18,7 +18,7 @@ if [ "${DB_HOST_ARG}" == "-dbhost" ]; then
     echo "INFO: DB_HOST_NAME <${DB_HOST_NAME}>"
     echo "INFO: DB_HOST_PORT <${DB_HOST_PORT}>"
     [[ "${DB_HOST_NAME}" == "" ]] && echo "ERROR: MySQL hostname not provided" >&2 && exit 2
-    sed -i "s/mysql:\/\/localhost/mysql:\/\/"${DB_HOST_VALUE}"/g" /opt/keypass/config.yml
+    sed -i "s/mysql:\/\/localhost/mysql:\/\/${DB_HOST_VALUE}/g" /opt/keypass/config.yml
     # Wait until DB is up or exit if timeout
     # Current time in seconds
     STARTTIME=$(date +%s)
