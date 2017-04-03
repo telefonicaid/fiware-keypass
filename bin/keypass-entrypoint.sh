@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo INFO: keypass entrypoint start"
+
 # Check argument DB_HOST
 DB_HOST_ARG=${1}
 # DB_HOST_VALUE can be hostname[:port]
