@@ -2,7 +2,8 @@ FROM centos:6
 
 MAINTAINER IoT team
 
-ENV DB_HOST localhost
+# DB_ENDPOINT host[:port]
+ENV DB_ENDPOINT localhost
 ENV KEYPASS_VERSION 1.2.1
 ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk.x86_64
 
@@ -30,14 +31,34 @@ RUN \
     sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml && \
     sed -i "s/port: 8081/port: 7071/g" /opt/keypass/config.yml && \
     sed -i "s/bindHost: 127.0.0.1/bindHost: 0.0.0.0/g" /opt/keypass/config.yml && \
-    sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_HOST"/g" /opt/keypass/config.yml && \
+    sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_ENDPOINT"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
     mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
-    yum erase -y java-1.7.0-openjdk-devel && unset JAVA_HOME && \
-    rpm -qa redhat-logos gtk2 pulseaudio-libs libvorbis jpackage-utils groff alsa-lib atk cairo libX* | xargs -r rpm -e --nodeps && yum -y erase libss && yum clean all && rpm -vv --rebuilddb && \
-    rm -rf /var/lib/yum/yumdb && \
-    rm -rf /var/lib/yum/history && find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en' ! -name 'es' ! -name 'es_ES' | xargs rm -r && \
-    rm -f /var/log/*log
+    yum erase -y java-1.7.0-openjdk-devel libss && unset JAVA_HOME && \
+    # Clean yum data
+    yum clean all && rm -rf /var/lib/yum/yumdb && rm -rf /var/lib/yum/history && \
+    # Erase without dependencies unneded rpm packages
+    rpm -qa alsa-lib atk cairo cups-libs flac fontconfig gdk-pixbuf2 giflib groff gtk2 jasper-libs jpackage-utils \
+      libjpeg-turbo libsndfile libthai libtiff libvorbis libxcb libX* \
+      pango pixman pulseaudio-libs redhat-logos xorg-x11* | xargs -r rpm -e --nodeps && \
+    # Rebuild rpm data files
+    rpm --rebuilddb && \
+    # Delete unused locales. Only preserve en_US and the locale aliases
+    rm -rf /usr/share/zoneinfo && \
+    find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en_US' ! -name 'locale.alias' | xargs -r rm -r && \
+    bash -c 'localedef --list-archive | grep -v -e "en_US" | xargs localedef --delete-from-archive' && \
+    # We use cp instead of mv as to refresh locale changes for ssh connections
+    # We use /bin/cp instead of cp to avoid any alias substitution, which in some cases has been problematic
+    /bin/cp -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl && \
+    build-locale-archive && \
+    find /opt/keypass -name '.[^.]*' 2>/dev/null | xargs -r rm -rf && \
+    # We don't need glibc locale data
+    # This cannot be removed using yum as yum uses hard dependencies and doing so will uninstall essential packages
+    rm -rf /usr/share/i18n /usr/{lib,lib64}/gconv && \
+    # We don't need wallpapers
+    rm -rf /usr/share/wallpapers/* && \
+    # Don't need old log files inside docker images
+    rm -rf /root/*log* /tmp/* /var/log/*log*
 
 # Define the entry point
 ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
