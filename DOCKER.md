@@ -12,11 +12,11 @@ A Docker Compose file is provided for convenience. You must install [Docker Comp
 
 Simply navigate to the docker directory of the orchestrator code (if you have downloaded it) and run
 
-        docker-compose up
+        sudo docker-compose up
 
 If you haven't or you don't want to download the whole thing, you can download the file called `docker-compose.yaml` in a directory of your choice and run the aforementioned command. It will work just the same.
 
-You can use [this](https://github.com/telefonicaid/fiware-keypass/blob/master/docker-compose.yml) or also you can create a docker-compose.yml file, were you should include an orchestrator section like this:
+You can use [this](https://github.com/telefonicaid/fiware-keypass/blob/master/docker-compose.yml) or also you can create a docker-compose.yml file, were you should include a section like this:
 
 ```
 keypass:
@@ -37,6 +37,16 @@ As you can see there are several arguments to pass to keypass entry point in ord
    -dbhost mysql
 ```
 
+You can use other mysql port setting optionally the port as:
+```
+   -dbhost mysql[:port]
+```
+
+By default wait until mysql database is operative at maximum of default DBTIMEOUT 60 seconds. You can explicitly set this value to other:
+```
+  environment:
+    - DBTIMEOUT=100
+```
 
 ## Build the image
 
@@ -44,7 +54,7 @@ This is an alternative approach than the one presented in section [The Fastest W
 
 You only need to do this once in your system:
 
-        docker build -t fiware-keypass .
+        sudo docker build -t fiware-keypass .
 
 The parameter `-t fiware-keypass` gives the image a name. This name could be anything, or even include an organization like `-t org/fiware-keypass`. This name is later used to run the container based on the image.
 
@@ -54,7 +64,7 @@ If you want to know more about images and the building process you can find it i
 
 The following line will run the container exposing port `7070`, give it a name -in this case `keypass1` and present a bash prompt.
 
-          docker run -d --name keypass1 -p 7070:7070 fiware-keypass
+          sudo docker run -d --name keypass1 -p 7070:7070 fiware-keypass
 
 As a result of this command, there is a orchestrator listening on port 7070 on localhost. Try to see if it works now with
 
