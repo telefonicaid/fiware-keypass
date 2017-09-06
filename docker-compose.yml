@@ -21,4 +21,6 @@ keypass:
     - "7070:7070"
     - "7071:7071"
   command: -dbhost mysql
+  environment:
+    - DBTIMEOUT=200
 
