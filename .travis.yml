@@ -5,5 +5,7 @@ install:
 script:
   - mvn -Pzip,rpm package
 jdk:
-  - oraclejdk7
+  - openjdk7
+  - openjdk8  
+  - oraclejdk8
 

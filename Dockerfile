@@ -4,7 +4,8 @@ MAINTAINER IoT team
 
 # DB_ENDPOINT host[:port]
 ENV DB_ENDPOINT localhost
-ENV KEYPASS_VERSION 1.2.1
+
+ENV KEYPASS_VERSION 1.2.2
 ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk.x86_64
 
 COPY . /opt/keypass/
