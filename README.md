@@ -17,6 +17,8 @@ basic concepts. For a more detailed information you can read the following docs:
 * [Installation guide](INSTALL.md)
 * [Troubleshooting](TROUBLESHOOTING.md)
 * [Behaviour Tests](https://github.com/telefonicaid/fiware-keypass/tree/master/src/behavior/README.md)
+* [Performance Tests](https://github.com/telefonicaid/fiware-keypass/tree/master/jmeter-test-plan.jmx)
+* [Docker configuraton](DOCKER.md)
 
 
 # Building
