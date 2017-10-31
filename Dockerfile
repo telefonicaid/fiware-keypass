@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:7
 
 MAINTAINER IoT team
 
@@ -6,14 +6,14 @@ MAINTAINER IoT team
 ENV DB_ENDPOINT localhost
 
 ENV KEYPASS_VERSION 1.2.2
-ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk.x86_64
+ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk
 
 COPY . /opt/keypass/
 WORKDIR /opt/keypass
 
 RUN \
     # Install dependencies
-    yum update -y && yum install -y wget nc unzip && \
+    yum update -y && yum install -y wget tcping unzip && \
     yum install -y epel-release && yum update -y epel-release && \
     yum install -y java-1.7.0-openjdk java-1.7.0-openjdk-devel && \
     # Install Maven
