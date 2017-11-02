@@ -13,9 +13,10 @@ WORKDIR /opt/keypass
 
 RUN \
     # Install dependencies
-    yum update -y && yum install -y wget tcping unzip && \
+    yum update -y && yum install -y wget unzip && \
     yum install -y epel-release && yum update -y epel-release && \
     yum install -y java-1.7.0-openjdk java-1.7.0-openjdk-devel && \
+    yum install -y tcping && \
     # Install Maven
     wget -c http://ftp.cixug.es/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip && \
     unzip -oq apache-maven-3.2.5-bin.zip  && \
