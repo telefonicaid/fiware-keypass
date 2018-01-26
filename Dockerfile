@@ -6,6 +6,7 @@ MAINTAINER IoT team
 ENV DB_ENDPOINT localhost
 
 ENV KEYPASS_VERSION 1.2.2
+ENV JAVA_VERSION "1.8.0"
 ENV JAVA_HOME /usr/lib/jvm/java-1.7.0-openjdk
 
 COPY . /opt/keypass/
@@ -15,7 +16,7 @@ RUN \
     # Install dependencies
     yum update -y && yum install -y wget unzip && \
     yum install -y epel-release && yum update -y epel-release && \
-    yum install -y java-1.7.0-openjdk java-1.7.0-openjdk-devel && \
+    yum install -y java-${JAVA_VERSION}-openjdk java-${JAVA_VERSION}-openjdk-devel && \
     yum install -y tcping && \
     # Install Maven
     wget -c http://ftp.cixug.es/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip && \
@@ -36,7 +37,7 @@ RUN \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_ENDPOINT"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
     mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
-    yum erase -y java-1.7.0-openjdk-devel libss && unset JAVA_HOME && \
+    yum erase -y java-${JAVA_VERSION}-openjdk-devel libss && unset JAVA_HOME && \
     # Clean yum data
     yum clean all && rm -rf /var/lib/yum/yumdb && rm -rf /var/lib/yum/history && \
     # Erase without dependencies unneded rpm packages
