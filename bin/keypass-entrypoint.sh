@@ -22,7 +22,7 @@ if [ "${DB_HOST_ARG}" == "-dbhost" ]; then
     # Wait until DB is up or exit if timeout
     # Current time in seconds
     STARTTIME=$(date +%s)
-    while ! nc -z ${DB_HOST_NAME} ${DB_HOST_PORT}
+    while ! tcping -t 1 ${DB_HOST_NAME} ${DB_HOST_PORT}
     do
         [[ $(($(date +%s) - ${DBTIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>" >&2; exit 3; }
         echo "INFO: Wait for MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>"

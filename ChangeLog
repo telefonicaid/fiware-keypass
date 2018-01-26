@@ -1,3 +1,5 @@
+Update docker to centos7
+
 1.2.2
 
 Add docker_enable_hostname_port_and_add_timeout_and_optimize_size
