@@ -376,3 +376,53 @@ Content-Type: application/xml
   </Result>
 </Response>
 ```
+
+
+## Admin API
+
+### Get version
+
+```
+GET /verison
+<TENANT-HEADER>:<tenant>
+```
+
+Response
+
+
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+1.2.2
+```
+
+### Get log level
+
+```
+GET /admin/log
+<TENANT-HEADER>:<tenant>
+```
+Response
+
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+INFO
+```
+
+
+### Change log level (valid are debug, info, warn, error)
+
+```
+PUT /admin/log?level=new_level
+<TENANT-HEADER>:<tenant>
+```
+Response 
+```HTTP
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+```
+
