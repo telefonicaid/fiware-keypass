@@ -5,6 +5,10 @@ Update docker to centos7
 
 Add docker_enable_hostname_port_and_add_timeout_and_optimize_size
 
+1.3.0
+
+Metrics API comon [issue#101]
+
 1.2.1
 
 Bug logs: subservice log component as not apply

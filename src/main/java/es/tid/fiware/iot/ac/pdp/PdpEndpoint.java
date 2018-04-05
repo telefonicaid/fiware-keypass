@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac.pdp;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -43,6 +43,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import com.codahale.metrics.MetricRegistry;
+
 
 @Path("/pdp/v3")
 @Produces(MediaType.APPLICATION_XML)
@@ -50,15 +52,18 @@ public class PdpEndpoint {
 
     private final PdpFactory pdpFactory;
     private static final Logger LOGGER = LoggerFactory.getLogger(PdpEndpoint.class);
+    private MetricRegistry metrics;
 
-    public PdpEndpoint(PdpFactory pdpFactory) {
+    public PdpEndpoint(PdpFactory pdpFactory, MetricRegistry metrics) {
         this.pdpFactory = pdpFactory;
+        this.metrics = metrics;
     }
 
     @POST
     @UnitOfWork(readOnly = true, transactional = false,
             cacheMode = CacheMode.GET, flushMode = FlushMode.MANUAL)
     @Timed
+    @Correlator
     public Response enforce(@Tenant String tenant,
                             @Correlator String correlator,
                             String xacmlRequest) {
@@ -90,6 +95,8 @@ public class PdpEndpoint {
             evaluation = pdp.evaluate(xacmlRequest);
             LOGGER.trace("XACML evaluation: {}", evaluation);
         }
+        metrics.counter("incomingTransactionRequestSize").inc(xacmlRequest.length());
+        metrics.counter("incomingTransactionResponseSize").inc(evaluation.length());
         return Response.ok(evaluation).build();
     }
 

@@ -42,8 +42,8 @@ time=15:12:55.106 | lvl=INFO | corr= | trans=n/a | op=DropwizardResourceConfig |
     PUT     /pap/v1/{tenant}/subject/{subject}/policy/{policyId} (es.tid.fiware.iot.ac.pap.PoliciesEndpoint)
     POST    /pdp/v3/{tenant} (es.tid.fiware.iot.ac.pdp.PdpEndpoint)
 
-time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started application@7e00a490{HTTP/1.1}{0.0.0.0:8080}
-time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started admin@5c342a90{HTTP/1.1}{127.0.0.1:8081}
+time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started application@7e00a490{HTTP/1.1}{0.0.0.0:7070}
+time=15:12:55.464 | lvl=INFO | corr= | trans=n/a | op=ServerConnector | msg=Started admin@5c342a90{HTTP/1.1}{127.0.0.1:7071}
 ```
 
 ## Database connection errors
@@ -72,6 +72,6 @@ time=15:15:02.453 | lvl=ERROR | corr=45a55bc3-3456-47ec-bf97-436f7ed0e71a | tran
 ## Monitoring API
 
 You can inspect the application status through its admin interface, by default
-configured to listen in <http://localhost:8081>.
+configured to listen in <http://localhost:7071>.
 
 The admin interface expose several metrics and health check status.

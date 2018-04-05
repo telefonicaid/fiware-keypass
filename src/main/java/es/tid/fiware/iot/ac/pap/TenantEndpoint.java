@@ -10,9 +10,9 @@ package es.tid.fiware.iot.ac.pap;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,6 +25,7 @@ import es.tid.fiware.iot.ac.dao.PolicyDao;
 import es.tid.fiware.iot.ac.rs.Tenant;
 import es.tid.fiware.iot.ac.rs.Correlator;
 import io.dropwizard.hibernate.UnitOfWork;
+import com.codahale.metrics.MetricRegistry;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -41,9 +42,11 @@ public class TenantEndpoint {
 
     private final PolicyDao dao;
     private static final Logger LOGGER = LoggerFactory.getLogger(TenantEndpoint.class);
+    private MetricRegistry metrics;
 
-    public TenantEndpoint(PolicyDao dao) {
+    public TenantEndpoint(PolicyDao dao, MetricRegistry metrics) {
         this.dao = dao;
+        this.metrics = metrics;
     }
 
     /**
@@ -54,11 +57,14 @@ public class TenantEndpoint {
      */
     @DELETE
     @UnitOfWork
+    @Correlator
     public Response delete(@Tenant String tenant,
                            @Correlator String correlator) {
         LOGGER.debug("Deleting all the resources for [{}]", tenant);
 
         dao.deleteFromTenant(tenant);
+        metrics.counter("incomingTransactionRequestSize").inc(tenant.length() +
+                                                              correlator.length());
         return Response.status(204).build();
     }
 

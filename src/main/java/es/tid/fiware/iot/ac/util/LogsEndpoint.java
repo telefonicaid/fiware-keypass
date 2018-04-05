@@ -58,8 +58,7 @@ public class LogsEndpoint {
 
     @GET
     @UnitOfWork
-    public Response getLogLevel(@Tenant String tenant,
-                                @Correlator String correlator
+    public Response getLogLevel(@Correlator String correlator
                                 ) {
         // Get current logLevel
         Logger root_LOGGER = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
@@ -78,8 +77,7 @@ public class LogsEndpoint {
 
     @PUT
     @UnitOfWork
-    public Response updateLogLevel(@Tenant String tenant,
-                                   @Correlator String correlator,
+    public Response updateLogLevel(@Correlator String correlator,
                                    @QueryParam("logLevel") String logLevel,
                                    @QueryParam("level") String level
                                    ) {

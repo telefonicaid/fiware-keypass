@@ -29,6 +29,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import io.dropwizard.client.JerseyClientConfiguration;
+
 public class AcConfig extends Configuration {
 
     @NotEmpty
@@ -51,6 +53,12 @@ public class AcConfig extends Configuration {
     @JsonProperty("pdpCache")
     private CacheConfig pdpCacheConfig = new CacheConfig();
 
+    @Valid
+    @NotNull
+    @JsonProperty
+    private JerseyClientConfiguration httpClient = new JerseyClientConfiguration();
+
+
     public String getTenantHeader() {
         return tenantHeader;
     }
@@ -69,6 +77,10 @@ public class AcConfig extends Configuration {
 
     public CacheConfig getPdpCacheConfig() {
         return pdpCacheConfig;
+    }
+
+    public JerseyClientConfiguration getJerseyClientConfiguration() {
+        return httpClient;
     }
 
     public void setTenantHeader(String tenantHeader) {
@@ -90,4 +102,5 @@ public class AcConfig extends Configuration {
     public void setPdpCacheConfig(CacheConfig pdpCacheConfig) {
         this.pdpCacheConfig = pdpCacheConfig;
     }
+
 }

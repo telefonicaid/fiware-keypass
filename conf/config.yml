@@ -1,12 +1,12 @@
 server:
   applicationConnectors:
     - type: http
-      port: 8080
+      port: 7070
       bindHost: 0.0.0.0
   adminConnectors:
     - type: http
-      port: 8081
-      bindHost: 127.0.0.1
+      port: 7071
+      bindHost: 0.0.0.0
 
 tenantHeader: Fiware-Service
 

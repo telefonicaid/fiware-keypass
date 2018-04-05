@@ -37,13 +37,17 @@ import es.tid.fiware.iot.ac.rs.CorrelatorProvider;
 import es.tid.fiware.iot.ac.util.BlockingCacheFactory;
 import es.tid.fiware.iot.ac.util.LogsEndpoint;
 import es.tid.fiware.iot.ac.util.VersionEndpoint;
+import es.tid.fiware.iot.ac.util.MetricsEndpoint;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import com.codahale.metrics.MetricRegistry;
 import java.util.EnumSet;
 import javax.servlet.DispatcherType;
+import com.sun.jersey.api.client.Client;
+
 
 public class AcService extends io.dropwizard.Application<AcConfig> {
 
@@ -74,6 +78,8 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
             Environment environment)
             throws Exception {
 
+        MetricRegistry metrics = environment.metrics();
+
         PolicyDao dao = new PolicyDAOHibernate(hibernate.getSessionFactory());
         PdpFactory pdpFactory = new PdpFactoryCached(dao,
                 new BlockingCacheFactory(
@@ -90,12 +96,13 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
         environment.jersey().getResourceConfig().getContainerResponseFilters().add(
                 new CorrelatorHeaderFilter(configuration.getCorrelatorHeader()));
 
-        environment.jersey().register(new TenantEndpoint(dao));
-        environment.jersey().register(new SubjectEndpoint(dao));
-        environment.jersey().register(new PoliciesEndpoint(dao));
-        environment.jersey().register(new PdpEndpoint(pdpFactory));
+        environment.jersey().register(new TenantEndpoint(dao, metrics));
+        environment.jersey().register(new SubjectEndpoint(dao, metrics));
+        environment.jersey().register(new PoliciesEndpoint(dao, metrics));
+        environment.jersey().register(new PdpEndpoint(pdpFactory, metrics));
         environment.jersey().register(new LogsEndpoint());
         environment.jersey().register(new VersionEndpoint());
+        environment.jersey().register(new MetricsEndpoint(metrics));
 
     }
 }
