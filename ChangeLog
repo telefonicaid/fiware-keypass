@@ -1,3 +1,5 @@
+Upgrade mysql connector from 5.1.6 to 5.1.47
+
 1.3.0
 
 Update docker to java 1.8
