@@ -1,14 +1,18 @@
 #!/bin/bash
-# keypass : This starts and stops keypass daemon
-#
-# chkconfig: 12345 12 88
-# description: keypass
-# processname: keypass
-# pidfile: /var/run/keypass.pid
+
+### BEGIN INIT INFO
+# Provides:          keypass
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon keypass at boot time
+# Description:       Enable service keypass provided by daemon.
+### END INIT INFO
 
 # Source function library.
 
-. /etc/rc.d/init.d/functions
+. /etc/init.d/functions
 
 CURR="$( cd "$( dirname "$( readlink -f ${BASH_SOURCE[0]} )" )" && pwd )"
 
@@ -92,3 +96,4 @@ case "$1" in
     ;; esac
 
 exit 0
+
