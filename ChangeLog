@@ -1,5 +1,4 @@
-Master
-
+Compatibilize keypass manage service in RedHat/Centos 7.7 systemd package (#119)
 Upgrade java build completely to 1.8 (#118)
 Remove openjdk7 from travis (#121)
 
