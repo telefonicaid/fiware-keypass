@@ -98,7 +98,7 @@ logging:
       logFormat: "time=%d{yyyy-MM-dd,UTC}T%d{HH:mm:ss.SSS,UTC}Z | lvl=%level | corr=%X{client} | trans=n/a | srv=%X{service} | subsrv=n/a | comp=KEYPASS | op=%c{0} | msg=%msg\n"
 
     - type: console
-      threshold: DEBUG
+      threshold: INFO
       target: stdout
       timeZone: UTC
       logFormat: "time=%d{yyyy-MM-dd,UTC}T%d{HH:mm:ss.SSS,UTC}Z | lvl=%level | corr=%X{client} | trans=n/a | srv=%X{service} | subsrv=n/a | comp=KEYPASS | op=%c{0} | msg=%msg\n"
