@@ -30,6 +30,5 @@ if [ "${DB_HOST_ARG}" == "-dbhost" ]; then
     done
     java -jar /opt/keypass/keypass.jar db migrate /opt/keypass/config.yml
 fi
-sed -i "s/threshold: DEBUG/threshold: CRITICAL/g" /opt/keypass/config.yml
 
 java -jar /opt/keypass/keypass.jar server /opt/keypass/config.yml

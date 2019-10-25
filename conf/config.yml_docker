@@ -1,0 +1,87 @@
+server:
+  applicationConnectors:
+    - type: http
+      port: 8080
+      bindHost: 0.0.0.0
+  adminConnectors:
+    - type: http
+      port: 8081
+      bindHost: 127.0.0.1
+
+tenantHeader: Fiware-Service
+
+correlatorHeader: Fiware-Correlator
+
+# SteelSkinPep can perform a XACML request using several subject-id in the
+# accesss-subject field
+# If Policies were not prepared to match with everal subject-ids (by using
+# subject-id in AttributeDesignator of Match) this mode enables to match each
+# subject-id of XACML request, checking one by one
+steelSkinPepMode: True
+
+database:
+  # the name of your JDBC driver
+  driverClass: com.mysql.jdbc.Driver
+
+  # the username
+  user: keypass
+
+  # the password
+  password: keypass
+
+  # the JDBC URL
+  url: jdbc:mysql://localhost/keypass
+
+  # any properties specific to your JDBC driver:
+  properties:
+    charSet: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQLDialect
+
+  # the maximum amount of time to wait on an empty pool before throwing an exception
+  maxWaitForConnection: 1s
+
+  # the SQL query to run when validating a connection's liveness
+  validationQuery: "/* Keypass Health Check */ SELECT 1"
+
+  # the minimum number of connections to keep open
+  minSize: 8
+
+  # the maximum number of connections to keep open
+  maxSize: 32
+
+  # whether or not idle connections should be validated
+  checkConnectionWhileIdle: true
+
+  checkConnectionOnBorrow: true
+
+# cache for PDP objects
+pdpCache:
+  # expiration time for cached objects
+  timeToLiveSeconds: 60
+
+  # max PDP objects (per tenant)
+  maxEntriesLocalHeap: 100
+
+# Logging settings.
+logging:
+
+  # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+  level: INFO
+
+  # Logger-specific levels.
+  loggers:
+    "org.hibernate": ERROR
+    "io.dropwizard": ERROR
+    "org.eclipse.jetty": ERROR
+    "com.sun.jersey": ERROR
+    "io.dropwizard.jersey.DropwizardResourceConfig": INFO
+    "org.eclipse.jetty.server.ServerConnector": INFO
+    "io.dropwizard.server.ServerFactory": INFO
+
+  appenders:
+
+    - type: console
+      threshold: INFO
+      target: stdout
+      timeZone: UTC
+      logFormat: "time=%d{yyyy-MM-dd,UTC}T%d{HH:mm:ss.SSS,UTC}Z | lvl=%level | corr=%X{client} | trans=n/a | srv=%X{service} | subsrv=n/a | comp=KEYPASS | op=%c{0} | msg=%msg\n"
