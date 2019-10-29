@@ -42,7 +42,7 @@ public class LogsEndpoint {
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(LogsEndpoint.class);
 
     private static String[] ValidLogLevels = {
-        "CRITICAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"
+        "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"
     };
 
     public LogsEndpoint() {
