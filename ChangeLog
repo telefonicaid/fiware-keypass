@@ -1,3 +1,5 @@
+Disable log to file in docker
+
 1.5.0
 
 Compatibilize keypass manage service in RedHat/Centos 7.7 systemd package (#119)
