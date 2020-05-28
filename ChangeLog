@@ -1,3 +1,5 @@
+ADD: allow usage of env vas with in docker entry point
+
 1.5.0
 
 Compatibilize keypass manage service in RedHat/Centos 7.7 systemd package (#119)
