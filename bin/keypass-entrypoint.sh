@@ -2,6 +2,7 @@
 
 echo "INFO: keypass entrypoint start"
 
+[[ "${DB_HOST_VALUE}" == "" ]] && DB_HOST_VALUE=localhost:3306
 # Default MySQL host name
 [[ "${DB_HOST_NAME}" == "" ]] && DB_HOST_NAME=localhost
 # Default MySQL port 3306
