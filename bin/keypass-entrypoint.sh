@@ -7,8 +7,8 @@ echo "INFO: keypass entrypoint start"
 [[ "${DB_HOST_NAME}" == "" ]] && DB_HOST_NAME=localhost
 # Default MySQL port 3306
 [[ "${DB_HOST_PORT}" == "" ]] && DB_HOST_PORT=3306
-# DBTIMEOUT in seconds. Default to 60 seconds
-[[ "${DBTIMEOUT}" == "" ]] && export DBTIMEOUT=60
+# DB_TIMEOUT in seconds. Default to 60 seconds
+[[ "${DB_TIMEOUT}" == "" ]] && export DB_TIMEOUT=60
 
 # Check argument DB_HOST if provided
 while [[ $# -gt 0 ]]; do
@@ -40,7 +40,7 @@ sed -i "s/mysql:\/\/localhost/mysql:\/\/${DB_HOST_VALUE}/g" /opt/keypass/config.
 STARTTIME=$(date +%s)
 while ! tcping -t 1 ${DB_HOST_NAME} ${DB_HOST_PORT}
 do
-    [[ $(($(date +%s) - ${DBTIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>" >&2; exit 3; }
+    [[ $(($(date +%s) - ${DB_TIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>" >&2; exit 3; }
     echo "INFO: Wait for MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>"
     sleep 2
 done

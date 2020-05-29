@@ -48,6 +48,19 @@ By default wait until mysql database is operative at maximum of default DBTIMEOU
     - DBTIMEOUT=100
 ```
 
+
+
+Additionally, the following environment variables are available for keypass docker
+
+| Environment variable        | Configuration attribute   | Default value             |
+|:----------------------------|:--------------------------|:--------------------------|
+| DB_HOST_VALUE               |                           | localhost:3306            |
+| DB_HOST_NAME                |                           | localhost                 |
+| DB_HOST_PORT                |                           | 3306                      |
+| DB_TIMEOUT                   |                           | 60                       |
+
+
+
 ## Build the image
 
 This is an alternative approach than the one presented in section [The Fastest Way](#the_fastest_way). You do not need to go through these steps if you have used docker-compose.
