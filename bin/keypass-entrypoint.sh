@@ -2,13 +2,13 @@
 
 echo "INFO: keypass entrypoint start"
 
-[[ "${DB_HOST_VALUE}" == "" ]] && DB_HOST_VALUE=localhost:3306
+[[ "${KEYPASS_DB_HOST_VALUE}" == "" ]] && KEYPASS_DB_HOST_VALUE=localhost:3306
 # Default MySQL host name
-[[ "${DB_HOST_NAME}" == "" ]] && DB_HOST_NAME=localhost
+[[ "${KEYPASS_DB_HOST_NAME}" == "" ]] && KEYPASS_DB_HOST_NAME=localhost
 # Default MySQL port 3306
-[[ "${DB_HOST_PORT}" == "" ]] && DB_HOST_PORT=3306
+[[ "${KEYPASS_DB_HOST_PORT}" == "" ]] && KEYPASS_DB_HOST_PORT=3306
 # DB_TIMEOUT in seconds. Default to 60 seconds
-[[ "${DB_TIMEOUT}" == "" ]] && export DB_TIMEOUT=60
+[[ "${KEYPASS_DB_TIMEOUT}" == "" ]] && export KEYPASS_DB_TIMEOUT=60
 
 # Check argument DB_HOST if provided
 while [[ $# -gt 0 ]]; do
@@ -16,9 +16,9 @@ while [[ $# -gt 0 ]]; do
     VALUE=`echo $2`
     case "$PARAM" in
         -dbhost)
-            DB_HOST_VALUE=$VALUE
-            DB_HOST_NAME="$(echo "${DB_HOST_VALUE}" | awk -F: '{print $1}')"
-            DB_HOST_PORT="$(echo "${DB_HOST_VALUE}" | awk -F: '{print $2}')"
+            KEYPASS_DB_HOST_VALUE=$VALUE
+            KEYPASS_DB_HOST_NAME="$(echo "${KEYPASS_DB_HOST_VALUE}" | awk -F: '{print $1}')"
+            KEYPASS_DB_HOST_PORT="$(echo "${KEYPASS_DB_HOST_VALUE}" | awk -F: '{print $2}')"
             ;;
         *)
             echo "not found"
@@ -29,19 +29,19 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-echo "INFO: MySQL endpoint <${DB_HOST_VALUE}>"
-echo "INFO: DB_HOST_NAME <${DB_HOST_NAME}>"
-echo "INFO: DB_HOST_PORT <${DB_HOST_PORT}>"
+echo "INFO: MySQL endpoint <${KEYPASS_DB_HOST_VALUE}>"
+echo "INFO: KEYPASS_DB_HOST_NAME <${KEYPASS_DB_HOST_NAME}>"
+echo "INFO: KEYPASS_DB_HOST_PORT <${KEYPASS_DB_HOST_PORT}>"
 
-sed -i "s/mysql:\/\/localhost/mysql:\/\/${DB_HOST_VALUE}/g" /opt/keypass/config.yml
+sed -i "s/mysql:\/\/localhost/mysql:\/\/${KEYPASS_DB_HOST_VALUE}/g" /opt/keypass/config.yml
 
 # Wait until DB is up or exit if timeout
 # Current time in seconds
 STARTTIME=$(date +%s)
-while ! tcping -t 1 ${DB_HOST_NAME} ${DB_HOST_PORT}
+while ! tcping -t 1 ${KEYPASS_DB_HOST_NAME} ${KEYPASS_DB_HOST_PORT}
 do
-    [[ $(($(date +%s) - ${DB_TIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>" >&2; exit 3; }
-    echo "INFO: Wait for MySQL endpoint <${DB_HOST_NAME}:${DB_HOST_PORT}>"
+    [[ $(($(date +%s) - ${KEYPASS_DB_TIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}>" >&2; exit 3; }
+    echo "INFO: Wait for MySQL endpoint <${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}>"
     sleep 2
 done
 java -jar /opt/keypass/keypass.jar db migrate /opt/keypass/config.yml

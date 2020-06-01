@@ -45,7 +45,7 @@ You can use other mysql port setting optionally the port as:
 By default wait until mysql database is operative at maximum of default DBTIMEOUT 60 seconds. You can explicitly set this value to other:
 ```
   environment:
-    - DBTIMEOUT=100
+    - KEYPASS_DB_TIMEOUT=100
 ```
 
 
@@ -54,10 +54,10 @@ Additionally, the following environment variables are available for keypass dock
 
 | Environment variable        | Configuration attribute   | Default value             |
 |:----------------------------|:--------------------------|:--------------------------|
-| DB_HOST_VALUE               |                           | localhost:3306            |
-| DB_HOST_NAME                |                           | localhost                 |
-| DB_HOST_PORT                |                           | 3306                      |
-| DB_TIMEOUT                   |                           | 60                       |
+| KEYPASS_DB_HOST_VALUE       | database.url              | localhost:3306            |
+| KEYPASS_DB_HOST_NAME        | database.url              | localhost                 |
+| KEYPASS_DB_HOST_PORT        | database.url              | 3306                      |
+| KEYPASS_DB_TIMEOUT          |                           | 60                        |
 
 
 
