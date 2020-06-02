@@ -1,4 +1,4 @@
-ADD: allow usage of env vas with in docker entry point
+ADD: allow usage of env vars in docker entry point
 
 1.5.0
 
