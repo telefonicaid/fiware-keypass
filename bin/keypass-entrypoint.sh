@@ -19,6 +19,8 @@ while [[ $# -gt 0 ]]; do
             KEYPASS_DB_HOST_VALUE=$VALUE
             KEYPASS_DB_HOST_NAME="$(echo "${KEYPASS_DB_HOST_VALUE}" | awk -F: '{print $1}')"
             KEYPASS_DB_HOST_PORT="$(echo "${KEYPASS_DB_HOST_VALUE}" | awk -F: '{print $2}')"
+            # Ensure MySQL valid port
+            [[ "${KEYPASS_DB_HOST_PORT}" == "" ]] && KEYPASS_DB_HOST_PORT=3306
             ;;
         *)
             echo "not found"
