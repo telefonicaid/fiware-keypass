@@ -9,6 +9,8 @@ echo "INFO: keypass entrypoint start"
 [[ "${KEYPASS_DB_HOST_PORT}" == "" ]] && KEYPASS_DB_HOST_PORT=3306
 # DB_TIMEOUT in seconds. Default to 60 seconds
 [[ "${KEYPASS_DB_TIMEOUT}" == "" ]] && export KEYPASS_DB_TIMEOUT=60
+# LOG_LEVEL. Default INFO
+[[ "${KEYPASS_LOG_LEVEL}" == "" ]] && export KEYPASS_LOG_LEVEL=INFO
 
 # Check argument DB_HOST if provided
 while [[ $# -gt 0 ]]; do
@@ -30,6 +32,9 @@ while [[ $# -gt 0 ]]; do
     shift
     shift
 done
+
+echo "INFO: LOG LEVEL <${KEYPASS_LOG_LEVEL}>"
+sed -i "s/INFO/${KEYPASS_LOG_LEVEL}/g" /opt/keypass/config.yml
 
 echo "INFO: MySQL endpoint <${KEYPASS_DB_HOST_VALUE}>"
 echo "INFO: KEYPASS_DB_HOST_NAME <${KEYPASS_DB_HOST_NAME}>"
