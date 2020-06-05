@@ -1,3 +1,5 @@
+ADD: env var to set log level in docker entry point
+Disable log to file in docker
 ADD: allow usage of env vars in docker entry point
 
 1.5.0
