@@ -1,3 +1,5 @@
+ADD: autoReconnect to jdbc url configuration (#116)
+ADD: disable usage of SSL for mysql in jdbc url configuration (#126)
 ADD: env var to set log level in docker entry point
 Disable log to file in docker
 ADD: allow usage of env vars in docker entry point
