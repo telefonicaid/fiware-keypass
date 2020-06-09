@@ -28,8 +28,8 @@ RUN \
     mkdir -p /opt/keypass/log && \
     # Copy jar and conf to proper location
     cp target/keypass-$KEYPASS_VERSION.jar /opt/keypass/keypass.jar && \
-    chmod 666 /opt/keypass/config.yml && \
     cp ./conf/config.yml_docker /opt/keypass/config.yml && \
+    chmod 666 /opt/keypass/config.yml && \
     cp ./bin/keypass-daemon.sh /opt/keypass/ && \
     cp ./bin/keypass-entrypoint.sh /opt/keypass/ && \
     sed -i "s/port: 8080/port: 7070/g" /opt/keypass/config.yml && \
