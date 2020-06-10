@@ -61,7 +61,8 @@ RUN \
     # We don't need wallpapers
     rm -rf /usr/share/wallpapers/* && \
     # Don't need old log files inside docker images
-    rm -rf /root/*log* /tmp/* /var/log/*log*
+    rm -rf /root/*log* /tmp/* /var/log/*log* && \
+    chown -R 1000:1000 /opt/keypass
 
 # Define the entry point
 ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
