@@ -1,3 +1,4 @@
+ADD: fix Centos 7.7.1908 version in dockerfile
 ADD: fix /opt/keypass directory to 1000 user for docker
 ADD: autoReconnect to jdbc url configuration (#116)
 ADD: disable usage of SSL for mysql in jdbc url configuration (#126)
