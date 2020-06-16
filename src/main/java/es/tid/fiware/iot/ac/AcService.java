@@ -55,6 +55,7 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
     };
 
     public static void main(String[] args) throws Exception {
+        System.setProperty("net.sf.ehcache.skipUpdateCheck", "true");
         new AcService().run(args);
     }
 
