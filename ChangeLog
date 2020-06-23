@@ -1,3 +1,5 @@
+1.6.0
+
 ADD: fix Centos 7.7.1908 version in dockerfile
 ADD: Fix net.sf.ehcache.skipUpdateCheck (#136)
 ADD: upgrade java mysql connector from 5.1.47 to 5.1.49
