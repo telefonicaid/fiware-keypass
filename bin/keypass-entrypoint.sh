@@ -49,7 +49,7 @@ echo "INFO: KEYPASS_DB_PASSWORD <${KEYPASS_DB_PASSWORD}>"
 
 sed -i "s/mysql:\/\/localhost/mysql:\/\/${KEYPASS_DB_HOST_VALUE}/g" /opt/keypass/config.yml
 sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
-sed -i "s/password: keypass/password: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
+sed -i "s/password: keypass/password: ${KEYPASS_DB_PASSWORD}/g" /opt/keypass/config.yml
 
 # Wait until DB is up or exit if timeout
 # Current time in seconds
