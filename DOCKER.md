@@ -52,12 +52,15 @@ By default wait until mysql database is operative at maximum of default DBTIMEOU
 
 Additionally, the following environment variables are available for keypass docker
 
-| Environment variable        | Configuration attribute   | Default value             |
-|:----------------------------|:--------------------------|:--------------------------|
-| KEYPASS_DB_HOST_VALUE       | database.url              | localhost:3306            |
-| KEYPASS_DB_HOST_NAME        | database.url              | localhost                 |
-| KEYPASS_DB_HOST_PORT        | database.url              | 3306                      |
-| KEYPASS_DB_TIMEOUT          |                           | 60                        |
+| Environment variable  | Configuration attribute | Default value  |
+|:----------------------|:------------------------|:---------------|
+| KEYPASS_DB_HOST_VALUE | database.url            | localhost:3306 |
+| KEYPASS_DB_HOST_NAME  | database.url            | localhost      |
+| KEYPASS_DB_HOST_PORT  | database.url            | 3306           |
+| KEYPASS_DB_TIMEOUT    |                         | 60             |
+| KEYPASS_DB_USER       |                         | keypass        |
+| KEYPASS_DB_PASSWORD   |                         | keypass        |
+| KEYPASS_LOG_LEVEL     |                         | INFO           |
 
 
 
