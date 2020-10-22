@@ -1,4 +1,4 @@
-ADD: env var to set db user and password in docker entry point
+ADD: env var to set db user and password in docker entry point (#142)
 
 1.7.0
 
