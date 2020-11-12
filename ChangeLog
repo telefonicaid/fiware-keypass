@@ -1,3 +1,5 @@
+ADD: env var to set db user and password in docker entry point (#142)
+
 1.7.0
 
 ADD: Fix serverTimezone to UTC in mysql jdbc driver uri
