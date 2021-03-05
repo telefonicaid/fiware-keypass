@@ -1,3 +1,5 @@
+1.8.0
+
 Upgrade Dockerfile base image from centos7.7.1908 to centos7.9.2009
 ADD: env var to set db user and password in docker entry point (#142)
 
