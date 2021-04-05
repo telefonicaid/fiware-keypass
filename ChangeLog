@@ -1,3 +1,5 @@
+FIX: upgrade lxml test behaviour dep from 4.6.2 to 4.6.3 due to vulnerability
+
 1.8.0
 
 Upgrade Dockerfile base image from centos7.7.1908 to centos7.9.2009
