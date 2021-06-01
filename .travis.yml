@@ -6,7 +6,7 @@ script:
   - mvn -Pzip,rpm package
 jdk:
   - openjdk8  
-  - oraclejdk9
+  - openjdk9
   - openjdk10
   - openjdk11
 
