@@ -1,4 +1,5 @@
 ADD: upgrade java mysql connector from 8.0.16 to 8.0.22
+Remove trusty dist from travis (including oraclejdk)
 FIX: upgrade lxml test behaviour dep from 4.6.2 to 4.6.3 due to vulnerability
 
 1.8.0
