@@ -30,7 +30,7 @@ database:
   password: keypass
 
   # the JDBC URL
-  url: jdbc:mysql://localhost/keypass?autoReconnect=true&useSSL=false&serverTimezone=UTC
+  url: jdbc:mysql://localhost/keypass?autoReconnect=true&autoReconnectForPools=true&failOverReadOnly=false&maxReconnects=20&useSSL=false&serverTimezone=UTC
 
   # any properties specific to your JDBC driver:
   properties:
