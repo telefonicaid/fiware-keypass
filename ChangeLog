@@ -1,6 +1,6 @@
+ADD: upgrade java mysql connector from 8.0.16 to 8.0.27
 ADD: upgrade wso2 balana dep from 1.0.0_wso2v7 to 1.0.0_wso2v8
 ADD: replace travis by gitactions
-ADD: upgrade java mysql connector from 8.0.16 to 8.0.22
 Remove trusty dist from travis (including oraclejdk)
 FIX: upgrade lxml test behaviour dep from 4.6.2 to 4.6.3 due to vulnerability
 
