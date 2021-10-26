@@ -69,4 +69,4 @@ ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
 
 EXPOSE 7070 7071
 
-HEALTHCHECK CMD curl --fail http://localhost:7070/pap/v1/subject/test  -H 'fiware-service: test' || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:7070/pap/v1/subject/test  -H 'fiware-service: test'
