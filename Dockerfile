@@ -14,7 +14,7 @@ WORKDIR /opt/keypass
 
 RUN \
     # Install dependencies
-    yum update -y && yum install -y wget unzip && \
+    yum update -y && yum install -y wget curl unzip && \
     yum install -y epel-release && yum update -y epel-release && \
     yum install -y java-${JAVA_VERSION}-openjdk java-${JAVA_VERSION}-openjdk-devel && \
     yum install -y tcping && \
@@ -69,3 +69,4 @@ ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
 
 EXPOSE 7070 7071
 
+HEALTHCHECK CMD curl --fail http://localhost:7070/pap/v1/subject/test  -H 'fiware-service: test' || exit 1
