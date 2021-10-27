@@ -1,3 +1,4 @@
+FIX: wso2 balana library dep from 1.0.0-wso2-0.8 to 1.0.3
 ADD: Docker healthcheck for keypass API
 FIX: Remove warn about jdbc class driver
 ADD: Minimize Reconnection problems to MySQL servers (#154)
