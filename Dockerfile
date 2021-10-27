@@ -70,4 +70,4 @@ ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
 EXPOSE 7070 7071
 
 HEALTHCHECK --interval=60s --timeout=5s --start-period=10s \
-            CMD curl --fail http://localhost:7070/pap/v1/subject/healthcheck  -H 'fiware-service: healthcheck'
+            CMD curl --fail http://localhost:7070/pap/v1/subject/healthcheck  -H 'fiware-service: healthcheck' || exit 1
