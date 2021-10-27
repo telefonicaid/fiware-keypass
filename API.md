@@ -36,7 +36,8 @@ they are not resources _per se_.
 ```
 POST /pap/v1/subject/:subjectId
 <TENANT-HEADER>:<tenant>
-
+```
+```XML
 <Policy/>
 ```
 
@@ -48,12 +49,13 @@ replaced (updated) with the new policy.
 
 Examples:
 
-```HTTP
+```
 POST /pap/v1/subject/role12345 HTTP/1.1
 Content-type: application/xml
 Accept: application/xml
 Fiware-Service: myTenant
-
+```
+```XML
 <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
     http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
         PolicyId="policy03"
@@ -101,7 +103,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 201 Created
 Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy03
 ```
@@ -125,10 +127,11 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
-
+```
+```XML
 <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
     http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
         PolicyId="policy03"
@@ -194,10 +197,11 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
-
+```
+```XML
 <Policy xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17
     http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd"
         PolicyId="policy03"
@@ -265,10 +269,11 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
-
+```
+```XML
 <PolicySet xmlns:ns0="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" ns0:PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides" xmlns:ns1="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" ns1:PolicySetId="myTenant:role12345" xmlns:ns2="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" ns2:Version="1.0" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"><Policy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" PolicyId="policy03" RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit" Version="1.0" xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17    http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd">  <Target>    <AnyOf>      <AllOf>        <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">fiware:orion:.*</AttributeValue>          <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>        </Match>      </AllOf>    </AnyOf>  </Target>  <Rule Effect="Permit" RuleId="policy03rule01">    <Condition>      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">        <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">          <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>        </Apply>        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">read</AttributeValue>      </Apply>    </Condition>  </Rule></Policy></PolicySet>
 
 ```
@@ -293,7 +298,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 204 No Content
 ```
 
@@ -316,7 +321,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 204 No Content
 ```
 
@@ -326,7 +331,8 @@ HTTP/1.1 204 No Content
 ```
 POST /pdp/v3
 <TENANT-HEADER>:<tenant>
-
+```
+```XML
 <xacmlRequest/>
 ```
 
@@ -336,12 +342,13 @@ with Decision `NotApplicable`.
 
 Example:
 
-```HTTP
+```
 POST /pdp/v3
 Fiware-Service: myTenant
 Content-type: application/xml
 Accept: application/xml
-
+```
+```XML
 <Request xsi:schemaLocation="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17 http://docs.oasis-open.org/xacml/3.0/xacml-core-v3-schema-wd-17.xsd" ReturnPolicyIdList="false" CombinedDecision="false" xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Attributes Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject">
     <Attribute IncludeInResult="false" AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id">
@@ -363,10 +370,11 @@ Accept: application/xml
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
-
+```
+```XML
 <Response xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17">
   <Result>
     <Decision>NotApplicable</Decision>
@@ -390,7 +398,7 @@ GET /verison
 Response
 
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
@@ -405,7 +413,7 @@ GET /admin/log
 ```
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
@@ -420,7 +428,7 @@ PUT /admin/log?level=new_level
 <TENANT-HEADER>:<tenant>
 ```
 Response 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
