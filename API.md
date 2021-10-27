@@ -36,7 +36,8 @@ they are not resources _per se_.
 ```
 POST /pap/v1/subject/:subjectId
 <TENANT-HEADER>:<tenant>
-
+```
+```XML
 <Policy/>
 ```
 
@@ -48,7 +49,7 @@ replaced (updated) with the new policy.
 
 Examples:
 
-```HTTP
+```
 POST /pap/v1/subject/role12345 HTTP/1.1
 Content-type: application/xml
 Accept: application/xml
@@ -102,7 +103,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 201 Created
 Location: http://localhost:8080/pap/v1/subject/role12345/policy/policy03
 ```
@@ -126,7 +127,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 ```
@@ -196,7 +197,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 ```
@@ -268,7 +269,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 ```
@@ -297,7 +298,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 204 No Content
 ```
 
@@ -320,7 +321,7 @@ Fiware-Service: myTenant
 
 Response
 
-```HTTP
+```
 HTTP/1.1 204 No Content
 ```
 
@@ -341,7 +342,7 @@ with Decision `NotApplicable`.
 
 Example:
 
-```HTTP
+```
 POST /pdp/v3
 Fiware-Service: myTenant
 Content-type: application/xml
@@ -369,7 +370,7 @@ Accept: application/xml
 
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 ```
@@ -397,7 +398,7 @@ GET /verison
 Response
 
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
@@ -412,7 +413,7 @@ GET /admin/log
 ```
 Response
 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
@@ -427,7 +428,7 @@ PUT /admin/log?level=new_level
 <TENANT-HEADER>:<tenant>
 ```
 Response 
-```HTTP
+```
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
