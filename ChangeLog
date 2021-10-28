@@ -1,3 +1,5 @@
+1.9.0
+
 ADD: Docker healthcheck for keypass API
 FIX: Remove warn about jdbc class driver
 ADD: Minimize Reconnection problems to MySQL servers (#154)
