@@ -5,7 +5,7 @@ MAINTAINER IoT team
 # DB_ENDPOINT host[:port]
 ENV DB_ENDPOINT localhost
 
-ENV KEYPASS_VERSION 1.8.0
+ENV KEYPASS_VERSION 1.9.0
 ENV JAVA_VERSION "1.8.0"
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk
 
@@ -14,7 +14,7 @@ WORKDIR /opt/keypass
 
 RUN \
     # Install dependencies
-    yum update -y && yum install -y wget unzip && \
+    yum update -y && yum install -y wget curl unzip && \
     yum install -y epel-release && yum update -y epel-release && \
     yum install -y java-${JAVA_VERSION}-openjdk java-${JAVA_VERSION}-openjdk-devel && \
     yum install -y tcping && \
@@ -69,3 +69,5 @@ ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
 
 EXPOSE 7070 7071
 
+HEALTHCHECK --interval=60s --timeout=5s --start-period=10s \
+            CMD curl --fail http://localhost:7070/pap/v1/subject/healthcheck  -H 'fiware-service: healthcheck' || exit 1

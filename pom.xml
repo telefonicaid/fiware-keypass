@@ -4,7 +4,7 @@
 
     <groupId>es.tid.fiware</groupId>
     <artifactId>keypass</artifactId>
-    <version>1.8.0</version>
+    <version>1.9.0</version>
     <description>
       Keypass is multi-tenant XACML server with PAP (Policy Administration
       Point) andPDP (Policy Detention Point) capabilities.
@@ -48,10 +48,11 @@
             <artifactId>hsqldb</artifactId>
             <version>2.2.9</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.wso2.balana/org.wso2.balana -->
         <dependency>
-            <groupId>org.wso2.balana</groupId>
-            <artifactId>org.wso2.balana</artifactId>
-            <version>1.0.0-wso2v7</version>
+          <groupId>org.wso2.balana</groupId>
+          <artifactId>org.wso2.balana</artifactId>
+          <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -62,7 +63,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <version>8.0.27</version>
         </dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
@@ -83,13 +84,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>0.7.1</dropwizard.version>
     </properties>
-
-    <repositories>
-      <repository>
-        <id>wso2</id>
-        <url>http://maven.wso2.org/nexus/content/groups/wso2-public</url>
-      </repository>
-    </repositories>
 
     <build>
       <resources>

@@ -1,5 +1,10 @@
 # FIWARE-KeyPass
 
+[![FIWARE Security](https://nexus.lab.fiware.org/static/badges/chapters/security.svg)](https://www.fiware.org/developers/catalogue/)
+[![License: Apache 2.0](https://img.shields.io/github/license/telefonicaid/fiware-keypass.svg)](https://opensource.org/licenses/Apache-2.0)
+<br/>
+![Status](https://nexus.lab.fiware.org/static/badges/statuses/incubating.svg)
+
 Keypass is multi-tenant XACML server with PAP (Policy Administration Point) and
 PDP (Policy Decision Point) capabilities.
 
