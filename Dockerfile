@@ -1,4 +1,4 @@
-FROM centos:7.9.2009
+FROM centos:centos8.4.2105
 
 MAINTAINER IoT team
 
