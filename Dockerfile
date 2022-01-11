@@ -37,7 +37,7 @@ RUN \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_ENDPOINT"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
     mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
-    yum erase -y java-${JAVA_VERSION}-openjdk-devel libss && unset JAVA_HOME && \
+    #yum erase -y java-${JAVA_VERSION}-openjdk-devel && unset JAVA_HOME && \
     # Clean yum data
     yum clean all && rm -rf /var/lib/yum/yumdb && rm -rf /var/lib/yum/history && \
     # Erase without dependencies unneded rpm packages
