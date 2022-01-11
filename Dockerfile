@@ -45,7 +45,7 @@ RUN \
       libjpeg-turbo libsndfile libthai libtiff libvorbis libxcb libX* \
       pango pixman pulseaudio-libs redhat-logos xorg-x11* | xargs -r rpm -e --nodeps && \
     # Rebuild rpm data files
-    rpm --rebuilddb && \
+    #rpm --rebuilddb && \
     # Delete unused locales. Only preserve en_US and the locale aliases
     rm -rf /usr/share/zoneinfo && \
     find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en_US' ! -name 'locale.alias' | xargs -r rm -r && \
