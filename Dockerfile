@@ -10,7 +10,7 @@ ENV DB_ENDPOINT localhost
 
 ENV KEYPASS_VERSION 1.9.0
 ENV JAVA_VERSION "1.11.0"
-ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk
+ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 
 COPY . /opt/keypass/
 WORKDIR /opt/keypass
