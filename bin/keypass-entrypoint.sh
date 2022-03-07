@@ -54,7 +54,7 @@ sed -i "s/password: keypass/password: ${KEYPASS_DB_PASSWORD}/g" /opt/keypass/con
 # Wait until DB is up or exit if timeout
 # Current time in seconds
 STARTTIME=$(date +%s)
-while ! tcping -t 1 ${KEYPASS_DB_HOST_NAME} ${KEYPASS_DB_HOST_PORT}
+while ! nc -zvw10 ${KEYPASS_DB_HOST_NAME} ${KEYPASS_DB_HOST_PORT}
 do
     [[ $(($(date +%s) - ${KEYPASS_DB_TIMEOUT})) -lt ${STARTTIME} ]] || { echo "ERROR: Timeout MySQL endpoint <${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}>" >&2; exit 3; }
     echo "INFO: Wait for MySQL endpoint <${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}>"

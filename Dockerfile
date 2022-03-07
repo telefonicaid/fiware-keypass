@@ -1,28 +1,31 @@
-FROM centos:7.9.2009
+ARG  IMAGE_TAG=11.2-slim
+FROM debian:${IMAGE_TAG}
 
 MAINTAINER IoT team
+
+ARG CLEAN_DEV_TOOLS
 
 # DB_ENDPOINT host[:port]
 ENV DB_ENDPOINT localhost
 
 ENV KEYPASS_VERSION 1.9.0
-ENV JAVA_VERSION "1.8.0"
+ENV JAVA_VERSION "1.11.0"
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk
 
 COPY . /opt/keypass/
 WORKDIR /opt/keypass
 
 RUN \
+    apt-get -y update && \
+    apt-get -y upgrade && \
     # Install dependencies
-    yum update -y && yum install -y wget curl unzip && \
-    yum install -y epel-release && yum update -y epel-release && \
-    yum install -y java-${JAVA_VERSION}-openjdk java-${JAVA_VERSION}-openjdk-devel && \
-    yum install -y tcping && \
-    # Install Maven
-    wget -c http://ftp.cixug.es/apache/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.zip && \
-    unzip -oq apache-maven-3.2.5-bin.zip  && \
-    mv apache-maven-3.2.5 /opt/maven && rm -f apache-maven-3.2.5-bin.zip && \
-    ln -fs /opt/maven/bin/mvn /usr/bin/mvn && \
+    apt-get -y install \
+      wget \
+      curl \
+      unzip \
+      openjdk-11-jdk \
+      netcat-traditional \
+      maven && \
     # Build keypass
     mvn clean package && \
     mkdir -p /opt/keypass/log && \
@@ -37,32 +40,16 @@ RUN \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_ENDPOINT"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
     mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
-    yum erase -y java-${JAVA_VERSION}-openjdk-devel libss && unset JAVA_HOME && \
-    # Clean yum data
-    yum clean all && rm -rf /var/lib/yum/yumdb && rm -rf /var/lib/yum/history && \
-    # Erase without dependencies unneded rpm packages
-    rpm -qa alsa-lib atk cairo cups-libs flac fontconfig gdk-pixbuf2 giflib groff gtk2 jasper-libs jpackage-utils \
-      libjpeg-turbo libsndfile libthai libtiff libvorbis libxcb libX* \
-      pango pixman pulseaudio-libs redhat-logos xorg-x11* | xargs -r rpm -e --nodeps && \
-    # Rebuild rpm data files
-    rpm --rebuilddb && \
-    # Delete unused locales. Only preserve en_US and the locale aliases
-    rm -rf /usr/share/zoneinfo && \
-    find /usr/share/locale -mindepth 1 -maxdepth 1 ! -name 'en_US' ! -name 'locale.alias' | xargs -r rm -r && \
-    bash -c 'localedef --list-archive | grep -v -e "en_US" | xargs localedef --delete-from-archive' && \
-    # We use cp instead of mv as to refresh locale changes for ssh connections
-    # We use /bin/cp instead of cp to avoid any alias substitution, which in some cases has been problematic
-    /bin/cp -f /usr/lib/locale/locale-archive /usr/lib/locale/locale-archive.tmpl && \
-    build-locale-archive && \
-    find /opt/keypass -name '.[^.]*' 2>/dev/null | xargs -r rm -rf && \
-    # We don't need glibc locale data
-    # This cannot be removed using yum as yum uses hard dependencies and doing so will uninstall essential packages
-    rm -rf /usr/share/i18n /usr/{lib,lib64}/gconv && \
-    # We don't need wallpapers
-    rm -rf /usr/share/wallpapers/* && \
+    echo "INFO: Cleaning unused software..." && \
+    apt-get clean && \
+    if [ ${CLEAN_DEV_TOOLS} -eq 0 ] ; then exit 0 ; fi && \
+    # remove the same packages we installed at the beginning to build Orch
+    apt-get -y remove --purge \
+       git \
+       gcc && \
+    apt-get -y autoremove --purge && \
     # Don't need old log files inside docker images
-    rm -rf /root/*log* /tmp/* /var/log/*log* && \
-    chown -R 1000:1000 /opt/keypass
+    rm -f /var/log/*log
 
 # Define the entry point
 ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
