@@ -20,9 +20,7 @@ RUN \
     apt-get -y upgrade && \
     # Install dependencies
     apt-get -y install \
-      wget \
       curl \
-      unzip \
       openjdk-11-jdk \
       netcat-traditional \
       maven && \
