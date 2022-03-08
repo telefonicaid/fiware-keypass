@@ -9,19 +9,20 @@ ARG CLEAN_DEV_TOOLS
 ENV DB_ENDPOINT localhost
 
 ENV KEYPASS_VERSION 1.9.0
-ENV JAVA_VERSION "1.11.0"
+ENV JAVA_VERSION "1.8.0"
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 
 COPY . /opt/keypass/
 WORKDIR /opt/keypass
 
 RUN \
+    echo 'deb http://httpredir.debian.org/debian-security stretch/updates main' > /etc/apt/sources.list.d/jessie-backports.list && \
     apt-get -y update && \
     apt-get -y upgrade && \
     # Install dependencies
     apt-get -y install \
       curl \
-      openjdk-11-jdk \
+      openjdk-8-jdk \
       netcat-traditional \
       maven && \
     # Build keypass
