@@ -43,9 +43,6 @@ RUN \
     apt-get clean && \
     if [ ${CLEAN_DEV_TOOLS} -eq 0 ] ; then exit 0 ; fi && \
     # remove the same packages we installed at the beginning to build Orch
-    apt-get -y remove --purge \
-       git \
-       gcc && \
     apt-get -y autoremove --purge && \
     # Don't need old log files inside docker images
     rm -f /var/log/*log
