@@ -23,6 +23,7 @@ RUN \
     apt-get -y install \
       curl \
       openjdk-8-jdk \
+      libjaxb-java \
       netcat-traditional \
       maven && \
     # Build keypass
