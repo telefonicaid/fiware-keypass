@@ -20,13 +20,14 @@ RUN \
     apt-get -y update && \
     apt-get -y upgrade && \
     # Install dependencies
+    apt-get -y install openjdk-8-jdk && \
     apt-get -y install \
+      tzdata \
       curl \
-      openjdk-8-jdk \
       libjaxb-java \
       netcat-traditional \
       maven && \
-    # Build keypass
+      # Build keypass
     mvn clean package && \
     mkdir -p /opt/keypass/log && \
     # Copy jar and conf to proper location
@@ -40,7 +41,7 @@ RUN \
     sed -i "s/mysql:\/\/localhost/mysql:\/\/"$DB_ENDPOINT"/g" /opt/keypass/config.yml && \
     # Cleaning unused files...
     mvn clean && rm -rf /opt/maven && rm -rf ~/.m2 && \
-    echo "INFO: Cleaning unused software..." && \
+    #echo "INFO: Cleaning unused software..." && \
     apt-get clean && \
     if [ ${CLEAN_DEV_TOOLS} -eq 0 ] ; then exit 0 ; fi && \
     # remove the same packages we installed at the beginning to build Orch
