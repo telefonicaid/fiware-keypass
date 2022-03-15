@@ -7,10 +7,10 @@ ARG CLEAN_DEV_TOOLS
 
 # DB_ENDPOINT host[:port]
 ENV DB_ENDPOINT localhost
-
 ENV KEYPASS_VERSION 1.9.0
 ENV JAVA_VERSION "1.8.0"
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
+ENV CLEAN_DEV_TOOLS ${CLEAN_DEV_TOOLS:-1}
 
 COPY . /opt/keypass/
 WORKDIR /opt/keypass
@@ -22,9 +22,7 @@ RUN \
     # Install dependencies
     apt-get -y install openjdk-8-jdk && \
     apt-get -y install \
-      tzdata \
       curl \
-      libjaxb-java \
       netcat-traditional \
       maven && \
       # Build keypass
@@ -44,7 +42,7 @@ RUN \
     #echo "INFO: Cleaning unused software..." && \
     apt-get clean && \
     if [ ${CLEAN_DEV_TOOLS} -eq 0 ] ; then exit 0 ; fi && \
-    # remove the same packages we installed at the beginning to build Orch
+    # remove the same packages we installed at the beginning to build Keypass
     apt-get -y autoremove --purge && \
     # Don't need old log files inside docker images
     rm -f /var/log/*log
