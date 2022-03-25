@@ -1,3 +1,5 @@
+UPGRADE: Dockerfile base image from centos7.9.2009 to Debian 11.2-slim
+
 1.9.0
 
 ADD: Docker healthcheck for keypass API
