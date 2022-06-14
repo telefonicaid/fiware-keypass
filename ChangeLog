@@ -1,3 +1,5 @@
+UPGRADE: Debian version from 11.2 to 11.3 in Dockerfile
+
 1.10.0
 
 UPGRADE: Dockerfile base image from centos7.9.2009 to Debian 11.2-slim
