@@ -1,3 +1,4 @@
+UPGRADE: java mysql connector from 8.0.27 to 8.0.28
 UPGRADE: Debian version from 11.2 to 11.3 in Dockerfile
 
 1.10.0
