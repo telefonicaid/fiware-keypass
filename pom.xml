@@ -89,6 +89,20 @@
           <version>3.0.0</version>
           <scope>runtime</scope>
         </dependency>
+
+        <!-- Include J2EE ABI since was removed from jdk upper 8 -->
+        <!-- API, java.xml.bind module -->
+        <dependency>
+          <groupId>jakarta.xml.bind</groupId>
+          <artifactId>jakarta.xml.bind-api</artifactId>
+          <version>2.3.2</version>
+        </dependency>
+        <!-- Runtime, com.sun.xml.bind module -->
+        <dependency>
+          <groupId>org.glassfish.jaxb</groupId>
+          <artifactId>jaxb-runtime</artifactId>
+          <version>2.3.2</version>
+        </dependency>
     </dependencies>
 
     <properties>
