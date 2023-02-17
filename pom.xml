@@ -112,8 +112,8 @@
                 <version>3.8.0</version>
                 <!-- compile for Java 1.11 -->
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.11</source>
+                    <target>1.11</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
