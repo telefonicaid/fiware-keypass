@@ -1,4 +1,4 @@
-ARG  IMAGE_TAG=11.3-slim
+ARG  IMAGE_TAG=12.1-slim
 FROM debian:${IMAGE_TAG}
 
 MAINTAINER IoT team
@@ -8,7 +8,7 @@ ARG CLEAN_DEV_TOOLS
 # DB_ENDPOINT host[:port]
 ENV DB_ENDPOINT localhost
 ENV KEYPASS_VERSION 1.10.0
-ENV JAVA_VERSION "1.11.0"
+ENV JAVA_VERSION "1.17.0"
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 ENV CLEAN_DEV_TOOLS ${CLEAN_DEV_TOOLS:-1}
 
@@ -19,7 +19,7 @@ RUN \
     apt-get -y update && \
     apt-get -y upgrade && \
     # Install dependencies
-    apt-get -y install openjdk-11-jdk && \
+    apt-get -y install openjdk-17-jdk && \
     apt-get -y install \
       curl \
       netcat-traditional \
