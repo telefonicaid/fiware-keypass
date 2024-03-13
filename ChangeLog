@@ -1,3 +1,5 @@
+UPGRADE: Debian version from 12.4 to 12.5 in Dockerfile
+
 1.11.0
 
 UPGRADE: testng dep from 6.1.1 to 7.7.0
