@@ -1,4 +1,4 @@
-ARG  IMAGE_TAG=12.4-slim
+ARG  IMAGE_TAG=12.5-slim
 FROM debian:${IMAGE_TAG}
 
 MAINTAINER IoT team
