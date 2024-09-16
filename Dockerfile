@@ -46,7 +46,8 @@ RUN \
     apt-get -y remove maven && \
     apt-get -y autoremove --purge && \
     # Don't need old log files inside docker images
-    rm -f /var/log/*log
+    rm -f /var/log/*log && \
+    chown -R 1000:1000 /opt/keypass
 
 # Define the entry point
 ENTRYPOINT ["/opt/keypass/keypass-entrypoint.sh"]
