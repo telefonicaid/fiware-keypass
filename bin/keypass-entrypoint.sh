@@ -16,6 +16,7 @@ echo "INFO: keypass entrypoint start"
 # LOG_LEVEL. Default INFO
 [[ "${KEYPASS_LOG_LEVEL}" == "" ]] && export KEYPASS_LOG_LEVEL=INFO
 
+export JDK_JAVA_OPTIONS='--add-opens java.base/java.lang=ALL-UNNAMED'
 
 # Check argument DB_HOST if provided
 while [[ $# -gt 0 ]]; do
