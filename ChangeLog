@@ -1,4 +1,6 @@
 FIX: Restore owner of /opt/keypass files
+FIX: startup error log about liquidbase (#171)
+FIX: startup log exception about InaccessibleObjectException (#195)
 UPGRADE: Debian version from 12.4 to 12.6 in Dockerfile
 
 1.11.0
