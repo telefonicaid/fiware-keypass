@@ -1,3 +1,5 @@
+1.12.0
+
 FIX: Restore owner of /opt/keypass files
 FIX: startup error log about liquidbase (#171)
 FIX: startup log exception about InaccessibleObjectException (#195)
