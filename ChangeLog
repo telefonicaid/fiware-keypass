@@ -1,3 +1,5 @@
+UPGRADE: Debian version from 12.6 to 12.7 in Dockerfile
+
 1.12.0
 
 FIX: Restore owner of /opt/keypass files
