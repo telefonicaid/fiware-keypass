@@ -11,7 +11,7 @@ UPGRADE: Debian version from 12.4 to 12.6 in Dockerfile
 
 UPGRADE: testng dep from 6.1.1 to 7.7.0
 UPGRADE: HSQLDB from 2.2.9 to 2.7.1
-UPGRADE: Java from 8 to 11 in Dockerfile
+UPGRADE: Java from 8 to 17 in Dockerfile
 UPGRADE: lxml from 4.6.5 to 4.9.1.
 UPGRADE: java mysql connector from 8.0.27 to 8.0.28
 UPGRADE: Debian version from 11.2 to 12.4 in Dockerfile
