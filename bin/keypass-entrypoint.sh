@@ -3,18 +3,20 @@
 echo "INFO: keypass entrypoint start"
 
 [[ "${KEYPASS_DB_HOST_VALUE}" == "" ]] && KEYPASS_DB_HOST_VALUE=localhost:3306
-# Default MySQL host name
+# Default DB host name
 [[ "${KEYPASS_DB_HOST_NAME}" == "" ]] && KEYPASS_DB_HOST_NAME=localhost
-# Default MySQL port 3306
+# Default DB port 3306
 [[ "${KEYPASS_DB_HOST_PORT}" == "" ]] && KEYPASS_DB_HOST_PORT=3306
 # DB_TIMEOUT in seconds. Default to 60 seconds
 [[ "${KEYPASS_DB_TIMEOUT}" == "" ]] && export KEYPASS_DB_TIMEOUT=60
-# Default MySQL user
+# Default DB user
 [[ "${KEYPASS_DB_USER}" == "" ]] && export KEYPASS_DB_USER=keypass
-# Default MySQL password
+# Default DB password
 [[ "${KEYPASS_DB_PASSWORD}" == "" ]] && export KEYPASS_DB_PASSWORD=keypass
 # LOG_LEVEL. Default INFO
 [[ "${KEYPASS_LOG_LEVEL}" == "" ]] && export KEYPASS_LOG_LEVEL=INFO
+# Default DB type
+[[ "${KEYPASS_DB_TYPE}" == "" ]] && export KEYPASS_DB_TYPE=mysql
 
 export JDK_JAVA_OPTIONS='--add-opens java.base/java.lang=ALL-UNNAMED'
 
@@ -42,13 +44,18 @@ done
 echo "INFO: LOG LEVEL <${KEYPASS_LOG_LEVEL}>"
 sed -i "s/INFO/${KEYPASS_LOG_LEVEL}/g" /opt/keypass/config.yml
 
-echo "INFO: MySQL endpoint <${KEYPASS_DB_HOST_VALUE}>"
+echo "INFO: DB endpoint <${KEYPASS_DB_HOST_VALUE}>"
 echo "INFO: KEYPASS_DB_HOST_NAME <${KEYPASS_DB_HOST_NAME}>"
 echo "INFO: KEYPASS_DB_HOST_PORT <${KEYPASS_DB_HOST_PORT}>"
 echo "INFO: KEYPASS_DB_USER <${KEYPASS_DB_USER}>"
 echo "INFO: KEYPASS_DB_PASSWORD <${KEYPASS_DB_PASSWORD}>"
 
-sed -i "s/mysql:\/\/localhost/mysql:\/\/${KEYPASS_DB_HOST_VALUE}/g" /opt/keypass/config.yml
+if [ "$KEYPASS_DB_TYPE" == "psql" ]; then
+    sed -i "s/mysql:\/\/localhost/postgresql:\/\/${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}/g" /opt/keypass/config.yml
+else
+    sed -i "s/mysql:\/\/localhost/mysql:\/\/${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}/g" /opt/keypass/config.yml
+fi
+
 sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
 sed -i "s/password: keypass/password: ${KEYPASS_DB_PASSWORD}/g" /opt/keypass/config.yml
 
