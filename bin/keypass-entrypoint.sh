@@ -16,6 +16,9 @@ echo "INFO: keypass entrypoint start"
 [[ "${KEYPASS_LOG_LEVEL}" == "" ]] && export KEYPASS_LOG_LEVEL=INFO
 # Default DB type
 [[ "${KEYPASS_DB_TYPE}" == "" ]] && export KEYPASS_DB_TYPE=mysql
+# Default DB name
+[[ "${KEYPASS_DB_NAME}" == "" ]] && export KEYPASS_DB_NAME=keypass
+
 
 export JDK_JAVA_OPTIONS='--add-opens java.base/java.lang=ALL-UNNAMED'
 
@@ -64,7 +67,8 @@ else
 fi
 
 sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
-sed -i "s/password: keypass/password: ${KEYPASS_DB_PASSWORD}/g" /opt/keypass/config.yml
+sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
+sed -i "s/keypassDBName/${KEYPASS_DB_NAME}/g" /opt/keypass/config.yml
 
 # Wait until DB is up or exit if timeout
 # Current time in seconds
