@@ -57,9 +57,11 @@ Additionally, the following environment variables are available for keypass dock
 | KEYPASS_DB_HOST_VALUE | database.url            | localhost:3306 |
 | KEYPASS_DB_HOST_NAME  | database.url            | localhost      |
 | KEYPASS_DB_HOST_PORT  | database.url            | 3306           |
+| KEYPASS_DB_TYPE       | database connection type| mysql (or psql)|
 | KEYPASS_DB_TIMEOUT    |                         | 60             |
 | KEYPASS_DB_USER       |                         | keypass        |
 | KEYPASS_DB_PASSWORD   |                         | keypass        |
+| KEYPASS_DB_NAME       |                         | keypass        |
 | KEYPASS_LOG_LEVEL     |                         | INFO           |
 
 

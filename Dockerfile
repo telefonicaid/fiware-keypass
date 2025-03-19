@@ -20,6 +20,7 @@ RUN \
     apt-get -y upgrade && \
     # Install dependencies
     apt-get -y install openjdk-17-jdk && \
+    apt-get -y install postgresql-client && \
     apt-get -y install \
       curl \
       netcat-traditional \
