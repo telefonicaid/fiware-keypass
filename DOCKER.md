@@ -60,7 +60,7 @@ Additionally, the following environment variables are available for keypass dock
 | KEYPASS_DB_TYPE       | database connection type| mysql (or psql)|
 | KEYPASS_DB_TIMEOUT    |                         | 60             |
 | KEYPASS_DB_USER       |                         | keypass        |
-| KEYPASS_DB_PASSWORD   |                         | keypass        |
+| KEYPASS_DB_PASSWORD   |                         | N/A            |
 | KEYPASS_DB_NAME       |                         | keypass        |
 | KEYPASS_LOG_LEVEL     |                         | INFO           |
 

@@ -1,3 +1,4 @@
+ADD: new env vars for database connection: KEYPASS_DB_USER, KEYPASS_DB_NAME, KEYPASS_DB_PASSWORD, KEYPASS_DB_TYPE
 ADD: allow to use PostgreSQL based DB instead of MySQL based DB (#205)
 
 1.13.0
