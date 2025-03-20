@@ -10,8 +10,6 @@ echo "INFO: keypass entrypoint start"
 [[ "${KEYPASS_DB_TIMEOUT}" == "" ]] && export KEYPASS_DB_TIMEOUT=60
 # Default DB user
 [[ "${KEYPASS_DB_USER}" == "" ]] && export KEYPASS_DB_USER=keypass
-# Default DB password
-[[ "${KEYPASS_DB_PASSWORD}" == "" ]] && export KEYPASS_DB_PASSWORD=keypass
 # LOG_LEVEL. Default INFO
 [[ "${KEYPASS_LOG_LEVEL}" == "" ]] && export KEYPASS_LOG_LEVEL=INFO
 # Default DB type
@@ -68,7 +66,7 @@ else
 fi
 
 sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
-sed -i "s/user: keypass/user: ${KEYPASS_DB_USER}/g" /opt/keypass/config.yml
+sed -i "s/password: keypass/password: ${KEYPASS_DB_PASSWORD}/g" /opt/keypass/config.yml
 sed -i "s/keypassDBName/${KEYPASS_DB_NAME}/g" /opt/keypass/config.yml
 
 # Wait until DB is up or exit if timeout
