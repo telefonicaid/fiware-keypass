@@ -76,7 +76,7 @@ EOF
 pgloader mysql://keypassUser:keypassPass@172.17.0.1:3306/keypassDb postgresql://keypassUser:keypassPass@172.17.0.1:5432/keypassDb
 ```
 
-3. Rename policy table to Policy (in uppercase)
+3. Rename policy table to Policy (in camelcase)
 ```sh
 PGPASSWORD=postgresUser psql -h 172.17.0.1 -p 5432 -U postgresPass -d keypassDb <<EOF
 ALTER TABLE policy RENAME TO "Policy";
