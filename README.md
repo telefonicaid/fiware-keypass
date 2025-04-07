@@ -56,6 +56,41 @@ $ mvn -Pzip package
 $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
+# Migrate from MySQL to PosgreSQL
+
+Keypass since 1.14.0 version could be migrate from MySQL to PosgreSQL.
+The procedure is the following:
+
+1. Create new Keypass database and user in PostgreSQL:
+```sh
+PGPASSWORD=postgresUser psql -h 172.17.0.1 -p 5432 -U postgresPass <<EOF
+CREATE DATABASE keypassDb;
+CREATE USER keypassUser WITH PASSWORD 'keypassPass';
+GRANT ALL PRIVILEGES ON DATABASE keypassDb TO keypassUser;
+ALTER DATABASE keypassDb OWNER TO keypassUser;
+EOF
+```
+
+
+2. Migrate with [pgloader](https://pgloader.io/) which is commonly available in linux distributions like Debian.
+```sh
+pgloader mysql://keypassUser:keypassPass@172.17.0.1:3306/keypassDb postgresql://keypassUser:keypassPass@172.17.0.1:5432/keypassDb
+```
+
+3. Rename policy table to Policy (in uppercase)
+```sh
+PGPASSWORD=postgresUser psql -h 172.17.0.1 -p 5432 -U postgresPass -d keypassDb <<EOF
+ALTER TABLE policy RENAME TO "Policy";
+EOF
+```
+
+4. Restart Keypass Docker container
+```sh
+docker restart keypass
+```
+
+
+
 # Usage
 
 ## Create a policy
