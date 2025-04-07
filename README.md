@@ -56,8 +56,7 @@ $ mvn -Pzip package
 $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
-# Migrate from MySQL to PosgreSQL
-
+# Migrate from MySQL to PostgreSQL
 Keypass since 1.14.0 version could be migrate from MySQL to PosgreSQL.
 The procedure is the following:
 
