@@ -57,8 +57,20 @@ $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
 # Migrate from MySQL to PostgreSQL
+
 Keypass versions 1.14.0 and later can be migrated from MySQL to PostgreSQL.
-The procedure is the following:
+
+## Prerequisites
+
+Default auth plugin in MySQL 8 is `caching_sha2_password` which is not supported by pgloader tool needed by this procedure. During this procedure MySQL should use `mysql_native_password` plugin. To achieve that set in `[mysqld]` section add:
+
+    default-authentication-plugin=mysql_native_password
+
+Then restart your MySQL server and execute:
+
+    ALTER USER 'youruser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
+
+## Procedure
 
 1. Create new Keypass database and user in PostgreSQL:
 ```sh
@@ -69,7 +81,6 @@ GRANT ALL PRIVILEGES ON DATABASE keypassDb TO keypassUser;
 ALTER DATABASE keypassDb OWNER TO keypassUser;
 EOF
 ```
-
 
 2. Migrate with [pgloader](https://pgloader.io/) which is commonly available in linux distributions like Debian.
 ```sh
@@ -87,7 +98,6 @@ EOF
 ```sh
 docker restart keypass
 ```
-
 
 
 # Usage
