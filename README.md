@@ -56,6 +56,50 @@ $ mvn -Pzip package
 $ java -jar target/keypass-<VERSION>.jar server conf/config.yml
 ```
 
+# Migrate from MySQL to PostgreSQL
+
+Keypass versions 1.14.0 and later can be migrated from MySQL to PostgreSQL.
+
+## Prerequisites
+
+Default auth plugin in MySQL 8 is `caching_sha2_password` which is not supported by pgloader tool needed by this procedure. During this procedure MySQL should use `mysql_native_password` plugin. To achieve that set in `[mysqld]` section add:
+
+    default-authentication-plugin=mysql_native_password
+
+Then restart your MySQL server and execute:
+
+    ALTER USER 'youruser'@'localhost' IDENTIFIED WITH mysql_native_password BY 'yourpassword';
+
+## Procedure
+
+1. Create new Keypass database and user in PostgreSQL:
+```sh
+PGPASSWORD=postgresUser psql -h 172.17.0.1 -p 5432 -U postgresPass <<EOF
+CREATE DATABASE keypassDb;
+CREATE USER keypassUser WITH PASSWORD 'keypassPass';
+GRANT ALL PRIVILEGES ON DATABASE keypassDb TO keypassUser;
+ALTER DATABASE keypassDb OWNER TO keypassUser;
+EOF
+```
+
+2. Migrate with [pgloader](https://pgloader.io/) which is commonly available in linux distributions like Debian.
+```sh
+pgloader mysql://keypassUser:keypassPass@172.17.0.1:3306/keypassDb postgresql://keypassUser:keypassPass@172.17.0.1:5432/keypassDb
+```
+
+3. Rename policy table to Policy (in camelcase)
+```sh
+PGPASSWORD=postgresUser psql -h 172.17.0.1 -p 5432 -U postgresPass -d keypassDb <<EOF
+ALTER TABLE policy RENAME TO "Policy";
+EOF
+```
+
+4. Restart Keypass Docker container
+```sh
+docker restart keypass
+```
+
+
 # Usage
 
 ## Create a policy
