@@ -78,6 +78,6 @@ do
     echo "INFO: Wait for DB endpoint <${KEYPASS_DB_HOST_NAME}:${KEYPASS_DB_HOST_PORT}>"
     sleep 2
 done
-java -jar /opt/keypass/keypass.jar db migrate /opt/keypass/config.yml
+#java -jar /opt/keypass/keypass.jar db migrate /opt/keypass/config.yml
 
 java -jar /opt/keypass/keypass.jar server /opt/keypass/config.yml
