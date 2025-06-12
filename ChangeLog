@@ -1,3 +1,5 @@
+FIX: Upgrade postgresql from 42.7.2 to 42.7.7 due to CVE-2025-49146
+
 1.14.0
 
 ADD: new env vars for database connection: KEYPASS_DB_USER, KEYPASS_DB_NAME, KEYPASS_DB_PASSWORD, KEYPASS_DB_TYPE
