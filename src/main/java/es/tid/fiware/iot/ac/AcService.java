@@ -39,7 +39,7 @@ import es.tid.fiware.iot.ac.util.LogsEndpoint;
 import es.tid.fiware.iot.ac.util.VersionEndpoint;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
-import io.dropwizard.migrations.MigrationsBundle;
+//import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
@@ -62,12 +62,12 @@ public class AcService extends io.dropwizard.Application<AcConfig> {
     @Override
     public void initialize(Bootstrap<AcConfig> bootstrap) {
         bootstrap.addBundle(hibernate);
-        bootstrap.addBundle(new MigrationsBundle<AcConfig>() {
-            @Override
-            public DataSourceFactory getDataSourceFactory(AcConfig configuration) {
-                return configuration.getDataSourceFactory();
-            }
-        });
+        // bootstrap.addBundle(new MigrationsBundle<AcConfig>() {
+        //     @Override
+        //     public DataSourceFactory getDataSourceFactory(AcConfig configuration) {
+        //         return configuration.getDataSourceFactory();
+        //     }
+        // });
     }
 
     @Override
