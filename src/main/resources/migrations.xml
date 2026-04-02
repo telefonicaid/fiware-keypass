@@ -5,6 +5,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+   <changeSet id="2" author="sc">
+    <preConditions onFail="CONTINUE">
+            <sqlCheck expectedResult="0">
+              select count(*) from user_sequences where sequence_name = 'SEQUENCE_NAME_SEQ';
+            </sqlCheck>
+    </preConditions>
+    <createSequence sequenceName="SEQUENCE_NAME_SEQ"/>
+   </changeSet>
+
     <changeSet id="1" author="dmj">
         <createTable tableName="Policy">
             <column name="id" type="varchar(255)">
