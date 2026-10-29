@@ -1,5 +1,5 @@
 UPGRADE: requests from 2.32.4 to 2.33.0 due to CVE-2026-25645
-UPGRADE: Upgrade postgresql from 42.7.2 to 42.7.7 due to CVE-2025-49146
+UPGRADE: Upgrade postgresql from 42.7.2 to 42.7.12 due to CVE-2025-49146, CWE-770, CWE-636, CWE-757
 
 1.14.0
 
